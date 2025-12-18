@@ -128,11 +128,11 @@ export default function RegisterPage() {
           <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
             <div 
               style={{
-                width: '288px',
-                height: '288px',
+                width: '225px',
+                height: '225px',
                 borderRadius: '50%',
                 overflow: 'hidden',
-                border: '4px solid #1f2937',
+                border: '10px solid #38475eff',
                 backgroundColor: '#93c5fd',
                 display: 'flex',
                 alignItems: 'center',
@@ -195,14 +195,14 @@ export default function RegisterPage() {
                   borderRadius: '9999px',
                   fontWeight: 'bold',
                   fontSize: '1.125rem',
-                  color: '#d1d5db',
+                  color: '#465874ff',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  minWidth: '340px'
+                  minWidth: '190px'
                 }}
-                onMouseOver={(e) => e.target.style.backgroundColor = '#bfdbfe'}
+                onMouseOver={(e) => e.target.style.backgroundColor = '#80b2eaff'}
                 onMouseOut={(e) => e.target.style.backgroundColor = '#93c5fd'}
               >
                 Retake Photo
@@ -218,13 +218,13 @@ export default function RegisterPage() {
                   borderRadius: '9999px',
                   fontWeight: 'bold',
                   fontSize: '1.125rem',
-                  color: '#d1d5db',
+                  color: '#465874ff',
                   cursor: stream ? 'pointer' : 'not-allowed',
                   opacity: stream ? 1 : 0.5,
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  minWidth: '340px'
+                  minWidth: '190px'
                 }}
                 onMouseOver={(e) => stream && (e.target.style.backgroundColor = '#bfdbfe')}
                 onMouseOut={(e) => e.target.style.backgroundColor = '#93c5fd'}
@@ -243,15 +243,15 @@ export default function RegisterPage() {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Username..."
               style={{
-                width: '640px',
-                height: '144px',
+                width: '300px',
+                height: '70px',
                 padding: '1.5rem',
                 backgroundColor: '#3b82f6',
-                border: '4px solid #d1d5db',
+                border: '4px solid #53698aff',
                 textAlign: 'center',
                 fontSize: '1.125rem',
                 fontWeight: '500',
-                color: '#d1d5db',
+                color: '#4b525cff',
                 outline: 'none'
               }}
               onFocus={(e) => e.target.style.boxShadow = '0 0 0 2px #d1d5db'}
