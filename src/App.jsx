@@ -102,7 +102,7 @@ export default function RegisterPage() {
   }, []);
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#bfdbfe', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', margin: 0, boxSizing: 'border-box' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#1f1f1f', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', margin: 0, boxSizing: 'border-box' }}>
       <div style={{ width: '100%', maxWidth: '28rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem' }}>
         
         {/* Camera/Photo Circle */}
