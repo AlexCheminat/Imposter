@@ -106,8 +106,8 @@ export default function RegisterPage() {
       <div className="w-full max-w-md space-y-8">
         
         {/* Camera Circle */}
-        <div className="relative">
-          <div className="w-72 h-72 mx-auto rounded-full border-4 border-gray-800 overflow-hidden bg-blue-300 flex items-center justify-center">
+        <div className="flex justify-center">
+          <div className="relative w-72 h-72 rounded-full border-4 border-gray-800 overflow-hidden bg-blue-300 flex items-center justify-center">
             {capturedImage ? (
               <img 
                 src={capturedImage} 
