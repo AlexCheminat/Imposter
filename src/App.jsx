@@ -5,12 +5,14 @@ export default function RegisterPage() {
   const [stream, setStream] = useState(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [username, setUsername] = useState('');
+  const [cameraError, setCameraError] = useState(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
 
   const startCamera = async () => {
     try {
+      setCameraError(null);
       const mediaStream = await navigator.mediaDevices.getUserMedia({ 
         video: { 
           facingMode: 'user',
@@ -18,16 +20,34 @@ export default function RegisterPage() {
           height: { ideal: 720 }
         } 
       });
+      
       streamRef.current = mediaStream;
       setStream(mediaStream);
+      
+      // Wait for video element to be ready
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
+        // Force play
+        try {
+          await videoRef.current.play();
+        } catch (playErr) {
+          console.error('Play error:', playErr);
+        }
       }
     } catch (err) {
       console.error('Error accessing camera:', err);
+      setCameraError(err.message);
       alert(`Could not access camera: ${err.message}. Please check permissions.`);
     }
   };
+
+  // Effect to connect stream to video when both are ready
+  useEffect(() => {
+    if (stream && videoRef.current) {
+      videoRef.current.srcObject = stream;
+      videoRef.current.play().catch(e => console.error('Play error:', e));
+    }
+  }, [stream]);
 
   const takePhoto = () => {
     if (videoRef.current && canvasRef.current) {
@@ -94,19 +114,33 @@ export default function RegisterPage() {
                 alt="Captured" 
                 className="w-full h-full object-cover"
               />
-            ) : stream ? (
-              <video 
-                ref={videoRef}
-                autoPlay 
-                playsInline
-                muted
-                className="w-full h-full object-cover scale-x-[-1]"
-              />
             ) : (
-              <div className="text-center text-gray-700 px-8">
-                <UserCircle2 size={80} className="mx-auto mb-4 opacity-50" />
-                <p className="text-sm">Camera loading...</p>
-              </div>
+              <>
+                <video 
+                  ref={videoRef}
+                  autoPlay 
+                  playsInline
+                  muted
+                  className="w-full h-full object-cover scale-x-[-1]"
+                  style={{ display: stream ? 'block' : 'none' }}
+                />
+                {!stream && (
+                  <div className="text-center text-gray-700 px-8">
+                    <UserCircle2 size={80} className="mx-auto mb-4 opacity-50" />
+                    <p className="text-sm">
+                      {cameraError ? `Error: ${cameraError}` : 'Camera loading...'}
+                    </p>
+                    {cameraError && (
+                      <button 
+                        onClick={startCamera}
+                        className="mt-4 px-4 py-2 bg-blue-400 border-2 border-gray-800 rounded text-sm"
+                      >
+                        Retry
+                      </button>
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </div>
           <canvas ref={canvasRef} className="hidden" />
