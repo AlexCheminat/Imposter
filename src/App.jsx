@@ -191,11 +191,11 @@ export default function RegisterPage() {
                 style={{
                   padding: '1rem 5rem',
                   backgroundColor: '#93c5fd',
-                  border: '4px solid #d1d5db',
+                  border: '4px solid #38475eff',
                   borderRadius: '9999px',
                   fontWeight: 'bold',
                   fontSize: '1.125rem',
-                  color: '#465874ff',
+                  color: '#38475eff',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -214,11 +214,11 @@ export default function RegisterPage() {
                 style={{
                   padding: '1rem 5rem',
                   backgroundColor: '#93c5fd',
-                  border: '4px solid #d1d5db',
+                  border: '4px solid #38475eff',
                   borderRadius: '9999px',
                   fontWeight: 'bold',
                   fontSize: '1.125rem',
-                  color: '#465874ff',
+                  color: '#38475eff',
                   cursor: stream ? 'pointer' : 'not-allowed',
                   opacity: stream ? 1 : 0.5,
                   display: 'flex',
@@ -246,12 +246,12 @@ export default function RegisterPage() {
                 width: '300px',
                 height: '70px',
                 padding: '1.5rem',
-                backgroundColor: '#3b82f6',
-                border: '4px solid #53698aff',
+                backgroundColor: '#93c5fd',
+                border: '4px solid #38475eff',
                 textAlign: 'center',
                 fontSize: '1.125rem',
                 fontWeight: '500',
-                color: '#4b525cff',
+                color: '#38475eff',
                 outline: 'none'
               }}
               onFocus={(e) => e.target.style.boxShadow = '0 0 0 2px #d1d5db'}
@@ -266,11 +266,11 @@ export default function RegisterPage() {
               style={{
                 padding: '1rem 5rem',
                 backgroundColor: '#93c5fd',
-                border: '4px solid #d1d5db',
+                border: '4px solid #38475eff',
                 borderRadius: '9999px',
                 fontWeight: 'bold',
                 fontSize: '1.25rem',
-                color: '#d1d5db',
+                color: '#38475eff',
                 cursor: 'pointer',
                 minWidth: '340px'
               }}
