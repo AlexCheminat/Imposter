@@ -255,7 +255,7 @@ export default function RegisterPage() {
                 outline: 'none'
               }}
               onFocus={(e) => e.target.style.boxShadow = '0 0 0 2px #38475eff'}
-              onBlur={(e) => e.target.style.boxShadow = 'none'}
+              onBlur={(e) => e.target.style.boxShadow = '0 0 0 2px #38475eff'}
             />
           </div>
 
