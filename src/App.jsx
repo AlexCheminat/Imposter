@@ -24,10 +24,8 @@ export default function RegisterPage() {
       streamRef.current = mediaStream;
       setStream(mediaStream);
       
-      // Wait for video element to be ready
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
-        // Force play
         try {
           await videoRef.current.play();
         } catch (playErr) {
@@ -41,7 +39,6 @@ export default function RegisterPage() {
     }
   };
 
-  // Effect to connect stream to video when both are ready
   useEffect(() => {
     if (stream && videoRef.current) {
       videoRef.current.srcObject = stream;
@@ -62,7 +59,6 @@ export default function RegisterPage() {
       const imageData = canvas.toDataURL('image/png');
       setCapturedImage(imageData);
       
-      // Stop camera after taking photo
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
         streamRef.current = null;
@@ -86,7 +82,6 @@ export default function RegisterPage() {
       return;
     }
     
-    // Here you would handle the registration
     console.log('Registering:', { username, photo: capturedImage });
     alert(`Welcome, ${username}! 🎉`);
   };
@@ -102,55 +97,67 @@ export default function RegisterPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-blue-200 flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-blue-200 flex items-center justify-center p-6">
       <div className="w-full max-w-md space-y-8">
         
-        {/* Camera Circle - Only show when no photo is captured */}
-        {!capturedImage && (
-          <div className="flex justify-center">
-            <div className="w-72 h-72 rounded-full border-4 border-gray-800 overflow-hidden bg-blue-300 flex items-center justify-center">
+        {/* Camera/Photo Circle */}
+        <div className="flex justify-center">
+          <div 
+            style={{
+              width: '288px',
+              height: '288px',
+              borderRadius: '50%',
+              overflow: 'hidden',
+              border: '4px solid #1f2937',
+              backgroundColor: '#93c5fd',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            {capturedImage ? (
+              <img 
+                src={capturedImage} 
+                alt="Captured" 
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover'
+                }}
+              />
+            ) : stream ? (
               <video 
                 ref={videoRef}
                 autoPlay 
                 playsInline
                 muted
-                className="w-full h-full object-cover scale-x-[-1]"
-                style={{ display: stream ? 'block' : 'none' }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  transform: 'scaleX(-1)'
+                }}
               />
-              {!stream && (
-                <div className="text-center text-gray-700 px-8">
-                  <UserCircle2 size={80} className="mx-auto mb-4 opacity-50" />
-                  <p className="text-sm">
-                    {cameraError ? `Error: ${cameraError}` : 'Camera loading...'}
-                  </p>
-                  {cameraError && (
-                    <button 
-                      onClick={startCamera}
-                      className="mt-4 px-4 py-2 bg-blue-400 border-2 border-gray-800 rounded text-sm"
-                    >
-                      Retry
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
+            ) : (
+              <div className="text-center text-gray-700 px-8">
+                <UserCircle2 size={80} className="mx-auto mb-4 opacity-50" />
+                <p className="text-sm">
+                  {cameraError ? `Error: ${cameraError}` : 'Camera loading...'}
+                </p>
+                {cameraError && (
+                  <button 
+                    onClick={startCamera}
+                    className="mt-4 px-4 py-2 bg-blue-400 border-2 border-gray-800 rounded text-sm"
+                  >
+                    Retry
+                  </button>
+                )}
+              </div>
+            )}
           </div>
-        )}
-
-        {/* Photo Circle - Only show when photo is captured */}
-        {capturedImage && (
-          <div className="flex justify-center">
-            <div className="w-72 h-72 rounded-full border-4 border-gray-800 overflow-hidden bg-blue-300">
-              <img 
-                src={capturedImage} 
-                alt="Captured" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        )}
+        </div>
         
-        <canvas ref={canvasRef} className="hidden" />
+        <canvas ref={canvasRef} style={{ display: 'none' }} />
 
         {/* Take Photo Button */}
         <div className="flex justify-center">
