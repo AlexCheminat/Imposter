@@ -92,6 +92,11 @@ export default function RegisterPage() {
   };
 
   useEffect(() => {
+    // Remove default body margin/padding
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.body.style.overflow = 'hidden';
+    
     startCamera();
     
     return () => {
@@ -102,7 +107,7 @@ export default function RegisterPage() {
   }, []);
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#1f1f1f', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', margin: 0, boxSizing: 'border-box' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#bfdbfe', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', margin: 0, boxSizing: 'border-box' }}>
       <div style={{ width: '100%', maxWidth: '28rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem' }}>
         
         {/* Camera/Photo Circle */}
@@ -113,7 +118,7 @@ export default function RegisterPage() {
               height: '288px',
               borderRadius: '50%',
               overflow: 'hidden',
-              border: '10px solid #7eabeaff',
+              border: '4px solid #1f2937',
               backgroundColor: '#93c5fd',
               display: 'flex',
               alignItems: 'center',
