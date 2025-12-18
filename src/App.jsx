@@ -7,6 +7,7 @@ export default function RegisterPage() {
   const [username, setUsername] = useState('');
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const streamRef = useRef(null);
 
   const startCamera = async () => {
     try {
@@ -17,11 +18,10 @@ export default function RegisterPage() {
           height: { ideal: 720 }
         } 
       });
+      streamRef.current = mediaStream;
       setStream(mediaStream);
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
-        // Ensure video plays
-        videoRef.current.play().catch(e => console.error('Play error:', e));
       }
     } catch (err) {
       console.error('Error accessing camera:', err);
@@ -43,8 +43,9 @@ export default function RegisterPage() {
       setCapturedImage(imageData);
       
       // Stop camera after taking photo
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
         setStream(null);
       }
     }
@@ -74,8 +75,8 @@ export default function RegisterPage() {
     startCamera();
     
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
       }
     };
   }, []);
@@ -116,7 +117,7 @@ export default function RegisterPage() {
           {capturedImage ? (
             <button
               onClick={retakePhoto}
-              className="px-16 py-4 bg-blue-300 border-3 border-gray-800 rounded-full font-bold text-lg hover:bg-blue-400 transition-colors"
+              className="px-16 py-4 bg-blue-300 border-4 border-gray-800 rounded-full font-bold text-lg hover:bg-blue-400 transition-colors"
             >
               Retake Photo
             </button>
@@ -124,7 +125,7 @@ export default function RegisterPage() {
             <button
               onClick={takePhoto}
               disabled={!stream}
-              className="px-16 py-4 bg-blue-300 border-3 border-gray-800 rounded-full font-bold text-lg hover:bg-blue-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="px-16 py-4 bg-blue-300 border-4 border-gray-800 rounded-full font-bold text-lg hover:bg-blue-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               <Camera size={24} />
               Take Photo
@@ -139,7 +140,7 @@ export default function RegisterPage() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Username..."
-            className="w-80 px-6 py-6 bg-blue-300 border-3 border-gray-800 text-center text-lg font-medium placeholder-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-800"
+            className="w-80 px-6 py-4 bg-blue-300 border-4 border-gray-800 text-center text-lg font-medium placeholder-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-800"
           />
         </div>
 
@@ -147,7 +148,7 @@ export default function RegisterPage() {
         <div className="flex justify-center pt-4">
           <button
             onClick={handleSubmit}
-            className="px-20 py-4 bg-blue-300 border-3 border-gray-800 rounded-full font-bold text-xl hover:bg-blue-400 transition-colors"
+            className="px-20 py-4 bg-blue-300 border-4 border-gray-800 rounded-full font-bold text-xl hover:bg-blue-400 transition-colors"
           >
             Let's Go !!!
           </button>
