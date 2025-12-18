@@ -54,7 +54,12 @@ export default function RegisterPage() {
       
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
+      
+      // Flip the canvas horizontally to match the mirrored video
+      context.translate(canvas.width, 0);
+      context.scale(-1, 1);
       context.drawImage(video, 0, 0);
+      context.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
       
       const imageData = canvas.toDataURL('image/png');
       setCapturedImage(imageData);
@@ -98,7 +103,7 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-blue-200 flex items-center justify-center p-6">
-      <div className="w-full max-w-md space-y-8">
+      <div className="w-full max-w-md flex flex-col items-center space-y-8">
         
         {/* Camera/Photo Circle */}
         <div className="flex justify-center">
