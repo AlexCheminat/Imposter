@@ -132,7 +132,7 @@ export default function RegisterPage() {
                 height: '288px',
                 borderRadius: '50%',
                 overflow: 'hidden',
-                border: '10px solid #415b7fff',
+                border: '4px solid #1f2937',
                 backgroundColor: '#93c5fd',
                 display: 'flex',
                 alignItems: 'center',
@@ -184,11 +184,26 @@ export default function RegisterPage() {
           <canvas ref={canvasRef} style={{ display: 'none' }} />
 
           {/* Take Photo Button */}
-          <div style={{ display: 'flex', justifyContent: 'center', width: '130%' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
             {capturedImage ? (
               <button
                 onClick={retakePhoto}
-                className="px-16 py-4 bg-blue-300 border-4 border-gray-800 rounded-full font-bold text-lg hover:bg-blue-400 transition-colors"
+                style={{
+                  padding: '1rem 5rem',
+                  backgroundColor: '#93c5fd',
+                  border: '4px solid #d1d5db',
+                  borderRadius: '9999px',
+                  fontWeight: 'bold',
+                  fontSize: '1.125rem',
+                  color: '#d1d5db',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  minWidth: '340px'
+                }}
+                onMouseOver={(e) => e.target.style.backgroundColor = '#bfdbfe'}
+                onMouseOut={(e) => e.target.style.backgroundColor = '#93c5fd'}
               >
                 Retake Photo
               </button>
@@ -196,7 +211,23 @@ export default function RegisterPage() {
               <button
                 onClick={takePhoto}
                 disabled={!stream}
-                className="px-16 py-4 bg-blue-300 border-4 border-gray-800 rounded-full font-bold text-lg hover:bg-blue-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                style={{
+                  padding: '1rem 5rem',
+                  backgroundColor: '#93c5fd',
+                  border: '4px solid #d1d5db',
+                  borderRadius: '9999px',
+                  fontWeight: 'bold',
+                  fontSize: '1.125rem',
+                  color: '#d1d5db',
+                  cursor: stream ? 'pointer' : 'not-allowed',
+                  opacity: stream ? 1 : 0.5,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  minWidth: '340px'
+                }}
+                onMouseOver={(e) => stream && (e.target.style.backgroundColor = '#bfdbfe')}
+                onMouseOut={(e) => e.target.style.backgroundColor = '#93c5fd'}
               >
                 <Camera size={24} />
                 Take Photo
@@ -211,7 +242,20 @@ export default function RegisterPage() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Username..."
-              className="w-80 px-6 py-4 bg-blue-300 border-4 border-gray-800 text-center text-lg font-medium placeholder-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-800"
+              style={{
+                width: '640px',
+                height: '144px',
+                padding: '1.5rem',
+                backgroundColor: '#3b82f6',
+                border: '4px solid #d1d5db',
+                textAlign: 'center',
+                fontSize: '1.125rem',
+                fontWeight: '500',
+                color: '#d1d5db',
+                outline: 'none'
+              }}
+              onFocus={(e) => e.target.style.boxShadow = '0 0 0 2px #d1d5db'}
+              onBlur={(e) => e.target.style.boxShadow = 'none'}
             />
           </div>
 
@@ -219,7 +263,19 @@ export default function RegisterPage() {
           <div style={{ display: 'flex', justifyContent: 'center', width: '100%', paddingTop: '1rem' }}>
             <button
               onClick={handleSubmit}
-              className="px-20 py-4 bg-blue-300 border-4 border-gray-800 rounded-full font-bold text-xl hover:bg-blue-400 transition-colors"
+              style={{
+                padding: '1rem 5rem',
+                backgroundColor: '#93c5fd',
+                border: '4px solid #d1d5db',
+                borderRadius: '9999px',
+                fontWeight: 'bold',
+                fontSize: '1.25rem',
+                color: '#d1d5db',
+                cursor: 'pointer',
+                minWidth: '340px'
+              }}
+              onMouseOver={(e) => e.target.style.backgroundColor = '#bfdbfe'}
+              onMouseOut={(e) => e.target.style.backgroundColor = '#93c5fd'}
             >
               Let's Go !!!
             </button>
