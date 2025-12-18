@@ -132,7 +132,7 @@ export default function RegisterPage() {
                 height: '288px',
                 borderRadius: '50%',
                 overflow: 'hidden',
-                border: '4px solid #1f2937',
+                border: '10px solid #415b7fff',
                 backgroundColor: '#93c5fd',
                 display: 'flex',
                 alignItems: 'center',
@@ -184,7 +184,7 @@ export default function RegisterPage() {
           <canvas ref={canvasRef} style={{ display: 'none' }} />
 
           {/* Take Photo Button */}
-          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', width: '130%' }}>
             {capturedImage ? (
               <button
                 onClick={retakePhoto}
