@@ -106,18 +106,18 @@ export default function RegisterPage() {
       <div className="w-full max-w-md flex flex-col items-center space-y-8">
         
         {/* Camera/Photo Circle */}
-        <div className="flex justify-center">
+        <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           <div 
             style={{
               width: '288px',
               height: '288px',
               borderRadius: '50%',
               overflow: 'hidden',
-              border: '10px solid #7594c0ff',
-              backgroundColor: '#2d3641ff',
+              border: '10px solid #7a94b8ff',
+              backgroundColor: '#93c5fd',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'center'
             }}
           >
             {capturedImage ? (
@@ -165,7 +165,7 @@ export default function RegisterPage() {
         <canvas ref={canvasRef} style={{ display: 'none' }} />
 
         {/* Take Photo Button */}
-        <div className="flex justify-center">
+        <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           {capturedImage ? (
             <button
               onClick={retakePhoto}
@@ -186,7 +186,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Username Input */}
-        <div className="flex justify-center">
+        <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
           <input
             type="text"
             value={username}
@@ -197,7 +197,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Let's Go Button */}
-        <div className="flex justify-center pt-4">
+        <div style={{ display: 'flex', justifyContent: 'center', width: '100%', paddingTop: '1rem' }}>
           <button
             onClick={handleSubmit}
             className="px-20 py-4 bg-blue-300 border-4 border-gray-800 rounded-full font-bold text-xl hover:bg-blue-400 transition-colors"
