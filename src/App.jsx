@@ -113,11 +113,11 @@ export default function RegisterPage() {
               height: '288px',
               borderRadius: '50%',
               overflow: 'hidden',
-              border: '4px solid #1f2937',
-              backgroundColor: '#93c5fd',
+              border: '10px solid #7594c0ff',
+              backgroundColor: '#2d3641ff',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
           >
             {capturedImage ? (
