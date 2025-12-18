@@ -202,7 +202,7 @@ export default function RegisterPage() {
                   gap: '0.5rem',
                   minWidth: '190px'
                 }}
-                onMouseOver={(e) => e.target.style.backgroundColor = '#80b2eaff'}
+                onMouseOver={(e) => e.target.style.backgroundColor = '#93c5fd'}
                 onMouseOut={(e) => e.target.style.backgroundColor = '#93c5fd'}
               >
                 Retake Photo
@@ -226,7 +226,7 @@ export default function RegisterPage() {
                   gap: '0.5rem',
                   minWidth: '190px'
                 }}
-                onMouseOver={(e) => stream && (e.target.style.backgroundColor = '#bfdbfe')}
+                onMouseOver={(e) => stream && (e.target.style.backgroundColor = '#93c5fd')}
                 onMouseOut={(e) => e.target.style.backgroundColor = '#93c5fd'}
               >
                 <Camera size={24} />
@@ -254,7 +254,7 @@ export default function RegisterPage() {
                 color: '#38475eff',
                 outline: 'none'
               }}
-              onFocus={(e) => e.target.style.boxShadow = '0 0 0 2px #d1d5db'}
+              onFocus={(e) => e.target.style.boxShadow = '0 0 0 2px #38475eff'}
               onBlur={(e) => e.target.style.boxShadow = 'none'}
             />
           </div>
@@ -274,7 +274,7 @@ export default function RegisterPage() {
                 cursor: 'pointer',
                 minWidth: '340px'
               }}
-              onMouseOver={(e) => e.target.style.backgroundColor = '#bfdbfe'}
+              onMouseOver={(e) => e.target.style.backgroundColor = '#93c5fd'}
               onMouseOut={(e) => e.target.style.backgroundColor = '#93c5fd'}
             >
               Let's Go !!!
