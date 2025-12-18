@@ -11,15 +11,21 @@ export default function RegisterPage() {
   const startCamera = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'user' } 
+        video: { 
+          facingMode: 'user',
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        } 
       });
       setStream(mediaStream);
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
+        // Ensure video plays
+        videoRef.current.play().catch(e => console.error('Play error:', e));
       }
     } catch (err) {
       console.error('Error accessing camera:', err);
-      alert('Could not access camera. Please check permissions.');
+      alert(`Could not access camera: ${err.message}. Please check permissions.`);
     }
   };
 
@@ -93,7 +99,7 @@ export default function RegisterPage() {
                 autoPlay 
                 playsInline
                 muted
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover scale-x-[-1]"
               />
             ) : (
               <div className="text-center text-gray-700 px-8">
