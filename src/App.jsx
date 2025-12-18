@@ -11,18 +11,18 @@ export default function RegisterPage() {
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
 
-  // Generate random triangles
+  // Generate random triangles with staggered delays
   useEffect(() => {
     const generateTriangles = () => {
       const newTriangles = [];
-      for (let i = 0; i < 15; i++) {
+      for (let i = 0; i < 8; i++) {
         newTriangles.push({
           id: i,
           left: Math.random() * 100,
-          size: Math.random() * 40 + 20,
-          duration: Math.random() * 10 + 15,
-          delay: Math.random() * 5,
-          opacity: Math.random() * 0.3 + 0.1
+          size: Math.random() * 30 + 20,
+          duration: Math.random() * 8 + 12,
+          delay: i * 2.5, // Spread out the start times
+          opacity: Math.random() * 0.25 + 0.1
         });
       }
       setTriangles(newTriangles);
