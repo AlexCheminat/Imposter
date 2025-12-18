@@ -6,9 +6,29 @@ export default function RegisterPage() {
   const [capturedImage, setCapturedImage] = useState(null);
   const [username, setUsername] = useState('');
   const [cameraError, setCameraError] = useState(null);
+  const [triangles, setTriangles] = useState([]);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
+
+  // Generate random triangles
+  useEffect(() => {
+    const generateTriangles = () => {
+      const newTriangles = [];
+      for (let i = 0; i < 15; i++) {
+        newTriangles.push({
+          id: i,
+          left: Math.random() * 100,
+          size: Math.random() * 40 + 20,
+          duration: Math.random() * 10 + 15,
+          delay: Math.random() * 5,
+          opacity: Math.random() * 0.3 + 0.1
+        });
+      }
+      setTriangles(newTriangles);
+    };
+    generateTriangles();
+  }, []);
 
   const startCamera = async () => {
     try {
@@ -55,11 +75,10 @@ export default function RegisterPage() {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       
-      // Flip the canvas horizontally to match the mirrored video
       context.translate(canvas.width, 0);
       context.scale(-1, 1);
       context.drawImage(video, 0, 0);
-      context.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
+      context.setTransform(1, 0, 0, 1, 0, 0);
       
       const imageData = canvas.toDataURL('image/png');
       setCapturedImage(imageData);
@@ -92,7 +111,6 @@ export default function RegisterPage() {
   };
 
   useEffect(() => {
-    // Remove default body margin/padding
     document.body.style.margin = '0';
     document.body.style.padding = '0';
     document.body.style.overflow = 'hidden';
@@ -120,9 +138,38 @@ export default function RegisterPage() {
           overflow-x: hidden !important;
           width: 100% !important;
         }
+        @keyframes float-down {
+          0% {
+            transform: translateY(-100px) rotate(0deg);
+          }
+          100% {
+            transform: translateY(100vh) rotate(360deg);
+          }
+        }
       `}</style>
-      <div style={{ minHeight: '100vh', width: '100vw', backgroundColor: '#bfdbfe', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0 }}>
-        <div style={{ width: '100%', maxWidth: '28rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem' }}>
+      
+      <div style={{ minHeight: '100vh', width: '100vw', backgroundColor: '#bfdbfe', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'hidden' }}>
+        
+        {/* Animated Triangles Background */}
+        {triangles.map(triangle => (
+          <div
+            key={triangle.id}
+            style={{
+              position: 'absolute',
+              left: `${triangle.left}%`,
+              top: '-100px',
+              width: 0,
+              height: 0,
+              borderLeft: `${triangle.size}px solid transparent`,
+              borderRight: `${triangle.size}px solid transparent`,
+              borderBottom: `${triangle.size * 1.732}px solid rgba(147, 197, 253, ${triangle.opacity})`,
+              animation: `float-down ${triangle.duration}s linear ${triangle.delay}s infinite`,
+              pointerEvents: 'none'
+            }}
+          />
+        ))}
+        
+        <div style={{ width: '100%', maxWidth: '28rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', position: 'relative', zIndex: 10 }}>
         
           {/* Camera/Photo Circle */}
           <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
@@ -202,8 +249,6 @@ export default function RegisterPage() {
                   gap: '0.5rem',
                   minWidth: '190px'
                 }}
-                onMouseOver={(e) => e.target.style.backgroundColor = '#93c5fd'}
-                onMouseOut={(e) => e.target.style.backgroundColor = '#93c5fd'}
               >
                 Retake Photo
               </button>
@@ -226,8 +271,6 @@ export default function RegisterPage() {
                   gap: '0.5rem',
                   minWidth: '190px'
                 }}
-                onMouseOver={(e) => stream && (e.target.style.backgroundColor = '#93c5fd')}
-                onMouseOut={(e) => e.target.style.backgroundColor = '#93c5fd'}
               >
                 <Camera size={24} />
                 Take Photo
@@ -254,8 +297,6 @@ export default function RegisterPage() {
                 color: '#38475eff',
                 outline: 'none'
               }}
-              onFocus={(e) => e.target.style.boxShadow = '0 0 0 2px #38475eff'}
-              onBlur={(e) => e.target.style.boxShadow = '0 0 0 2px #38475eff'}
             />
           </div>
 
@@ -274,8 +315,6 @@ export default function RegisterPage() {
                 cursor: 'pointer',
                 minWidth: '340px'
               }}
-              onMouseOver={(e) => e.target.style.backgroundColor = '#93c5fd'}
-              onMouseOut={(e) => e.target.style.backgroundColor = '#93c5fd'}
             >
               Let's Go !!!
             </button>
