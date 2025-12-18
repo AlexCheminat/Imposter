@@ -107,110 +107,125 @@ export default function RegisterPage() {
   }, []);
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#bfdbfe', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', margin: 0, boxSizing: 'border-box' }}>
-      <div style={{ width: '100%', maxWidth: '28rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem' }}>
+    <>
+      <style>{`
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        html, body {
+          margin: 0 !important;
+          padding: 0 !important;
+          overflow-x: hidden !important;
+          width: 100% !important;
+        }
+      `}</style>
+      <div style={{ minHeight: '100vh', width: '100vw', backgroundColor: '#bfdbfe', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0 }}>
+        <div style={{ width: '100%', maxWidth: '28rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem' }}>
         
-        {/* Camera/Photo Circle */}
-        <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-          <div 
-            style={{
-              width: '288px',
-              height: '288px',
-              borderRadius: '50%',
-              overflow: 'hidden',
-              border: '4px solid #1f2937',
-              backgroundColor: '#93c5fd',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
+          {/* Camera/Photo Circle */}
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <div 
+              style={{
+                width: '288px',
+                height: '288px',
+                borderRadius: '50%',
+                overflow: 'hidden',
+                border: '4px solid #1f2937',
+                backgroundColor: '#93c5fd',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              {capturedImage ? (
+                <img 
+                  src={capturedImage} 
+                  alt="Captured" 
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                />
+              ) : stream ? (
+                <video 
+                  ref={videoRef}
+                  autoPlay 
+                  playsInline
+                  muted
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    transform: 'scaleX(-1)'
+                  }}
+                />
+              ) : (
+                <div className="text-center text-gray-700 px-8">
+                  <UserCircle2 size={80} className="mx-auto mb-4 opacity-50" />
+                  <p className="text-sm">
+                    {cameraError ? `Error: ${cameraError}` : 'Camera loading...'}
+                  </p>
+                  {cameraError && (
+                    <button 
+                      onClick={startCamera}
+                      className="mt-4 px-4 py-2 bg-blue-400 border-2 border-gray-800 rounded text-sm"
+                    >
+                      Retry
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+          
+          <canvas ref={canvasRef} style={{ display: 'none' }} />
+
+          {/* Take Photo Button */}
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
             {capturedImage ? (
-              <img 
-                src={capturedImage} 
-                alt="Captured" 
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover'
-                }}
-              />
-            ) : stream ? (
-              <video 
-                ref={videoRef}
-                autoPlay 
-                playsInline
-                muted
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  transform: 'scaleX(-1)'
-                }}
-              />
+              <button
+                onClick={retakePhoto}
+                className="px-16 py-4 bg-blue-300 border-4 border-gray-800 rounded-full font-bold text-lg hover:bg-blue-400 transition-colors"
+              >
+                Retake Photo
+              </button>
             ) : (
-              <div className="text-center text-gray-700 px-8">
-                <UserCircle2 size={80} className="mx-auto mb-4 opacity-50" />
-                <p className="text-sm">
-                  {cameraError ? `Error: ${cameraError}` : 'Camera loading...'}
-                </p>
-                {cameraError && (
-                  <button 
-                    onClick={startCamera}
-                    className="mt-4 px-4 py-2 bg-blue-400 border-2 border-gray-800 rounded text-sm"
-                  >
-                    Retry
-                  </button>
-                )}
-              </div>
+              <button
+                onClick={takePhoto}
+                disabled={!stream}
+                className="px-16 py-4 bg-blue-300 border-4 border-gray-800 rounded-full font-bold text-lg hover:bg-blue-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                <Camera size={24} />
+                Take Photo
+              </button>
             )}
           </div>
-        </div>
-        
-        <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-        {/* Take Photo Button */}
-        <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-          {capturedImage ? (
+          {/* Username Input */}
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Username..."
+              className="w-80 px-6 py-4 bg-blue-300 border-4 border-gray-800 text-center text-lg font-medium placeholder-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-800"
+            />
+          </div>
+
+          {/* Let's Go Button */}
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%', paddingTop: '1rem' }}>
             <button
-              onClick={retakePhoto}
-              className="px-16 py-4 bg-blue-300 border-4 border-gray-800 rounded-full font-bold text-lg hover:bg-blue-400 transition-colors"
+              onClick={handleSubmit}
+              className="px-20 py-4 bg-blue-300 border-4 border-gray-800 rounded-full font-bold text-xl hover:bg-blue-400 transition-colors"
             >
-              Retake Photo
+              Let's Go !!!
             </button>
-          ) : (
-            <button
-              onClick={takePhoto}
-              disabled={!stream}
-              className="px-16 py-4 bg-blue-300 border-4 border-gray-800 rounded-full font-bold text-lg hover:bg-blue-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-            >
-              <Camera size={24} />
-              Take Photo
-            </button>
-          )}
-        </div>
-
-        {/* Username Input */}
-        <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username..."
-            className="w-80 px-6 py-4 bg-blue-300 border-4 border-gray-800 text-center text-lg font-medium placeholder-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-800"
-          />
-        </div>
-
-        {/* Let's Go Button */}
-        <div style={{ display: 'flex', justifyContent: 'center', width: '100%', paddingTop: '1rem' }}>
-          <button
-            onClick={handleSubmit}
-            className="px-20 py-4 bg-blue-300 border-4 border-gray-800 rounded-full font-bold text-xl hover:bg-blue-400 transition-colors"
-          >
-            Let's Go !!!
-          </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
