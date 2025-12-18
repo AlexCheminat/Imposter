@@ -15,7 +15,7 @@ export default function RegisterPage() {
   useEffect(() => {
     const generateTriangles = () => {
       const newTriangles = [];
-      for (let i = 0; i < 8; i++) {
+      for (let i = 0; i < 15; i++) {
         newTriangles.push({
           id: i,
           left: Math.random() * 100,
