@@ -56,16 +56,23 @@ export default function App() {
   }, [currentUser, lobbyId]);
 
   const handleRegister = async (userData) => {
+    console.log('handleRegister called with:', userData);
+    
     try {
       // Add user to Firebase
       const playersRef = ref(database, `lobbies/${lobbyId}/players`);
+      console.log('Creating player reference...');
+      
       const newPlayerRef = push(playersRef);
+      console.log('Pushing to Firebase...');
       
       await set(newPlayerRef, {
         username: userData.username,
         photo: userData.photo,
         joinedAt: Date.now()
       });
+      
+      console.log('Player added to Firebase successfully!');
 
       // Save user data with Firebase ID
       const userWithId = {
@@ -75,9 +82,11 @@ export default function App() {
       
       setCurrentUser(userWithId);
       setCurrentPage('lobby');
+      console.log('Navigating to lobby...');
     } catch (error) {
       console.error('Error adding player:', error);
-      alert('Failed to join lobby. Please try again.');
+      console.error('Error details:', error.message);
+      alert('Failed to join lobby. Please try again. Error: ' + error.message);
     }
   };
 
