@@ -148,7 +148,7 @@ export default function RegisterPage() {
         }
       `}</style>
       
-      <div style={{ minHeight: '100vh', width: '100vw', backgroundColor: '#bfdbfe', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'hidden' }}>
+      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #93c5fd, #bfdbfe)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'hidden' }}>
         
         {/* Animated Triangles Background */}
         {triangles.map(triangle => (
