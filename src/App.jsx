@@ -15,13 +15,13 @@ export default function RegisterPage() {
   useEffect(() => {
     const generateTriangles = () => {
       const newTriangles = [];
-      for (let i = 0; i < 15; i++) {
+      for (let i = 0; i < 8; i++) {
         newTriangles.push({
           id: i,
           left: Math.random() * 100,
           size: Math.random() * 30 + 20,
           duration: Math.random() * 8 + 12,
-          delay: i * 2.5, // Spread out the start times
+          delay: i * 2.5 - 20, // Start with negative delays so triangles are already mid-fall
           opacity: Math.random() * 0.25 + 0.1
         });
       }
@@ -169,7 +169,7 @@ export default function RegisterPage() {
           />
         ))}
         
-        <div style={{ width: '100%', maxWidth: '28rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', position: 'relative', zIndex: 10 }}>
+        <div style={{ width: '100%', maxWidth: '28rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', position: 'relative', zIndex: 10, marginTop: '-20px' }}>
         
           {/* Camera/Photo Circle */}
           <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
