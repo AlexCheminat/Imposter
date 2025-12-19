@@ -162,7 +162,7 @@ export default function RegisterPage() {
               height: 0,
               borderLeft: `${triangle.size}px solid transparent`,
               borderRight: `${triangle.size}px solid transparent`,
-              borderBottom: `${triangle.size * 1.732}px solid rgba(147, 0, 0, ${triangle.opacity})`,
+              borderBottom: `${triangle.size * 1.732}px solid rgba(102, 178, 255, ${triangle.opacity})`,
               animation: `float-down ${triangle.duration}s linear ${triangle.delay}s infinite`,
               pointerEvents: 'none'
             }}
