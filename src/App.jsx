@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Camera, UserCircle2 } from 'lucide-react';
 
-export default function RegisterPage() {
+export default function RegisterPage({ onRegister }) {
   const [stream, setStream] = useState(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [username, setUsername] = useState('');
@@ -106,8 +106,17 @@ export default function RegisterPage() {
       return;
     }
     
-    console.log('Registering:', { username, photo: capturedImage });
-    alert(`Welcome, ${username}! 🎉`);
+    // Call the onRegister function passed from App
+    if (onRegister) {
+      onRegister({
+        username: username,
+        photo: capturedImage
+      });
+    } else {
+      // Fallback for when component is used standalone
+      console.log('Registering:', { username, photo: capturedImage });
+      alert(`Welcome, ${username}! 🎉`);
+    }
   };
 
   useEffect(() => {
@@ -162,7 +171,7 @@ export default function RegisterPage() {
               height: 0,
               borderLeft: `${triangle.size}px solid transparent`,
               borderRight: `${triangle.size}px solid transparent`,
-              borderBottom: `${triangle.size * 1.732}px solid rgba(102, 178, 255, ${triangle.opacity})`,
+              borderBottom: `${triangle.size * 1.732}px solid rgba(147, 197, 253, ${triangle.opacity})`,
               animation: `float-down ${triangle.duration}s linear ${triangle.delay}s infinite`,
               pointerEvents: 'none'
             }}
