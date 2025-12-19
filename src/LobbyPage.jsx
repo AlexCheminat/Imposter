@@ -3,8 +3,12 @@ import { useState, useEffect } from 'react';
 export default function LobbyPage({ players = [], currentUser, onStartGame }) {
   const [triangles, setTriangles] = useState([]);
   
+  // Sort players by join time to determine host
+  const sortedPlayers = [...players].sort((a, b) => a.joinedAt - b.joinedAt);
+  
   // Check if current user is the first player (host)
-  const isFirstPlayer = players.length > 0 && currentUser && players[0].id === currentUser.id;
+  const isFirstPlayer = sortedPlayers.length > 0 && currentUser && 
+                        sortedPlayers[0].id === currentUser.firebaseId;
 
   // Generate animated triangles
   useEffect(() => {
@@ -95,12 +99,12 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
             fontWeight: 'bold',
             color: '#38475eff'
           }}>
-            Player Count: {players.length}
+            Player Count: {sortedPlayers.length}
           </div>
 
           {/* Players List */}
           <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            {players.map(player => (
+            {sortedPlayers.map(player => (
               <div key={player.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 {/* Player Photo */}
                 <div style={{
