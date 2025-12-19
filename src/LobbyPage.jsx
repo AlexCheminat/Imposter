@@ -132,7 +132,11 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
                   {/* Player Username */}
                   <div style={{
                     flex: 1,
-                    padding: '1.5rem',
+                    height: '80%',
+                    padding: '0 1.5rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     backgroundColor: isCurrentUser ? '#86efac' : '#c084fc',
                     border: `4px solid ${isCurrentUser ? '#22c55e' : '#7c3aed'}`,
                     textAlign: 'center',
