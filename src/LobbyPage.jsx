@@ -114,8 +114,8 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
                     height: '80px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    border: `4px solid ${isCurrentUser ? '#9e68e9ff' : '#7c3aed'}`,
-                    backgroundColor: isCurrentUser ? '#b067c4ff' : '#c084fc',
+                    border: `4px solid ${isCurrentUser ? '#622fbaff' : '#7c3aed'}`,
+                    backgroundColor: isCurrentUser ? '#a16bd6ff' : '#c084fc',
                     flexShrink: 0
                   }}>
                     <img 
@@ -137,12 +137,12 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    backgroundColor: isCurrentUser ? '#b067c4ff' : '#c084fc',
-                    border: `2.5px solid ${isCurrentUser ? '#9e68e9ff' : '#7c3aed'}`,
+                    backgroundColor: isCurrentUser ? '#a16bd6ff' : '#c084fc',
+                    border: `2.5px solid ${isCurrentUser ? '#622fbaff' : '#7c3aed'}`,
                     textAlign: 'center',
                     fontSize: '1.125rem',
                     fontWeight: '600',
-                    color: isCurrentUser ? '#9e68e9ff' : '#7c3aed'
+                    color: isCurrentUser ? '#622fbaff' : '#7c3aed'
                   }}>
                     {player.username}
                   </div>
