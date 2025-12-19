@@ -1,10 +1,11 @@
 import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 
-// Replace this with your Firebase config from the Firebase Console
+// Your Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAHaRj74BrW8TW164GozEOB3k_KLpQbrsI",
   authDomain: "imposter-677b5.firebaseapp.com",
+  databaseURL: "https://imposter-677b5-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "imposter-677b5",
   storageBucket: "imposter-677b5.firebasestorage.app",
   messagingSenderId: "499539586788",
