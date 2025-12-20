@@ -916,7 +916,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         }
       `}</style>
       
-      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #9bbea8ff, #686868ff)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'auto' }}>
+      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #a8a8a8ff, #686868ff)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'auto' }}>
         
         {/* Animated Triangles Background */}
         {triangles.map(triangle => (
@@ -1042,7 +1042,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
               onMouseOver={(e) => e.target.style.backgroundColor = '#bbf7d0'}
               onMouseOut={(e) => e.target.style.backgroundColor = '#86efac'}
             >
-              Confirm
+              Confirmer
             </button>
           </div>
         </div>
