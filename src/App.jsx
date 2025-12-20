@@ -3,12 +3,12 @@ import { ref, push, onValue, set, remove } from 'firebase/database';
 import { database } from './firebase';
 import RegisterPage from './RegisterPage';
 import LobbyPage from './LobbyPage';
-import WordSelectionPage from './WordSelectionPage';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('register');
   const [currentUser, setCurrentUser] = useState(null);
   const [allPlayers, setAllPlayers] = useState([]);
+  const [imposterId, setImposterId] = useState(null);
   const [lobbyId] = useState('lobby-1'); // You can make this dynamic later
 
   // Listen to players in the lobby
@@ -30,23 +30,6 @@ export default function App() {
     });
 
     // Cleanup function
-    return () => unsubscribe();
-  }, [lobbyId]);
-
-  // Listen to game state changes - THIS IS THE NEW CODE
-  useEffect(() => {
-    const gameStateRef = ref(database, `lobbies/${lobbyId}/gameState`);
-    
-    const unsubscribe = onValue(gameStateRef, (snapshot) => {
-      const gameState = snapshot.val();
-      console.log('Game state changed:', gameState);
-      
-      if (gameState && gameState.currentPage) {
-        console.log('Navigating to:', gameState.currentPage);
-        setCurrentPage(gameState.currentPage);
-      }
-    });
-
     return () => unsubscribe();
   }, [lobbyId]);
 
@@ -108,28 +91,9 @@ export default function App() {
     }
   };
 
-  const handleStartGame = async () => {
-    console.log('handleStartGame called!');
-    try {
-      const gameStateRef = ref(database, `lobbies/${lobbyId}/gameState`);
-      console.log('Setting game state in Firebase...');
-      
-      await set(gameStateRef, {
-        currentPage: 'wordSelection',
-        startedAt: Date.now()
-      });
-      
-      console.log('Game state updated in Firebase successfully!');
-    } catch (error) {
-      console.error('Error starting game:', error);
-      alert('Failed to start game. Please try again. Error: ' + error.message);
-    }
-  };
-
-  const handleWordSelectionConfirm = (data) => {
-    console.log('Word selection confirmed:', data);
-    // You can add the next page navigation here later
-    alert(`Selected: ${data.selectedPlayer.username} with word: ${data.word}`);
+  const handleStartGame = () => {
+    alert('Game starting!');
+    // You can add game page navigation here later
   };
 
   return (
@@ -143,16 +107,6 @@ export default function App() {
           players={allPlayers}
           currentUser={currentUser}
           onStartGame={handleStartGame}
-        />
-      )}
-
-      {currentPage === 'wordSelection' && (
-        <WordSelectionPage 
-          players={allPlayers}
-          currentUser={currentUser}
-          onConfirm={handleWordSelectionConfirm}
-          lobbyId={lobbyId}
-          database={{ db: database, ref, onValue, set }}
         />
       )}
     </>

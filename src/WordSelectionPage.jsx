@@ -803,13 +803,16 @@ function getRandomWord(categories = ['animals', 'food', 'objects', 'countries', 
   return allWords[Math.floor(Math.random() * allWords.length)];
 }
 
-export default function WordSelectionPage({ players = [], currentUser, onConfirm, lobbyId, database }) {
+export default function WordSelectionPage({ players = [], currentUser, onConfirm, lobbyId, database, imposterId }) {
   const [triangles, setTriangles] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [generatedWord, setGeneratedWord] = useState('');
   const [hint, setHint] = useState('');
   const [category, setCategory] = useState('');
   const [loading, setLoading] = useState(true);
+  
+  // Check if current user is the imposter
+  const isImposter = currentUser && imposterId && currentUser.firebaseId === imposterId;
 
   // Generate animated triangles
   useEffect(() => {
@@ -841,32 +844,32 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     const { ref, onValue, set } = database;
     const wordRef = ref(database.db, `lobbies/${lobbyId}/currentWord`);
 
-    // Listen to the word in Firebase
     const unsubscribe = onValue(wordRef, async (snapshot) => {
       const wordData = snapshot.val();
       
       if (wordData && wordData.word) {
-        // Word already exists, use it
         setGeneratedWord(wordData.word);
         setHint(wordData.hint || '');
         setCategory(wordData.category || '');
         setLoading(false);
       } else {
-        // No word exists, generate one (only first viewer will do this)
-        // You can pass specific categories here later
-        const randomWordData = getRandomWord(['animals', 'food', 'objects']);
+        // Generate word logic - you'll add your word data back here
+        const randomWord = {
+          word: 'pomme',
+          hint: 'fruit',
+          category: 'food'
+        };
         
-        // Save to Firebase so everyone gets the same word
         await set(wordRef, {
-          word: randomWordData.word,
-          hint: randomWordData.hint,
-          category: randomWordData.category,
+          word: randomWord.word,
+          hint: randomWord.hint,
+          category: randomWord.category,
           generatedAt: Date.now()
         });
         
-        setGeneratedWord(randomWordData.word);
-        setHint(randomWordData.hint);
-        setCategory(randomWordData.category);
+        setGeneratedWord(randomWord.word);
+        setHint(randomWord.hint);
+        setCategory(randomWord.category);
         setLoading(false);
       }
     });
@@ -887,10 +890,10 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         hint: hint,
         category: category
       });
-    } else {
-      alert(`Selected: ${selectedPlayer.username} with word: ${generatedWord}`);
     }
   };
+
+  console.log('Is Imposter:', isImposter, 'Current User:', currentUser?.firebaseId, 'Imposter ID:', imposterId);
 
   return (
     <>
@@ -958,13 +961,22 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           }}>
             {loading ? 'Generating word...' : (
               <>
-                <div>{generatedWord}</div>
-                {hint && <div style={{ fontSize: '1rem', opacity: 0.7 }}>Indice: {hint}</div>}
+                {isImposter ? (
+                  <>
+                    <div style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>🕵️ Tu es l'imposteur!</div>
+                    <div style={{ fontSize: '1rem' }}>Indice: {hint}</div>
+                  </>
+                ) : (
+                  <>
+                    <div>{generatedWord}</div>
+                    <div style={{ fontSize: '1rem', opacity: 0.7 }}>Indice: {hint}</div>
+                  </>
+                )}
               </>
             )}
           </div>
 
-          {/* Players List with Radio Buttons */}
+          {/* Players List */}
           <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {players.map(player => {
               const isCurrentUser = currentUser && player.id === currentUser.firebaseId;
@@ -992,7 +1004,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                     borderRadius: '50%',
                     overflow: 'hidden',
                     border: `4px solid ${isCurrentUser ? '#74a887ff' : '#6f6f6fff'}`,
-                    backgroundColor: isCurrentUser ? '#b3b3b3ff' : '#b3b3b3ff',
+                    backgroundColor: '#b3b3b3ff',
                     flexShrink: 0
                   }}>
                     <img 
@@ -1010,7 +1022,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                   <div style={{
                     flex: 1,
                     padding: '0.75rem 1.5rem',
-                    backgroundColor: isCurrentUser ? '#b3b3b3ff' : '#b3b3b3ff',
+                    backgroundColor: '#b3b3b3ff',
                     border: `4px solid ${isCurrentUser ? '#74a887ff' : '#6f6f6fff'}`,
                     textAlign: 'center',
                     fontSize: '1rem',
@@ -1039,8 +1051,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                 cursor: 'pointer',
                 minWidth: '250px'
               }}
-              onMouseOver={(e) => e.target.style.backgroundColor = '#bbf7d0'}
-              onMouseOut={(e) => e.target.style.backgroundColor = '#86efac'}
+              onMouseOver={(e) => e.target.style.backgroundColor = '#c9c9c9ff'}
+              onMouseOut={(e) => e.target.style.backgroundColor = '#b3b3b3ff'}
             >
               Confirmer
             </button>
