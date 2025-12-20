@@ -47,18 +47,18 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
       } else {
         // No word exists, generate one (only first viewer will do this)
         const commonNouns = [
-          'apple', 'banana', 'chair', 'table', 'ocean', 'mountain', 'building', 'car',
-          'phone', 'book', 'lamp', 'window', 'door', 'tree', 'flower', 'garden',
-          'computer', 'keyboard', 'mouse', 'screen', 'camera', 'picture', 'painting',
-          'bridge', 'road', 'river', 'lake', 'beach', 'forest', 'desert', 'island',
-          'city', 'village', 'house', 'apartment', 'hotel', 'restaurant', 'cafe',
-          'school', 'library', 'museum', 'theater', 'stadium', 'park', 'playground',
-          'bicycle', 'motorcycle', 'train', 'airplane', 'boat', 'ship', 'helicopter',
-          'guitar', 'piano', 'violin', 'drum', 'trumpet', 'flute', 'saxophone',
-          'pencil', 'pen', 'paper', 'notebook', 'backpack', 'wallet', 'watch',
-          'bottle', 'glass', 'cup', 'plate', 'bowl', 'spoon', 'fork', 'knife',
-          'shirt', 'pants', 'shoes', 'hat', 'jacket', 'dress', 'skirt', 'sweater',
-          'ball', 'toy', 'doll', 'puzzle', 'game', 'card', 'dice', 'board'
+          'pomme', 'banane', 'chaise', 'table', 'océan', 'montagne', 'bâtiment', 'voiture',
+          'téléphone', 'livre', 'lampe', 'fenêtre', 'porte', 'arbre', 'fleur', 'jardin',
+          'ordinateur', 'clavier', 'souris', 'écran', 'appareil photo', 'image', 'peinture',
+          'pont', 'route', 'rivière', 'lac', 'plage', 'forêt', 'désert', 'île',
+          'ville', 'village', 'maison', 'appartement', 'hôtel', 'restaurant', 'café',
+          'école', 'bibliothèque', 'musée', 'théâtre', 'stade', 'parc', 'aire de jeux',
+          'vélo', 'moto', 'train', 'avion', 'bateau', 'navire', 'hélicoptère',
+          'guitare', 'piano', 'violon', 'tambour', 'trompette', 'flûte', 'saxophone',
+          'crayon', 'stylo', 'papier', 'cahier', 'sac à dos', 'portefeuille', 'montre',
+          'bouteille', 'verre', 'tasse', 'assiette', 'bol', 'cuillère', 'fourchette', 'couteau',
+          'chemise', 'pantalon', 'chaussures', 'chapeau', 'veste', 'robe', 'jupe', 'pull',
+          'ballon', 'jouet', 'poupée', 'puzzle', 'jeu', 'carte', 'dés', 'plateau'
         ];
         
         const randomWord = commonNouns[Math.floor(Math.random() * commonNouns.length)];
@@ -216,7 +216,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           </div>
 
           {/* Confirm Button */}
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '-50px' }}>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '4rem' }}>
             <button
               onClick={handleConfirm}
               style={{
