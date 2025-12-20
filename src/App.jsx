@@ -3,6 +3,7 @@ import { ref, push, onValue, set, remove } from 'firebase/database';
 import { database } from './firebase';
 import RegisterPage from './RegisterPage';
 import LobbyPage from './LobbyPage';
+import WordSelectionPage from './WordSelectionPage';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('register');
