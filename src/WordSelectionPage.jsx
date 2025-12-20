@@ -1009,11 +1009,11 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                   {/* Player Username */}
                   <div style={{
                     flex: 1,
-                    padding: '1.5rem',
+                    padding: '0.75rem 1.5rem',
                     backgroundColor: isCurrentUser ? '#b3b3b3ff' : '#b3b3b3ff',
                     border: `4px solid ${isCurrentUser ? '#74a887ff' : '#6f6f6fff'}`,
                     textAlign: 'center',
-                    fontSize: '1.125rem',
+                    fontSize: '1rem',
                     fontWeight: '600',
                     color: isCurrentUser ? '#74a887ff' : '#6f6f6fff'
                   }}>
@@ -1025,7 +1025,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           </div>
 
           {/* Confirm Button */}
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '4.5rem' }}>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '-50px' }}>
             <button
               onClick={handleConfirm}
               style={{
