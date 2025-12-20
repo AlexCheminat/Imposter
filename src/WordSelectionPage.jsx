@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
+import { getRandomWord } from '../data/wordCategories';
 
 export default function WordSelectionPage({ players = [], currentUser, onConfirm, lobbyId, database }) {
   const [triangles, setTriangles] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [generatedWord, setGeneratedWord] = useState('');
+  const [hint, setHint] = useState('');
+  const [category, setCategory] = useState('');
   const [loading, setLoading] = useState(true);
 
   // Generate animated triangles
@@ -43,22 +46,25 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
       if (wordData && wordData.word) {
         // Word already exists, use it
         setGeneratedWord(wordData.word);
+        setHint(wordData.hint || '');
+        setCategory(wordData.category || '');
         setLoading(false);
       } else {
         // No word exists, generate one (only first viewer will do this)
-        const commonNouns = [
-          'pomme'
-        ];
-        
-        const randomWord = commonNouns[Math.floor(Math.random() * commonNouns.length)];
+        // You can pass specific categories here later
+        const randomWordData = getRandomWord(['animals', 'food', 'objects']);
         
         // Save to Firebase so everyone gets the same word
         await set(wordRef, {
-          word: randomWord,
+          word: randomWordData.word,
+          hint: randomWordData.hint,
+          category: randomWordData.category,
           generatedAt: Date.now()
         });
         
-        setGeneratedWord(randomWord);
+        setGeneratedWord(randomWordData.word);
+        setHint(randomWordData.hint);
+        setCategory(randomWordData.category);
         setLoading(false);
       }
     });
@@ -73,7 +79,12 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     }
     
     if (onConfirm) {
-      onConfirm({ selectedPlayer, word: generatedWord });
+      onConfirm({ 
+        selectedPlayer, 
+        word: generatedWord,
+        hint: hint,
+        category: category
+      });
     } else {
       alert(`Selected: ${selectedPlayer.username} with word: ${generatedWord}`);
     }
@@ -126,7 +137,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         
         <div style={{ width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', position: 'relative', zIndex: 10, marginTop: '2rem' }}>
         
-          {/* AI Generated Word */}
+          {/* Generated Word with Hint */}
           <div style={{
             width: '100%',
             padding: '2rem',
@@ -138,10 +149,17 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
             color: '#22c55e',
             minHeight: '100px',
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            gap: '0.5rem'
           }}>
-            {loading ? 'Generating word...' : generatedWord}
+            {loading ? 'Generating word...' : (
+              <>
+                <div>{generatedWord}</div>
+                {hint && <div style={{ fontSize: '1rem', opacity: 0.7 }}>Indice: {hint}</div>}
+              </>
+            )}
           </div>
 
           {/* Players List with Radio Buttons */}
