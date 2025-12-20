@@ -114,7 +114,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         }
       `}</style>
       
-      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #93c5fd, #bfdbfe)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'auto' }}>
+      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #86efac, #bbf7d0)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'auto' }}>
         
         {/* Animated Triangles Background */}
         {triangles.map(triangle => (
@@ -128,7 +128,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
               height: 0,
               borderLeft: `${triangle.size}px solid transparent`,
               borderRight: `${triangle.size}px solid transparent`,
-              borderBottom: `${triangle.size * 1.732}px solid rgba(147, 197, 253, ${triangle.opacity})`,
+              borderBottom: `${triangle.size * 1.732}px solid rgba(134, 239, 172, ${triangle.opacity})`,
               animation: `float-down ${triangle.duration}s linear ${triangle.delay}s infinite`,
               pointerEvents: 'none'
             }}
@@ -141,12 +141,12 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           <div style={{
             width: '100%',
             padding: '2rem',
-            backgroundColor: '#93c5fd',
-            border: '4px solid #38475eff',
+            backgroundColor: '#86efac',
+            border: '4px solid #22c55e',
             textAlign: 'center',
             fontSize: '1.5rem',
             fontWeight: 'bold',
-            color: '#38475eff',
+            color: '#22c55e',
             minHeight: '100px',
             display: 'flex',
             alignItems: 'center',
@@ -171,40 +171,19 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                     gap: '1rem',
                     cursor: 'pointer',
                     padding: '0.5rem',
-                    backgroundColor: isSelected ? 'rgba(59, 71, 94, 0.1)' : 'transparent',
+                    backgroundColor: isSelected ? 'rgba(34, 197, 94, 0.1)' : 'transparent',
                     borderRadius: '8px',
-                    border: `2px solid ${isSelected ? '#38475eff' : 'transparent'}`
+                    border: `2px solid ${isSelected ? '#22c55e' : 'transparent'}`
                   }}
                 >
-                  {/* Radio Button */}
-                  <div style={{
-                    width: '24px',
-                    height: '24px',
-                    borderRadius: '50%',
-                    border: '3px solid #38475eff',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}>
-                    {isSelected && (
-                      <div style={{
-                        width: '12px',
-                        height: '12px',
-                        borderRadius: '50%',
-                        backgroundColor: '#38475eff'
-                      }} />
-                    )}
-                  </div>
-
                   {/* Player Photo */}
                   <div style={{
                     width: '60px',
                     height: '60px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    border: `4px solid ${isCurrentUser ? '#22c55e' : '#38475eff'}`,
-                    backgroundColor: isCurrentUser ? '#86efac' : '#93c5fd',
+                    border: `4px solid ${isCurrentUser ? '#22c55e' : '#22c55e'}`,
+                    backgroundColor: isCurrentUser ? '#86efac' : '#86efac',
                     flexShrink: 0
                   }}>
                     <img 
@@ -222,12 +201,12 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                   <div style={{
                     flex: 1,
                     padding: '0.75rem 1.5rem',
-                    backgroundColor: isCurrentUser ? '#86efac' : '#93c5fd',
-                    border: `4px solid ${isCurrentUser ? '#22c55e' : '#38475eff'}`,
+                    backgroundColor: isCurrentUser ? '#86efac' : '#86efac',
+                    border: `4px solid ${isCurrentUser ? '#22c55e' : '#22c55e'}`,
                     textAlign: 'center',
                     fontSize: '1rem',
                     fontWeight: '600',
-                    color: isCurrentUser ? '#22c55e' : '#38475eff'
+                    color: isCurrentUser ? '#22c55e' : '#22c55e'
                   }}>
                     {player.username}
                   </div>
@@ -237,22 +216,22 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           </div>
 
           {/* Confirm Button */}
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '-50px' }}>
             <button
               onClick={handleConfirm}
               style={{
                 padding: '1rem 5rem',
-                backgroundColor: '#93c5fd',
-                border: '4px solid #38475eff',
+                backgroundColor: '#86efac',
+                border: '4px solid #22c55e',
                 borderRadius: '9999px',
                 fontWeight: 'bold',
                 fontSize: '1.25rem',
-                color: '#38475eff',
+                color: '#22c55e',
                 cursor: 'pointer',
                 minWidth: '250px'
               }}
-              onMouseOver={(e) => e.target.style.backgroundColor = '#bfdbfe'}
-              onMouseOut={(e) => e.target.style.backgroundColor = '#93c5fd'}
+              onMouseOver={(e) => e.target.style.backgroundColor = '#bbf7d0'}
+              onMouseOut={(e) => e.target.style.backgroundColor = '#86efac'}
             >
               Confirm
             </button>
