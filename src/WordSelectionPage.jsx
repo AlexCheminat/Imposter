@@ -822,7 +822,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           size: Math.random() * 30 + 20,
           duration: Math.random() * 8 + 12,
           delay: i * 2.5 - 20,
-          opacity: Math.random() * 0.25 + 0.1
+          opacity: Math.random() * 0.25
         });
       }
       setTriangles(newTriangles);
