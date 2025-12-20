@@ -47,18 +47,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
       } else {
         // No word exists, generate one (only first viewer will do this)
         const commonNouns = [
-          'pomme', 'banane', 'chaise', 'table', 'océan', 'montagne', 'bâtiment', 'voiture',
-          'téléphone', 'livre', 'lampe', 'fenêtre', 'porte', 'arbre', 'fleur', 'jardin',
-          'ordinateur', 'clavier', 'souris', 'écran', 'appareil photo', 'image', 'peinture',
-          'pont', 'route', 'rivière', 'lac', 'plage', 'forêt', 'désert', 'île',
-          'ville', 'village', 'maison', 'appartement', 'hôtel', 'restaurant', 'café',
-          'école', 'bibliothèque', 'musée', 'théâtre', 'stade', 'parc', 'aire de jeux',
-          'vélo', 'moto', 'train', 'avion', 'bateau', 'navire', 'hélicoptère',
-          'guitare', 'piano', 'violon', 'tambour', 'trompette', 'flûte', 'saxophone',
-          'crayon', 'stylo', 'papier', 'cahier', 'sac à dos', 'portefeuille', 'montre',
-          'bouteille', 'verre', 'tasse', 'assiette', 'bol', 'cuillère', 'fourchette', 'couteau',
-          'chemise', 'pantalon', 'chaussures', 'chapeau', 'veste', 'robe', 'jupe', 'pull',
-          'ballon', 'jouet', 'poupée', 'puzzle', 'jeu', 'carte', 'dés', 'plateau'
+          'pomme'
         ];
         
         const randomWord = commonNouns[Math.floor(Math.random() * commonNouns.length)];
@@ -216,7 +205,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           </div>
 
           {/* Confirm Button */}
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '4rem' }}>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '4.5rem' }}>
             <button
               onClick={handleConfirm}
               style={{
