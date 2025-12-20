@@ -916,7 +916,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         }
       `}</style>
       
-      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #9bbea8ff, #7ea98dff)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'auto' }}>
+      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #9bbea8ff, #686868ff)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'auto' }}>
         
         {/* Animated Triangles Background */}
         {triangles.map(triangle => (
@@ -943,12 +943,12 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           <div style={{
             width: '100%',
             padding: '2rem',
-            backgroundColor: '#93ad9cff',
-            border: '4px solid #9cecb9ff',
+            backgroundColor: '#6f6f6fff',
+            border: '4px solid #393939ff',
             textAlign: 'center',
             fontSize: '1.5rem',
             fontWeight: 'bold',
-            color: '#3f4b41ff',
+            color: '#393939ff',
             minHeight: '100px',
             display: 'flex',
             flexDirection: 'column',
@@ -980,9 +980,9 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                     gap: '1rem',
                     cursor: 'pointer',
                     padding: '0.5rem',
-                    backgroundColor: isSelected ? 'rgba(34, 197, 94, 0.1)' : 'transparent',
+                    backgroundColor: isSelected ? 'rgba(150, 50, 94, 0.2)' : 'transparent',
                     borderRadius: '8px',
-                    border: `2px solid ${isSelected ? '#738228ff' : 'transparent'}`
+                    border: `2px solid ${isSelected ? '#393939ff' : 'transparent'}`
                   }}
                 >
                   {/* Player Photo */}
@@ -991,8 +991,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                     height: '60px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    border: `4px solid ${isCurrentUser ? '#28822bff' : '#9cecb9ff'}`,
-                    backgroundColor: isCurrentUser ? '#86efac' : '#86efac',
+                    border: `4px solid ${isCurrentUser ? '#74a887ff' : '#393939ff'}`,
+                    backgroundColor: isCurrentUser ? '#6f6f6fff' : '#6f6f6fff',
                     flexShrink: 0
                   }}>
                     <img 
@@ -1010,12 +1010,12 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                   <div style={{
                     flex: 1,
                     padding: '0.75rem 1.5rem',
-                    backgroundColor: isCurrentUser ? '#86efac' : '#86efac',
-                    border: `4px solid ${isCurrentUser ? '#22c55e' : '#22c55e'}`,
+                    backgroundColor: isCurrentUser ? '#6f6f6fff' : '#6f6f6fff',
+                    border: `4px solid ${isCurrentUser ? '#74a887ff' : '#393939ff'}`,
                     textAlign: 'center',
                     fontSize: '1rem',
                     fontWeight: '600',
-                    color: isCurrentUser ? '#22c55e' : '#22c55e'
+                    color: isCurrentUser ? '#74a887ff' : '#393939ff'
                   }}>
                     {player.username}
                   </div>
@@ -1030,12 +1030,12 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
               onClick={handleConfirm}
               style={{
                 padding: '1rem 5rem',
-                backgroundColor: '#86efac',
-                border: '4px solid #22c55e',
+                backgroundColor: '#6f6f6fff',
+                border: '4px solid #393939ff',
                 borderRadius: '9999px',
                 fontWeight: 'bold',
                 fontSize: '1.25rem',
-                color: '#22c55e',
+                color: '#393939ff',
                 cursor: 'pointer',
                 minWidth: '250px'
               }}
