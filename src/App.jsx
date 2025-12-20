@@ -91,9 +91,29 @@ export default function App() {
     }
   };
 
-  const handleStartGame = () => {
-    alert('Game starting!');
-    // You can add game page navigation here later
+  const handleStartGame = async () => {
+    console.log('handleStartGame called!');
+    try {
+      const gameStateRef = ref(database, `lobbies/${lobbyId}/gameState`);
+      console.log('Setting game state in Firebase...');
+      
+      // Randomly select an imposter
+      const randomIndex = Math.floor(Math.random() * allPlayers.length);
+      const imposter = allPlayers[randomIndex];
+      
+      console.log('Selected imposter:', imposter.username);
+      
+      await set(gameStateRef, {
+        currentPage: 'wordSelection',
+        startedAt: Date.now(),
+        imposterId: imposter.id  // Store the imposter's ID
+      });
+      
+      console.log('Game state updated in Firebase successfully!');
+    } catch (error) {
+      console.error('Error starting game:', error);
+      alert('Failed to start game. Please try again. Error: ' + error.message);
+    }
   };
 
   return (
