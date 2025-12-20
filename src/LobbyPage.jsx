@@ -34,9 +34,11 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
   }, []);
 
   const handleStart = () => {
+    console.log('Start button clicked, calling onStartGame...');
     if (onStartGame) {
       onStartGame();
     } else {
+      console.error('onStartGame prop not provided!');
       alert('Starting game...');
     }
   };
@@ -114,8 +116,8 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
                     height: '80px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    border: `4px solid ${isCurrentUser ? '#622fbaff' : '#7c3aed'}`,
-                    backgroundColor: isCurrentUser ? '#a16bd6ff' : '#c084fc',
+                    border: `4px solid ${isCurrentUser ? '#22c55e' : '#7c3aed'}`,
+                    backgroundColor: isCurrentUser ? '#86efac' : '#c084fc',
                     flexShrink: 0
                   }}>
                     <img 
@@ -132,17 +134,13 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
                   {/* Player Username */}
                   <div style={{
                     flex: 1,
-                    height: '100%',
-                    padding: '0 1.5rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: isCurrentUser ? '#a16bd6ff' : '#c084fc',
-                    border: `2.5px solid ${isCurrentUser ? '#622fbaff' : '#7c3aed'}`,
+                    padding: '1.5rem',
+                    backgroundColor: isCurrentUser ? '#86efac' : '#c084fc',
+                    border: `4px solid ${isCurrentUser ? '#22c55e' : '#7c3aed'}`,
                     textAlign: 'center',
                     fontSize: '1.125rem',
                     fontWeight: '600',
-                    color: isCurrentUser ? '#622fbaff' : '#7c3aed'
+                    color: isCurrentUser ? '#22c55e' : '#7c3aed'
                   }}>
                     {player.username}
                   </div>
