@@ -943,12 +943,12 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           <div style={{
             width: '100%',
             padding: '2rem',
-            backgroundColor: '#6f6f6fff',
-            border: '4px solid #393939ff',
+            backgroundColor: '#b3b3b3ff',
+            border: '4px solid #6f6f6fff',
             textAlign: 'center',
             fontSize: '1.5rem',
             fontWeight: 'bold',
-            color: '#393939ff',
+            color: '#6f6f6fff',
             minHeight: '100px',
             display: 'flex',
             flexDirection: 'column',
@@ -982,7 +982,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                     padding: '0.5rem',
                     backgroundColor: isSelected ? 'rgba(150, 50, 94, 0.2)' : 'transparent',
                     borderRadius: '8px',
-                    border: `2px solid ${isSelected ? '#393939ff' : 'transparent'}`
+                    border: `2px solid ${isSelected ? '#6f6f6fff' : 'transparent'}`
                   }}
                 >
                   {/* Player Photo */}
@@ -991,8 +991,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                     height: '60px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    border: `4px solid ${isCurrentUser ? '#74a887ff' : '#393939ff'}`,
-                    backgroundColor: isCurrentUser ? '#6f6f6fff' : '#6f6f6fff',
+                    border: `4px solid ${isCurrentUser ? '#74a887ff' : '#6f6f6fff'}`,
+                    backgroundColor: isCurrentUser ? '#b3b3b3ff' : '#b3b3b3ff',
                     flexShrink: 0
                   }}>
                     <img 
@@ -1010,12 +1010,12 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                   <div style={{
                     flex: 1,
                     padding: '0.75rem 1.5rem',
-                    backgroundColor: isCurrentUser ? '#6f6f6fff' : '#6f6f6fff',
-                    border: `4px solid ${isCurrentUser ? '#74a887ff' : '#393939ff'}`,
+                    backgroundColor: isCurrentUser ? '#b3b3b3ff' : '#b3b3b3ff',
+                    border: `4px solid ${isCurrentUser ? '#74a887ff' : '#6f6f6fff'}`,
                     textAlign: 'center',
                     fontSize: '1rem',
                     fontWeight: '600',
-                    color: isCurrentUser ? '#74a887ff' : '#393939ff'
+                    color: isCurrentUser ? '#74a887ff' : '#6f6f6fff'
                   }}>
                     {player.username}
                   </div>
@@ -1030,12 +1030,12 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
               onClick={handleConfirm}
               style={{
                 padding: '1rem 5rem',
-                backgroundColor: '#6f6f6fff',
-                border: '4px solid #393939ff',
+                backgroundColor: '#b3b3b3ff',
+                border: '4px solid #6f6f6fff',
                 borderRadius: '9999px',
                 fontWeight: 'bold',
                 fontSize: '1.25rem',
-                color: '#393939ff',
+                color: '#6f6f6fff',
                 cursor: 'pointer',
                 minWidth: '250px'
               }}
