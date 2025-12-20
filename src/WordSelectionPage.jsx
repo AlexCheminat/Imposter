@@ -1,5 +1,44 @@
 import { useState, useEffect } from 'react';
-import { getRandomWord } from '../data/wordCategories';
+
+// Word categories directly in the file
+const wordCategories = {
+  animals: [
+    { word: 'chat', hint: 'animal domestique' },
+    { word: 'chien', hint: 'meilleur ami' },
+    { word: 'éléphant', hint: 'grande trompe' },
+    { word: 'poisson', hint: 'nage dans l\'eau' }
+  ],
+  
+  food: [
+    { word: 'pomme', hint: 'fruit rouge' },
+    { word: 'fromage', hint: 'produit laitier' },
+    { word: 'pain', hint: 'boulangerie' },
+    { word: 'chocolat', hint: 'dessert sucré' }
+  ],
+  
+  objects: [
+    { word: 'table', hint: 'meuble plat' },
+    { word: 'chaise', hint: 'pour s\'asseoir' }
+  ]
+};
+
+function getRandomWord(categories = ['animals', 'food', 'objects']) {
+  const allWords = [];
+  
+  categories.forEach(category => {
+    if (wordCategories[category]) {
+      wordCategories[category].forEach(item => {
+        allWords.push({ ...item, category });
+      });
+    }
+  });
+  
+  if (allWords.length === 0) {
+    return { word: 'pomme', hint: 'fruit', category: 'food' };
+  }
+  
+  return allWords[Math.floor(Math.random() * allWords.length)];
+}
 
 export default function WordSelectionPage({ players = [], currentUser, onConfirm, lobbyId, database }) {
   const [triangles, setTriangles] = useState([]);
