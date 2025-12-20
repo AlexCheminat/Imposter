@@ -1025,7 +1025,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           </div>
 
           {/* Confirm Button */}
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '-15px' }}>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '-5px' }}>
             <button
               onClick={handleConfirm}
               style={{
