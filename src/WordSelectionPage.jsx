@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { ref, onValue, set } from 'firebase/database';
+import { database } from './firebase';
 
-export default function WordSelectionPage({ players = [], currentUser, onConfirm }) {
+export default function WordSelectionPage({ players = [], currentUser, onConfirm, lobbyId = 'lobby-1' }) {
   const [triangles, setTriangles] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [generatedWord, setGeneratedWord] = useState('');
@@ -29,27 +31,52 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     document.body.style.overflow = 'hidden';
   }, []);
 
-  // Generate random noun from a predefined list
+  // Generate random noun from a predefined list and store in Firebase
   useEffect(() => {
-    const commonNouns = [
-      'apple', 'banana', 'chair', 'table', 'ocean', 'mountain', 'building', 'car',
-      'phone', 'book', 'lamp', 'window', 'door', 'tree', 'flower', 'garden',
-      'computer', 'keyboard', 'mouse', 'screen', 'camera', 'picture', 'painting',
-      'bridge', 'road', 'river', 'lake', 'beach', 'forest', 'desert', 'island',
-      'city', 'village', 'house', 'apartment', 'hotel', 'restaurant', 'cafe',
-      'school', 'library', 'museum', 'theater', 'stadium', 'park', 'playground',
-      'bicycle', 'motorcycle', 'train', 'airplane', 'boat', 'ship', 'helicopter',
-      'guitar', 'piano', 'violin', 'drum', 'trumpet', 'flute', 'saxophone',
-      'pencil', 'pen', 'paper', 'notebook', 'backpack', 'wallet', 'watch',
-      'bottle', 'glass', 'cup', 'plate', 'bowl', 'spoon', 'fork', 'knife',
-      'shirt', 'pants', 'shoes', 'hat', 'jacket', 'dress', 'skirt', 'sweater',
-      'ball', 'toy', 'doll', 'puzzle', 'game', 'card', 'dice', 'board'
-    ];
+    const wordRef = ref(database, `lobbies/${lobbyId}/currentWord`);
     
-    const randomWord = commonNouns[Math.floor(Math.random() * commonNouns.length)];
-    setGeneratedWord(randomWord);
-    setLoading(false);
-  }, []);
+    // Listen for the word in Firebase
+    const unsubscribe = onValue(wordRef, async (snapshot) => {
+      const existingWord = snapshot.val();
+      
+      if (existingWord) {
+        // Word already exists, use it
+        setGeneratedWord(existingWord);
+        setLoading(false);
+      } else {
+        // No word exists, generate one (only first person will do this)
+        const commonNouns = [
+          'apple', 'banana', 'chair', 'table', 'ocean', 'mountain', 'building', 'car',
+          'phone', 'book', 'lamp', 'window', 'door', 'tree', 'flower', 'garden',
+          'computer', 'keyboard', 'mouse', 'screen', 'camera', 'picture', 'painting',
+          'bridge', 'road', 'river', 'lake', 'beach', 'forest', 'desert', 'island',
+          'city', 'village', 'house', 'apartment', 'hotel', 'restaurant', 'cafe',
+          'school', 'library', 'museum', 'theater', 'stadium', 'park', 'playground',
+          'bicycle', 'motorcycle', 'train', 'airplane', 'boat', 'ship', 'helicopter',
+          'guitar', 'piano', 'violin', 'drum', 'trumpet', 'flute', 'saxophone',
+          'pencil', 'pen', 'paper', 'notebook', 'backpack', 'wallet', 'watch',
+          'bottle', 'glass', 'cup', 'plate', 'bowl', 'spoon', 'fork', 'knife',
+          'shirt', 'pants', 'shoes', 'hat', 'jacket', 'dress', 'skirt', 'sweater',
+          'ball', 'toy', 'doll', 'puzzle', 'game', 'card', 'dice', 'board'
+        ];
+        
+        const randomWord = commonNouns[Math.floor(Math.random() * commonNouns.length)];
+        
+        try {
+          // Store the word in Firebase so everyone sees the same one
+          await set(wordRef, randomWord);
+          setGeneratedWord(randomWord);
+          setLoading(false);
+        } catch (error) {
+          console.error('Error setting word:', error);
+          setGeneratedWord(randomWord);
+          setLoading(false);
+        }
+      }
+    });
+    
+    return () => unsubscribe();
+  }, [lobbyId]);
 
   const handleConfirm = () => {
     if (!selectedPlayer) {
