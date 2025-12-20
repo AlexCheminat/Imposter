@@ -987,8 +987,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                 >
                   {/* Player Photo */}
                   <div style={{
-                    width: '60px',
-                    height: '60px',
+                    width: '80px',
+                    height: '80px',
                     borderRadius: '50%',
                     overflow: 'hidden',
                     border: `4px solid ${isCurrentUser ? '#74a887ff' : '#6f6f6fff'}`,
@@ -1009,11 +1009,11 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                   {/* Player Username */}
                   <div style={{
                     flex: 1,
-                    padding: '0.75rem 1.5rem',
+                    padding: '1.5rem',
                     backgroundColor: isCurrentUser ? '#b3b3b3ff' : '#b3b3b3ff',
                     border: `4px solid ${isCurrentUser ? '#74a887ff' : '#6f6f6fff'}`,
                     textAlign: 'center',
-                    fontSize: '1rem',
+                    fontSize: '1.125rem',
                     fontWeight: '600',
                     color: isCurrentUser ? '#74a887ff' : '#6f6f6fff'
                   }}>
