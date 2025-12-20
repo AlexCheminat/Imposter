@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
-import { ref, onValue, set } from 'firebase/database';
-import { database } from './firebase';
 
-export default function WordSelectionPage({ players = [], currentUser, onConfirm, lobbyId = 'lobby-1' }) {
+export default function WordSelectionPage({ players = [], currentUser, onConfirm, lobbyId, database }) {
   const [triangles, setTriangles] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [generatedWord, setGeneratedWord] = useState('');
@@ -31,20 +29,23 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     document.body.style.overflow = 'hidden';
   }, []);
 
-  // Generate random noun from a predefined list and store in Firebase
+  // Generate and sync word with Firebase
   useEffect(() => {
-    const wordRef = ref(database, `lobbies/${lobbyId}/currentWord`);
-    
-    // Listen for the word in Firebase
+    if (!database || !lobbyId) return;
+
+    const { ref, onValue, set } = database;
+    const wordRef = ref(database.db, `lobbies/${lobbyId}/currentWord`);
+
+    // Listen to the word in Firebase
     const unsubscribe = onValue(wordRef, async (snapshot) => {
-      const existingWord = snapshot.val();
+      const wordData = snapshot.val();
       
-      if (existingWord) {
+      if (wordData && wordData.word) {
         // Word already exists, use it
-        setGeneratedWord(existingWord);
+        setGeneratedWord(wordData.word);
         setLoading(false);
       } else {
-        // No word exists, generate one (only first person will do this)
+        // No word exists, generate one (only first viewer will do this)
         const commonNouns = [
           'apple', 'banana', 'chair', 'table', 'ocean', 'mountain', 'building', 'car',
           'phone', 'book', 'lamp', 'window', 'door', 'tree', 'flower', 'garden',
@@ -62,21 +63,19 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         
         const randomWord = commonNouns[Math.floor(Math.random() * commonNouns.length)];
         
-        try {
-          // Store the word in Firebase so everyone sees the same one
-          await set(wordRef, randomWord);
-          setGeneratedWord(randomWord);
-          setLoading(false);
-        } catch (error) {
-          console.error('Error setting word:', error);
-          setGeneratedWord(randomWord);
-          setLoading(false);
-        }
+        // Save to Firebase so everyone gets the same word
+        await set(wordRef, {
+          word: randomWord,
+          generatedAt: Date.now()
+        });
+        
+        setGeneratedWord(randomWord);
+        setLoading(false);
       }
     });
-    
+
     return () => unsubscribe();
-  }, [lobbyId]);
+  }, [database, lobbyId]);
 
   const handleConfirm = () => {
     if (!selectedPlayer) {
