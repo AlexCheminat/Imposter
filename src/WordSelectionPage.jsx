@@ -29,40 +29,26 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     document.body.style.overflow = 'hidden';
   }, []);
 
-  // Generate random noun using Claude API
+  // Generate random noun from a predefined list
   useEffect(() => {
-    const generateWord = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("https://api.anthropic.com/v1/messages", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            model: "claude-sonnet-4-20250514",
-            max_tokens: 1000,
-            messages: [
-              { 
-                role: "user", 
-                content: "Generate a single random common noun (like 'apple', 'chair', 'ocean', 'building'). Reply with ONLY the word, nothing else." 
-              }
-            ],
-          })
-        });
-
-        const data = await response.json();
-        const word = data.content[0].text.trim();
-        setGeneratedWord(word);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error generating word:', error);
-        setGeneratedWord('apple'); // Fallback word
-        setLoading(false);
-      }
-    };
-
-    generateWord();
+    const commonNouns = [
+      'apple', 'banana', 'chair', 'table', 'ocean', 'mountain', 'building', 'car',
+      'phone', 'book', 'lamp', 'window', 'door', 'tree', 'flower', 'garden',
+      'computer', 'keyboard', 'mouse', 'screen', 'camera', 'picture', 'painting',
+      'bridge', 'road', 'river', 'lake', 'beach', 'forest', 'desert', 'island',
+      'city', 'village', 'house', 'apartment', 'hotel', 'restaurant', 'cafe',
+      'school', 'library', 'museum', 'theater', 'stadium', 'park', 'playground',
+      'bicycle', 'motorcycle', 'train', 'airplane', 'boat', 'ship', 'helicopter',
+      'guitar', 'piano', 'violin', 'drum', 'trumpet', 'flute', 'saxophone',
+      'pencil', 'pen', 'paper', 'notebook', 'backpack', 'wallet', 'watch',
+      'bottle', 'glass', 'cup', 'plate', 'bowl', 'spoon', 'fork', 'knife',
+      'shirt', 'pants', 'shoes', 'hat', 'jacket', 'dress', 'skirt', 'sweater',
+      'ball', 'toy', 'doll', 'puzzle', 'game', 'card', 'dice', 'board'
+    ];
+    
+    const randomWord = commonNouns[Math.floor(Math.random() * commonNouns.length)];
+    setGeneratedWord(randomWord);
+    setLoading(false);
   }, []);
 
   const handleConfirm = () => {
