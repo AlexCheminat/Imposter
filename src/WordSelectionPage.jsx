@@ -916,7 +916,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         }
       `}</style>
       
-      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #86efac, #bbf7d0)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'auto' }}>
+      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #9bbea8ff, #7ea98dff)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'auto' }}>
         
         {/* Animated Triangles Background */}
         {triangles.map(triangle => (
@@ -930,7 +930,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
               height: 0,
               borderLeft: `${triangle.size}px solid transparent`,
               borderRight: `${triangle.size}px solid transparent`,
-              borderBottom: `${triangle.size * 1.732}px solid rgba(134, 239, 172, ${triangle.opacity})`,
+              borderBottom: `${triangle.size * 1.732}px solid rgba(153, 255, 153, ${triangle.opacity})`,
               animation: `float-down ${triangle.duration}s linear ${triangle.delay}s infinite`,
               pointerEvents: 'none'
             }}
@@ -943,12 +943,12 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           <div style={{
             width: '100%',
             padding: '2rem',
-            backgroundColor: '#86efac',
-            border: '4px solid #22c55e',
+            backgroundColor: '#93ad9cff',
+            border: '4px solid #9cecb9ff',
             textAlign: 'center',
             fontSize: '1.5rem',
             fontWeight: 'bold',
-            color: '#22c55e',
+            color: '#3f4b41ff',
             minHeight: '100px',
             display: 'flex',
             flexDirection: 'column',
@@ -982,7 +982,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                     padding: '0.5rem',
                     backgroundColor: isSelected ? 'rgba(34, 197, 94, 0.1)' : 'transparent',
                     borderRadius: '8px',
-                    border: `2px solid ${isSelected ? '#22c55e' : 'transparent'}`
+                    border: `2px solid ${isSelected ? '#738228ff' : 'transparent'}`
                   }}
                 >
                   {/* Player Photo */}
@@ -991,7 +991,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                     height: '60px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    border: `4px solid ${isCurrentUser ? '#22c55e' : '#22c55e'}`,
+                    border: `4px solid ${isCurrentUser ? '#28822bff' : '#9cecb9ff'}`,
                     backgroundColor: isCurrentUser ? '#86efac' : '#86efac',
                     flexShrink: 0
                   }}>
