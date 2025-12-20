@@ -813,6 +813,12 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
   
   // Check if current user is the imposter
   const isImposter = currentUser && imposterId && currentUser.firebaseId === imposterId;
+  
+  console.log('===== IMPOSTER CHECK =====');
+  console.log('Current User Firebase ID:', currentUser?.firebaseId);
+  console.log('Imposter ID from props:', imposterId);
+  console.log('Is Imposter:', isImposter);
+  console.log('========================');
 
   // Generate animated triangles
   useEffect(() => {
