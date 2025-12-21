@@ -77,7 +77,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
         }
       `}</style>
       
-      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #93c5fd, #bfdbfe)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'auto' }}>
+      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #ddb96aff, #f0d28fff)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'auto' }}>
         
         {/* Animated Triangles Background */}
         {triangles.map(triangle => (
@@ -91,7 +91,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
               height: 0,
               borderLeft: `${triangle.size}px solid transparent`,
               borderRight: `${triangle.size}px solid transparent`,
-              borderBottom: `${triangle.size * 1.732}px solid rgba(147, 197, 253, ${triangle.opacity})`,
+              borderBottom: `${triangle.size * 1.732}px solid rgba(255, 153, 51, ${triangle.opacity})`,
               animation: `float-down ${triangle.duration}s linear ${triangle.delay}s infinite`,
               pointerEvents: 'none'
             }}
@@ -105,12 +105,12 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
             <div style={{
               width: '100%',
               padding: '1.5rem',
-              backgroundColor: '#93c5fd',
-              border: '4px solid #38475eff',
+              backgroundColor: '#f3d985ff',
+              border: '4px solid #977b48ff',
               textAlign: 'center',
               fontSize: '1rem',
               fontWeight: 'bold',
-              color: '#38475eff'
+              color: '#977b48ff'
             }}>
               {imposterCaught
                 ? 'Imposter lost'
@@ -132,8 +132,8 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                     height: '80px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    border: '4px solid #38475eff',
-                    backgroundColor: '#93c5fd',
+                    border: '4px solid #977b48ff',
+                    backgroundColor: '#f3d985ff',
                     flexShrink: 0
                   }}>
                     <img 
@@ -158,8 +158,8 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                     <div style={{
                       width: `${barWidth}%`,
                       height: '100%',
-                      backgroundColor: '#60a5fa',
-                      border: '4px solid #38475eff',
+                      backgroundColor: '#dba952ff',
+                      border: '4px solid #977b48ff',
                       transition: 'width 0.5s ease-out',
                       minWidth: barWidth > 0 ? '4px' : '0'
                     }} />
@@ -169,7 +169,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                   <div style={{
                     fontSize: '1.5rem',
                     fontWeight: 'bold',
-                    color: '#38475eff',
+                    color: '#977b48ff',
                     minWidth: '30px',
                     textAlign: 'center'
                   }}>
@@ -187,17 +187,17 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                 onClick={onContinue}
                 style={{
                   padding: '1rem 5rem',
-                  backgroundColor: '#93c5fd',
-                  border: '4px solid #38475eff',
+                  backgroundColor: '#f3d985ff',
+                  border: '4px solid #977b48ff',
                   borderRadius: '9999px',
                   fontWeight: 'bold',
                   fontSize: '1.25rem',
-                  color: '#38475eff',
+                  color: '#977b48ff',
                   cursor: 'pointer',
                   minWidth: '250px'
                 }}
-                onMouseOver={(e) => e.target.style.backgroundColor = '#bfdbfe'}
-                onMouseOut={(e) => e.target.style.backgroundColor = '#93c5fd'}
+                onMouseOver={(e) => e.target.style.backgroundColor = '#dcb869ff'}
+                onMouseOut={(e) => e.target.style.backgroundColor = '#f3d985ff'}
               >
                 Continue
               </button>
