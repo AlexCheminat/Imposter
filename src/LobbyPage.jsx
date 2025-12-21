@@ -56,6 +56,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
           padding: 0 !important;
           overflow-x: hidden !important;
           width: 100% !important;
+          overflow-y: auto !important;
         }
         @keyframes float-down {
           0% {
