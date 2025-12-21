@@ -152,7 +152,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
 
           {/* Start Button (only for first player) */}
           {isFirstPlayer && (
-            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '-50px' }}>
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '-10px' }}>
               <button
                 onClick={handleStart}
                 style={{
