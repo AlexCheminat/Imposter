@@ -325,7 +325,7 @@ export default function RegisterPage({ onRegister }) {
                 minWidth: '340px'
               }}
             >
-              Allons-Y !!!
+              Allons-y !!!
             </button>
           </div>
         </div>
