@@ -30,7 +30,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
 
     document.body.style.margin = '0';
     document.body.style.padding = '0';
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'auto'; // Allow scrolling
   }, []);
 
   const handleStart = () => {
@@ -67,7 +67,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
         }
       `}</style>
       
-      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #c084fc, #e9d5ff)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'auto' }}>
+      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #c084fc, #e9d5ff)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', paddingBottom: '100px', margin: 0, boxSizing: 'border-box', position: 'relative' }}>
         
         {/* Animated Triangles Background */}
         {triangles.map(triangle => (
@@ -101,7 +101,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
             fontWeight: 'bold',
             color: '#7c3aed'
           }}>
-            Nombre de Joueurs: {sortedPlayers.length}
+            Player Count: {sortedPlayers.length}
           </div>
 
           {/* Players List */}
