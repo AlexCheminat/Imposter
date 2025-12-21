@@ -810,6 +810,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
   const [hint, setHint] = useState('');
   const [category, setCategory] = useState('');
   const [loading, setLoading] = useState(true);
+  const [startingPlayer, setStartingPlayer] = useState(null);
   
   // Check if current user is the imposter
   const isImposter = currentUser && imposterId && currentUser.firebaseId === imposterId;
@@ -857,31 +858,34 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         setGeneratedWord(wordData.word);
         setHint(wordData.hint || '');
         setCategory(wordData.category || '');
+        setStartingPlayer(wordData.startingPlayer || null);
         setLoading(false);
       } else {
-        // Generate word logic - you'll add your word data back here
-        const randomWord = {
-          word: 'Pomme',
-          hint: 'Fruit',
-          category: 'food'
-        };
+        // Generate random word using getRandomWord function
+        const randomWordData = getRandomWord(['animals']);
+        
+        // Select random starting player
+        const randomPlayerIndex = Math.floor(Math.random() * players.length);
+        const randomPlayer = players[randomPlayerIndex];
         
         await set(wordRef, {
-          word: randomWord.word,
-          hint: randomWord.hint,
-          category: randomWord.category,
+          word: randomWordData.word,
+          hint: randomWordData.hint,
+          category: randomWordData.category,
+          startingPlayer: randomPlayer ? randomPlayer.username : null,
           generatedAt: Date.now()
         });
         
-        setGeneratedWord(randomWord.word);
-        setHint(randomWord.hint);
-        setCategory(randomWord.category);
+        setGeneratedWord(randomWordData.word);
+        setHint(randomWordData.hint);
+        setCategory(randomWordData.category);
+        setStartingPlayer(randomPlayer ? randomPlayer.username : null);
         setLoading(false);
       }
     });
 
     return () => unsubscribe();
-  }, [database, lobbyId]);
+  }, [database, lobbyId, players]);
 
   const handleConfirm = () => {
     if (!selectedPlayer) {
@@ -898,8 +902,6 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
       });
     }
   };
-
-  console.log('Is Imposter:', isImposter, 'Current User:', currentUser?.firebaseId, 'Imposter ID:', imposterId);
 
   return (
     <>
@@ -948,7 +950,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         
         <div style={{ width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', position: 'relative', zIndex: 10, marginTop: '2rem' }}>
         
-          {/* Generated Word with Hint */}
+          {/* Generated Word with Hint and Starting Player */}
           <div style={{
             width: '100%',
             padding: '2rem',
@@ -977,6 +979,11 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                     <div>{generatedWord}</div>
                   </>
                 )}
+                {startingPlayer && (
+                  <div style={{ fontSize: '0.9rem', marginTop: '0.5rem', opacity: 0.8 }}>
+                    Commence: {startingPlayer}
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -986,20 +993,22 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
             {players.map(player => {
               const isCurrentUser = currentUser && player.id === currentUser.firebaseId;
               const isSelected = selectedPlayer && selectedPlayer.id === player.id;
+              const cannotSelect = isCurrentUser; // Can't select yourself
               
               return (
                 <div 
                   key={player.id} 
-                  onClick={() => setSelectedPlayer(player)}
+                  onClick={() => !cannotSelect && setSelectedPlayer(player)}
                   style={{ 
                     display: 'flex', 
                     alignItems: 'center', 
                     gap: '1rem',
-                    cursor: 'pointer',
+                    cursor: cannotSelect ? 'not-allowed' : 'pointer',
                     padding: '0.5rem',
                     backgroundColor: isSelected ? 'rgba(150, 50, 94, 0.2)' : 'transparent',
                     borderRadius: '8px',
-                    border: `2px solid ${isSelected ? '#6f6f6fff' : 'transparent'}`
+                    border: `2px solid ${isSelected ? '#6f6f6fff' : 'transparent'}`,
+                    opacity: cannotSelect ? 0.5 : 1
                   }}
                 >
                   {/* Player Photo */}
