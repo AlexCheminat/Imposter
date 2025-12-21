@@ -112,9 +112,9 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
               fontWeight: 'bold',
               color: '#38475eff'
             }}>
-              {imposterCaught 
-                ? 'Imposter has won/lost (This will only display once everyone has voted!)'
-                : 'Imposter has won/lost (This will only display once everyone has voted!)'}
+              {imposterCaught
+                ? 'Imposter lost'
+                : 'Imposter won'}
             </div>
           )}
 
