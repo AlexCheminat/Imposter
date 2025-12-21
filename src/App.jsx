@@ -5,6 +5,7 @@ import RegisterPage from './RegisterPage';
 import LobbyPage from './LobbyPage';
 import WordSelectionPage from './WordSelectionPage';
 import VoteResultsPage from './VoteResultsPage';
+import FinalResultsPage from './FinalResultsPage';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('register');
@@ -12,6 +13,7 @@ function App() {
   const [allPlayers, setAllPlayers] = useState([]);
   const [imposterId, setImposterId] = useState(null);
   const [votes, setVotes] = useState({});
+  const [scores, setScores] = useState({});
   const [lobbyId] = useState('lobby-1');
 
   // Listen to players in the lobby
@@ -68,24 +70,25 @@ function App() {
       
       if (votesData) {
         setVotes(votesData);
-        
-        // Check if all players have voted
-        const voteCount = Object.keys(votesData).length;
-        if (voteCount === allPlayers.length && allPlayers.length > 0) {
-          console.log('All players have voted! Moving to results...');
-          // Move to results page
-          const gameStateRef = ref(database, `lobbies/${lobbyId}/gameState`);
-          set(gameStateRef, {
-            currentPage: 'voteResults',
-            imposterId: imposterId,
-            allVotesIn: true
-          });
-        }
       }
     });
 
     return () => unsubscribe();
-  }, [lobbyId, allPlayers.length, imposterId]);
+  }, [lobbyId]);
+
+  // Listen to scores
+  useEffect(() => {
+    const scoresRef = ref(database, `lobbies/${lobbyId}/scores`);
+    
+    const unsubscribe = onValue(scoresRef, (snapshot) => {
+      const scoresData = snapshot.val();
+      if (scoresData) {
+        setScores(scoresData);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [lobbyId]);
 
   // Remove player when they leave/close tab
   useEffect(() => {
@@ -189,10 +192,92 @@ function App() {
     }
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     console.log('Continue clicked');
-    // You can navigate to next page here or reset the game
-    alert('Game over! Starting new round...');
+    
+    try {
+      // Calculate scores based on votes
+      const voteCount = {};
+      allPlayers.forEach(player => {
+        voteCount[player.id] = 0;
+      });
+
+      Object.values(votes).forEach(vote => {
+        if (vote.votedFor && voteCount[vote.votedFor] !== undefined) {
+          voteCount[vote.votedFor]++;
+        }
+      });
+
+      // Find player with most votes
+      const mostVotedPlayerId = Object.keys(voteCount).reduce((a, b) => 
+        voteCount[a] > voteCount[b] ? a : b
+      );
+
+      // Update scores
+      const currentScores = { ...scores };
+      
+      // Initialize scores for new players
+      allPlayers.forEach(player => {
+        if (!currentScores[player.id]) {
+          currentScores[player.id] = 0;
+        }
+      });
+
+      // If imposter was caught (most voted), everyone else gets a point
+      if (mostVotedPlayerId === imposterId) {
+        console.log('Imposter was caught!');
+        allPlayers.forEach(player => {
+          if (player.id !== imposterId) {
+            currentScores[player.id] = (currentScores[player.id] || 0) + 1;
+          }
+        });
+      } else {
+        // If imposter wasn't caught, imposter gets a point
+        console.log('Imposter escaped!');
+        currentScores[imposterId] = (currentScores[imposterId] || 0) + 1;
+      }
+
+      // Save scores to Firebase
+      const scoresRef = ref(database, `lobbies/${lobbyId}/scores`);
+      await set(scoresRef, currentScores);
+
+      // Move everyone to final results
+      const gameStateRef = ref(database, `lobbies/${lobbyId}/gameState`);
+      await set(gameStateRef, {
+        currentPage: 'finalResults',
+        imposterId: imposterId
+      });
+
+      console.log('Moved to final results page');
+    } catch (error) {
+      console.error('Error updating scores:', error);
+      alert('Failed to update scores. Please try again.');
+    }
+  };
+
+  const handleNextRound = async () => {
+    console.log('Next Round clicked');
+    
+    try {
+      // Clear votes for next round
+      const votesRef = ref(database, `lobbies/${lobbyId}/votes`);
+      await set(votesRef, null);
+
+      // Clear current word
+      const wordRef = ref(database, `lobbies/${lobbyId}/currentWord`);
+      await set(wordRef, null);
+
+      // Move everyone back to lobby
+      const gameStateRef = ref(database, `lobbies/${lobbyId}/gameState`);
+      await set(gameStateRef, {
+        currentPage: 'lobby'
+      });
+
+      console.log('Starting new round');
+    } catch (error) {
+      console.error('Error starting new round:', error);
+      alert('Failed to start new round. Please try again.');
+    }
   };
 
   return (
@@ -226,6 +311,14 @@ function App() {
           votes={votes}
           imposterId={imposterId}
           onContinue={handleContinue}
+        />
+      )}
+
+      {currentPage === 'finalResults' && (
+        <FinalResultsPage
+          players={allPlayers}
+          scores={scores}
+          onNextRound={handleNextRound}
         />
       )}
     </>
