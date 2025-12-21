@@ -969,7 +969,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
               <>
                 {isImposter ? (
                   <>
-                    <div style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>🕵️ Tu es l'imposteur!</div>
+                    <div style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>😈 Tu es l'imposteur!</div>
                     <div style={{ fontSize: '1rem' }}>Indice: {hint}</div>
                   </>
                 ) : (
@@ -1008,7 +1008,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                     height: '80px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    border: `4px solid ${isCurrentUser ? (isImposter ? '#ff6666' : '#74a887ff') : '#6f6f6fff'}`,
+                    border: `4px solid ${isCurrentUser ? (isImposter ? '#cd6a6aff' : '#74a887ff') : '#6f6f6fff'}`,
                     backgroundColor: '#b3b3b3ff',
                     flexShrink: 0
                   }}>
@@ -1028,11 +1028,11 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                     flex: 1,
                     padding: '0.75rem 1.5rem',
                     backgroundColor: '#b3b3b3ff',
-                    border: `4px solid ${isCurrentUser ? (isImposter ? '#ff6666' : '#74a887ff') : '#6f6f6fff'}`,
+                    border: `4px solid ${isCurrentUser ? (isImposter ? '#cd6a6aff' : '#74a887ff') : '#6f6f6fff'}`,
                     textAlign: 'center',
                     fontSize: '1rem',
                     fontWeight: '600',
-                    color: isCurrentUser ? (isImposter ? '#ff6666' : '#74a887ff') : '#6f6f6fff',
+                    color: isCurrentUser ? (isImposter ? '#cd6a6aff' : '#74a887ff') : '#6f6f6fff',
                   }}>
                     {player.username}
                   </div>
