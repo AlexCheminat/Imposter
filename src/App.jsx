@@ -267,10 +267,18 @@ function App() {
       const wordRef = ref(database, `lobbies/${lobbyId}/currentWord`);
       await set(wordRef, null);
 
-      // Move everyone back to lobby
+      // Select a new imposter
+      const randomIndex = Math.floor(Math.random() * allPlayers.length);
+      const newImposter = allPlayers[randomIndex];
+      
+      console.log('New imposter selected:', newImposter.username);
+
+      // Move everyone back to word selection with new imposter
       const gameStateRef = ref(database, `lobbies/${lobbyId}/gameState`);
       await set(gameStateRef, {
-        currentPage: 'lobby'
+        currentPage: 'wordSelection',
+        imposterId: newImposter.id,
+        startedAt: Date.now()
       });
 
       console.log('Starting new round');
