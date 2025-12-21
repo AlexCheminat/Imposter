@@ -23,7 +23,7 @@ export default function FinalResultsPage({ players = [], scores = {}, onNextRoun
 
     document.body.style.margin = '0';
     document.body.style.padding = '0';
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'auto';
   }, []);
 
   // Get scores for each player
@@ -50,6 +50,7 @@ export default function FinalResultsPage({ players = [], scores = {}, onNextRoun
           margin: 0 !important;
           padding: 0 !important;
           overflow-x: hidden !important;
+          overflow-y: auto !important;
           width: 100% !important;
         }
         @keyframes float-down {
@@ -62,7 +63,7 @@ export default function FinalResultsPage({ players = [], scores = {}, onNextRoun
         }
       `}</style>
       
-      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #939393ff, #bebebeff)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'auto' }}>
+      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #939393ff, #bebebeff)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', paddingBottom: '100px', margin: 0, boxSizing: 'border-box', position: 'relative' }}>
         
         {/* Animated Triangles Background */}
         {triangles.map(triangle => (
