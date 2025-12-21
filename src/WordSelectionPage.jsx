@@ -841,7 +841,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
 
     document.body.style.margin = '0';
     document.body.style.padding = '0';
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'auto';
   }, []);
 
   // Generate and sync word with Firebase
