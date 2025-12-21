@@ -4,12 +4,14 @@ import { database } from './firebase';
 import RegisterPage from './RegisterPage';
 import LobbyPage from './LobbyPage';
 import WordSelectionPage from './WordSelectionPage';
+import VoteResultsPage from './VoteResultsPage';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('register');
   const [currentUser, setCurrentUser] = useState(null);
   const [allPlayers, setAllPlayers] = useState([]);
   const [imposterId, setImposterId] = useState(null);
+  const [votes, setVotes] = useState({});
   const [lobbyId] = useState('lobby-1');
 
   // Listen to players in the lobby
@@ -55,6 +57,35 @@ function App() {
 
     return () => unsubscribe();
   }, [lobbyId]);
+
+  // Listen to votes
+  useEffect(() => {
+    const votesRef = ref(database, `lobbies/${lobbyId}/votes`);
+    
+    const unsubscribe = onValue(votesRef, (snapshot) => {
+      const votesData = snapshot.val();
+      console.log('Votes updated:', votesData);
+      
+      if (votesData) {
+        setVotes(votesData);
+        
+        // Check if all players have voted
+        const voteCount = Object.keys(votesData).length;
+        if (voteCount === allPlayers.length && allPlayers.length > 0) {
+          console.log('All players have voted! Moving to results...');
+          // Move to results page
+          const gameStateRef = ref(database, `lobbies/${lobbyId}/gameState`);
+          set(gameStateRef, {
+            currentPage: 'voteResults',
+            imposterId: imposterId,
+            allVotesIn: true
+          });
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, [lobbyId, allPlayers.length, imposterId]);
 
   // Remove player when they leave/close tab
   useEffect(() => {
@@ -136,9 +167,29 @@ function App() {
     }
   };
 
-  const handleWordSelectionConfirm = (data) => {
+  const handleWordSelectionConfirm = async (data) => {
     console.log('Word selection confirmed:', data);
-    alert(`Selected: ${data.selectedPlayer.username} with word: ${data.word}`);
+    
+    try {
+      // Save vote to Firebase
+      const voteRef = ref(database, `lobbies/${lobbyId}/votes/${currentUser.firebaseId}`);
+      await set(voteRef, {
+        votedFor: data.selectedPlayer.id,
+        votedBy: currentUser.firebaseId,
+        timestamp: Date.now()
+      });
+      
+      console.log('Vote saved successfully!');
+    } catch (error) {
+      console.error('Error saving vote:', error);
+      alert('Failed to save vote. Please try again.');
+    }
+  };
+
+  const handleContinue = () => {
+    console.log('Continue clicked');
+    // You can navigate to next page here or reset the game
+    alert('Game over! Starting new round...');
   };
 
   return (
@@ -163,6 +214,15 @@ function App() {
           lobbyId={lobbyId}
           imposterId={imposterId}
           database={{ db: database, ref, onValue, set }}
+        />
+      )}
+
+      {currentPage === 'voteResults' && (
+        <VoteResultsPage
+          players={allPlayers}
+          votes={votes}
+          imposterId={imposterId}
+          onContinue={handleContinue}
         />
       )}
     </>
