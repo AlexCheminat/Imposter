@@ -180,6 +180,9 @@ function App() {
       });
       
       console.log('Vote saved successfully!');
+      
+      // Immediately move this player to vote results page
+      setCurrentPage('voteResults');
     } catch (error) {
       console.error('Error saving vote:', error);
       alert('Failed to save vote. Please try again.');

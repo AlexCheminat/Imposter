@@ -153,16 +153,17 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                   <div style={{
                     flex: 1,
                     height: '60px',
-                    backgroundColor: '#93c5fd',
-                    border: '4px solid #38475eff',
                     position: 'relative',
-                    overflow: 'hidden'
+                    display: 'flex',
+                    alignItems: 'center'
                   }}>
                     <div style={{
                       width: `${barWidth}%`,
                       height: '100%',
                       backgroundColor: '#60a5fa',
-                      transition: 'width 0.5s ease-out'
+                      border: '4px solid #38475eff',
+                      transition: 'width 0.5s ease-out',
+                      minWidth: barWidth > 0 ? '4px' : '0'
                     }} />
                   </div>
 
