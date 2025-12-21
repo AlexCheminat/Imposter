@@ -939,7 +939,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
               height: 0,
               borderLeft: `${triangle.size}px solid transparent`,
               borderRight: `${triangle.size}px solid transparent`,
-              borderBottom: `${triangle.size * 1.732}px solid rgba(153, 255, 153, ${triangle.opacity})`,
+              borderBottom: `${triangle.size * 1.732}px solid rgba(${isImposter ? '255, 102, 102' : '153, 255, 153'}, ${triangle.opacity})`,
               animation: `float-down ${triangle.duration}s linear ${triangle.delay}s infinite`,
               pointerEvents: 'none'
             }}
@@ -975,7 +975,6 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                 ) : (
                   <>
                     <div>{generatedWord}</div>
-                    <div style={{ fontSize: '1rem', opacity: 0.7 }}>Indice: {hint}</div>
                   </>
                 )}
               </>
