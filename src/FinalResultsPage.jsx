@@ -62,7 +62,7 @@ export default function FinalResultsPage({ players = [], scores = {}, onNextRoun
         }
       `}</style>
       
-      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #93c5fd, #bfdbfe)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'auto' }}>
+      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #939393ff, #bebebeff)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'auto' }}>
         
         {/* Animated Triangles Background */}
         {triangles.map(triangle => (
@@ -76,7 +76,7 @@ export default function FinalResultsPage({ players = [], scores = {}, onNextRoun
               height: 0,
               borderLeft: `${triangle.size}px solid transparent`,
               borderRight: `${triangle.size}px solid transparent`,
-              borderBottom: `${triangle.size * 1.732}px solid rgba(147, 197, 253, ${triangle.opacity})`,
+              borderBottom: `${triangle.size * 1.732}px solid rgba(192, 192, 192, ${triangle.opacity})`,
               animation: `float-down ${triangle.duration}s linear ${triangle.delay}s infinite`,
               pointerEvents: 'none'
             }}
@@ -89,12 +89,12 @@ export default function FinalResultsPage({ players = [], scores = {}, onNextRoun
           <div style={{
             width: '100%',
             padding: '1.5rem',
-            backgroundColor: '#93c5fd',
-            border: '4px solid #38475eff',
+            backgroundColor: '#cfcfcfff',
+            border: '4px solid #979797ff',
             textAlign: 'center',
             fontSize: '1.5rem',
             fontWeight: 'bold',
-            color: '#38475eff'
+            color: '#979797ff'
           }}>
             Total Scores
           </div>
@@ -113,8 +113,8 @@ export default function FinalResultsPage({ players = [], scores = {}, onNextRoun
                     height: '80px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    border: '4px solid #38475eff',
-                    backgroundColor: '#93c5fd',
+                    border: '4px solid #979797ff',
+                    backgroundColor: '#cfcfcfff',
                     flexShrink: 0
                   }}>
                     <img 
@@ -139,8 +139,8 @@ export default function FinalResultsPage({ players = [], scores = {}, onNextRoun
                     <div style={{
                       width: `${barWidth}%`,
                       height: '100%',
-                      backgroundColor: '#60a5fa',
-                      border: '4px solid #38475eff',
+                      backgroundColor: '#767676ff',
+                      border: '4px solid #979797ff',
                       transition: 'width 0.5s ease-out',
                       minWidth: barWidth > 0 ? '4px' : '0'
                     }} />
@@ -150,7 +150,7 @@ export default function FinalResultsPage({ players = [], scores = {}, onNextRoun
                   <div style={{
                     fontSize: '1.5rem',
                     fontWeight: 'bold',
-                    color: '#38475eff',
+                    color: '#979797ff',
                     minWidth: '30px',
                     textAlign: 'center'
                   }}>
@@ -167,17 +167,17 @@ export default function FinalResultsPage({ players = [], scores = {}, onNextRoun
               onClick={onNextRound}
               style={{
                 padding: '1rem 5rem',
-                backgroundColor: '#93c5fd',
-                border: '4px solid #38475eff',
+                backgroundColor: '#cfcfcfff',
+                border: '4px solid #979797ff',
                 borderRadius: '9999px',
                 fontWeight: 'bold',
                 fontSize: '1.25rem',
-                color: '#38475eff',
+                color: '#979797ff',
                 cursor: 'pointer',
                 minWidth: '250px'
               }}
-              onMouseOver={(e) => e.target.style.backgroundColor = '#bfdbfe'}
-              onMouseOut={(e) => e.target.style.backgroundColor = '#93c5fd'}
+              onMouseOver={(e) => e.target.style.backgroundColor = '#787878ff'}
+              onMouseOut={(e) => e.target.style.backgroundColor = '#cfcfcfff'}
             >
               Next Round
             </button>
