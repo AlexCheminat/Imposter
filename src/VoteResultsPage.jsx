@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 
 export default function VoteResultsPage({ players = [], votes = {}, imposterId, onContinue }) {
   const [triangles, setTriangles] = useState([]);
-  const [showResult, setShowResult] = useState(false);
+
+  // Check if all players have voted
+  const allPlayersVoted = Object.keys(votes).length === players.length && players.length > 0;
 
   // Generate animated triangles
   useEffect(() => {
@@ -25,10 +27,6 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
     document.body.style.margin = '0';
     document.body.style.padding = '0';
     document.body.style.overflow = 'hidden';
-
-    // Show result after all votes are in
-    // You can add a delay here if you want
-    setTimeout(() => setShowResult(true), 2000);
   }, []);
 
   // Calculate votes for each player
@@ -102,8 +100,8 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
         
         <div style={{ width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', position: 'relative', zIndex: 10, marginTop: '2rem' }}>
         
-          {/* Result Message */}
-          {showResult && (
+          {/* Result Message - Only show when all votes are in */}
+          {allPlayersVoted && (
             <div style={{
               width: '100%',
               padding: '1.5rem',
@@ -182,8 +180,8 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
             })}
           </div>
 
-          {/* Continue Button */}
-          {showResult && (
+          {/* Continue Button - Only show when all votes are in */}
+          {allPlayersVoted && (
             <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
               <button
                 onClick={onContinue}
