@@ -862,7 +862,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         setLoading(false);
       } else {
         // Generate random word using getRandomWord function
-        const randomWordData = getRandomWord(['animals']);
+        const randomWordData = getRandomWord(['animals', 'food', 'objects', 'countries', 'jobs', 'sports', 'celebrities', 'brands']);
         
         // Select random starting player
         const randomPlayerIndex = Math.floor(Math.random() * players.length);
@@ -889,7 +889,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
 
   const handleConfirm = () => {
     if (!selectedPlayer) {
-      alert('Please select a player!');
+      alert('Vous devez choisir un joueur!');
       return;
     }
     
@@ -981,7 +981,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                 )}
                 {startingPlayer && (
                   <div style={{ fontSize: '0.9rem', marginTop: '0.5rem', opacity: 0.8 }}>
-                    Commence: {startingPlayer}
+                    {startingPlayer} commence
                   </div>
                 )}
               </>

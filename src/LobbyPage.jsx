@@ -101,7 +101,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
             fontWeight: 'bold',
             color: '#7c3aed'
           }}>
-            Player Count: {sortedPlayers.length}
+            Nombre de Joueurs: {sortedPlayers.length}
           </div>
 
           {/* Players List */}
@@ -168,7 +168,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
                 onMouseOver={(e) => e.target.style.backgroundColor = '#e9d5ff'}
                 onMouseOut={(e) => e.target.style.backgroundColor = '#c084fc'}
               >
-                Start
+                Commencer
               </button>
             </div>
           )}

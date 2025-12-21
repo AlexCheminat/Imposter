@@ -98,11 +98,11 @@ export default function RegisterPage({ onRegister }) {
 
   const handleSubmit = () => {
     if (!capturedImage) {
-      alert('Please take a photo first!');
+      alert('Il faut prendre une photo !');
       return;
     }
     if (!username.trim()) {
-      alert('Please enter a username!');
+      alert('Veuillez entrer votre nom !');
       return;
     }
     
@@ -115,7 +115,7 @@ export default function RegisterPage({ onRegister }) {
     } else {
       // Fallback for when component is used standalone
       console.log('Registering:', { username, photo: capturedImage });
-      alert(`Welcome, ${username}! 🎉`);
+      alert(`Bienvenue, ${username}! 🎉`);
     }
   };
 
@@ -222,7 +222,7 @@ export default function RegisterPage({ onRegister }) {
                 <div className="text-center text-gray-700 px-8">
                   <UserCircle2 size={80} className="mx-auto mb-4 opacity-50" />
                   <p className="text-sm">
-                    {cameraError ? `Error: ${cameraError}` : 'Camera loading...'}
+                    {cameraError ? `Error: ${cameraError}` : 'La camera charge...'}
                   </p>
                   {cameraError && (
                     <button 
@@ -259,7 +259,7 @@ export default function RegisterPage({ onRegister }) {
                   minWidth: '190px'
                 }}
               >
-                Retake Photo
+                Reprendre Photo
               </button>
             ) : (
               <button
@@ -282,7 +282,7 @@ export default function RegisterPage({ onRegister }) {
                 }}
               >
                 <Camera size={24} />
-                Take Photo
+                Prendre Photo
               </button>
             )}
           </div>
@@ -293,7 +293,7 @@ export default function RegisterPage({ onRegister }) {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Username..."
+              placeholder="Nom..."
               style={{
                 width: '300px',
                 height: '70px',
@@ -325,7 +325,7 @@ export default function RegisterPage({ onRegister }) {
                 minWidth: '340px'
               }}
             >
-              Let's Go !!!
+              Allons-Y !!!
             </button>
           </div>
         </div>

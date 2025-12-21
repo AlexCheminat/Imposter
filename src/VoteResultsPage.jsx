@@ -113,8 +113,8 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
               color: '#977b48ff'
             }}>
               {imposterCaught
-                ? 'Imposter lost'
-                : 'Imposter won'}
+                ? 'L\'imposteur a perdu'
+                : 'L\'imposteur a gagné'}
             </div>
           )}
 
@@ -199,7 +199,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                 onMouseOver={(e) => e.target.style.backgroundColor = '#dcb869ff'}
                 onMouseOut={(e) => e.target.style.backgroundColor = '#f3d985ff'}
               >
-                Continue
+                Continuer
               </button>
             </div>
           )}

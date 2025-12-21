@@ -96,7 +96,7 @@ export default function FinalResultsPage({ players = [], scores = {}, onNextRoun
             fontWeight: 'bold',
             color: '#979797ff'
           }}>
-            Total Scores
+            Scores Totaux
           </div>
 
           {/* Score Results - Bar Graph */}
@@ -179,7 +179,7 @@ export default function FinalResultsPage({ players = [], scores = {}, onNextRoun
               onMouseOver={(e) => e.target.style.backgroundColor = '#787878ff'}
               onMouseOut={(e) => e.target.style.backgroundColor = '#cfcfcfff'}
             >
-              Next Round
+              Prochaine Partie
             </button>
           </div>
         </div>
