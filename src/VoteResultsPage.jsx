@@ -6,6 +6,12 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
   // Check if all players have voted
   const allPlayersVoted = Object.keys(votes).length === players.length && players.length > 0;
 
+  const sortedPlayersByJoinTime = [...players].sort((a, b) => a.joinedAt - b.joinedAt);
+  
+  // Check if current user is the first player (host)
+  const isFirstPlayer = sortedPlayersByJoinTime.length > 0 && currentUser && 
+                        sortedPlayersByJoinTime[0].id === currentUser.firebaseId;
+
   // Generate animated triangles
   useEffect(() => {
     const generateTriangles = () => {
@@ -224,7 +230,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
           </div>
 
           {/* Continue Button - Only show when all votes are in */}
-          {allPlayersVoted && (
+          {allPlayersVoted && isFirstPlayer && (
             <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
               <button
                 onClick={onContinue}

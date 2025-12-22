@@ -169,7 +169,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
                 onMouseOver={(e) => e.target.style.backgroundColor = '#e9d5ff'}
                 onMouseOut={(e) => e.target.style.backgroundColor = '#c084fc'}
               >
-                Start
+                Commencer
               </button>
             </div>
           )}
