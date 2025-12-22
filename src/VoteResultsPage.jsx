@@ -167,7 +167,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                   }}>
                     {voters.length > 0 && (
                       <div style={{
-                        width: `${voters.length * 49 + 5}px`,
+                        width: `${voters.length * 57 + 5}px`,
                         height: '100%',
                         backgroundColor: '#dba952ff',
                         border: '4px solid #977b48ff',
