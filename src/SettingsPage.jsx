@@ -14,7 +14,7 @@ const categories = [
 ];
 
 export default function SettingsPage({ onBack, database, lobbyId }) {
-  const [selectedCategories, setSelectedCategories] = useState(new Set(['animals', 'food', 'objects']));
+  const [selectedCategories, setSelectedCategories] = useState(new Set(['animals', 'food', 'objects', 'countries', 'jobs', 'sports', 'celebrities', 'brands']));
   const [triangles, setTriangles] = useState([]);
 
   // Generate animated triangles
@@ -108,7 +108,7 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
       <div style={{ 
         minHeight: '100vh', 
         width: '100vw', 
-        background: 'linear-gradient(to bottom, #a8a8a8ff, #686868ff)', 
+        background: 'linear-gradient(to bottom, #212121ff, #0b0b0bff)', 
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center', 
@@ -131,7 +131,7 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
               height: 0,
               borderLeft: `${triangle.size}px solid transparent`,
               borderRight: `${triangle.size}px solid transparent`,
-              borderBottom: `${triangle.size * 1.732}px solid rgba(153, 255, 153, ${triangle.opacity})`,
+              borderBottom: `${triangle.size * 1.732}px solid rgba(43, 43, 43, ${triangle.opacity})`,
               animation: `float-down ${triangle.duration}s linear ${triangle.delay}s infinite`,
               pointerEvents: 'none'
             }}
@@ -145,8 +145,8 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
             position: 'absolute',
             top: '1.5rem',
             right: '1.5rem',
-            backgroundColor: '#b3b3b3ff',
-            border: '3px solid #6f6f6fff',
+            // backgroundColor: '#b3b3b3',
+            // border: '3px solid #6f6f6f',
             borderRadius: '50%',
             width: '60px',
             height: '60px',
@@ -159,14 +159,14 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
           onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#c9c9c9ff'}
           onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#b3b3b3ff'}
         >
-          <Home size={30} color="#6f6f6fff" />
+          <Home size={90} color="#d7d7d7ff" />
         </button>
 
         {/* Title */}
         <div style={{
           fontSize: '2rem',
           fontWeight: 'bold',
-          color: '#6f6f6fff',
+          color: '#d7d7d7ff',
           marginTop: '1rem',
           marginBottom: '2rem',
           textAlign: 'center',
@@ -211,10 +211,10 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
               >
                 {/* Emoji Box */}
                 <div style={{
-                  width: '120px',
-                  height: '120px',
-                  backgroundColor: '#b3b3b3ff',
-                  border: `4px solid ${isSelected ? '#74a887ff' : '#6f6f6fff'}`,
+                  width: '90px',
+                  height: '90px',
+                  backgroundColor: '#d7d7d7ff',
+                  border: `4px solid ${isSelected ? '#73e79eff' : '#9a9a9aff'}`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -229,7 +229,7 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
                 <div style={{
                   fontSize: '1rem',
                   fontWeight: '600',
-                  color: isSelected ? '#74a887ff' : '#6f6f6fff',
+                  color: isSelected ? '#73e79eff' : '#d7d7d7ff',
                   textAlign: 'center'
                 }}>
                   {category.name}
@@ -243,12 +243,12 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
         <div style={{
           marginTop: '2rem',
           padding: '1rem 2rem',
-          backgroundColor: '#b3b3b3ff',
-          border: '3px solid #6f6f6fff',
+          backgroundColor: '#333333ff',
+          border: '3px solid #d7d7d7ff',
           borderRadius: '8px',
           fontSize: '1rem',
           fontWeight: '600',
-          color: '#6f6f6fff',
+          color: '#d7d7d7ff',
           zIndex: 10
         }}>
           {selectedCategories.size} catégorie{selectedCategories.size > 1 ? 's' : ''} sélectionnée{selectedCategories.size > 1 ? 's' : ''}
