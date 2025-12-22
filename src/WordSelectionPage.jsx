@@ -927,7 +927,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
       generatedAt: Date.now()
     });
     
-    await set(imposterRef, randomImposter ? randomImposter.imposterId : null);
+    await set(imposterRef, randomImposter ? randomImposter.gameState.imposterId : null);
   };
 
   const handleConfirm = () => {
