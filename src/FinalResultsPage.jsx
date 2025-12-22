@@ -1,7 +1,14 @@
 import { useState, useEffect } from 'react';
 
-export default function FinalResultsPage({ players = [], scores = {}, onNextRound }) {
+export default function FinalResultsPage({ players = [], scores = {}, currentUser, onNextRound }) {
   const [triangles, setTriangles] = useState([]);
+
+  // Sort players by join time to determine host
+  const sortedPlayersByJoinTime = [...players].sort((a, b) => a.joinedAt - b.joinedAt);
+  
+  // Check if current user is the first player (host)
+  const isFirstPlayer = sortedPlayersByJoinTime.length > 0 && currentUser && 
+                        sortedPlayersByJoinTime[0].id === currentUser.firebaseId;
 
   // Generate animated triangles
   useEffect(() => {
@@ -162,27 +169,29 @@ export default function FinalResultsPage({ players = [], scores = {}, onNextRoun
             })}
           </div>
 
-          {/* Next Round Button */}
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
-            <button
-              onClick={onNextRound}
-              style={{
-                padding: '1rem 5rem',
-                backgroundColor: '#cfcfcfff',
-                border: '4px solid #979797ff',
-                borderRadius: '9999px',
-                fontWeight: 'bold',
-                fontSize: '1.25rem',
-                color: '#979797ff',
-                cursor: 'pointer',
-                minWidth: '250px'
-              }}
-              onMouseOver={(e) => e.target.style.backgroundColor = '#787878ff'}
-              onMouseOut={(e) => e.target.style.backgroundColor = '#cfcfcfff'}
-            >
-              Prochaine Partie
-            </button>
-          </div>
+          {/* Next Round Button - Only show for host */}
+          {isFirstPlayer && (
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+              <button
+                onClick={onNextRound}
+                style={{
+                  padding: '1rem 5rem',
+                  backgroundColor: '#cfcfcfff',
+                  border: '4px solid #979797ff',
+                  borderRadius: '9999px',
+                  fontWeight: 'bold',
+                  fontSize: '1.25rem',
+                  color: '#979797ff',
+                  cursor: 'pointer',
+                  minWidth: '250px'
+                }}
+                onMouseOver={(e) => e.target.style.backgroundColor = '#787878ff'}
+                onMouseOut={(e) => e.target.style.backgroundColor = '#cfcfcfff'}
+              >
+                Prochaine Partie
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </>

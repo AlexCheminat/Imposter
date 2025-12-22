@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 
-export default function VoteResultsPage({ players = [], votes = {}, imposterId, onContinue }) {
+export default function VoteResultsPage({ players = [], votes = {}, imposterId, currentUser, onContinue }) {
   const [triangles, setTriangles] = useState([]);
 
   // Check if all players have voted
   const allPlayersVoted = Object.keys(votes).length === players.length && players.length > 0;
 
+  // Sort players by join time to determine host
   const sortedPlayersByJoinTime = [...players].sort((a, b) => a.joinedAt - b.joinedAt);
   
   // Check if current user is the first player (host)
@@ -229,7 +230,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
             })}
           </div>
 
-          {/* Continue Button - Only show when all votes are in */}
+          {/* Continue Button - Only show when all votes are in AND user is host */}
           {allPlayersVoted && isFirstPlayer && (
             <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
               <button
