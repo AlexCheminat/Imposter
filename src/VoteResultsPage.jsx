@@ -131,18 +131,18 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
           <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {sortedPlayers.map(player => {
               const votes = voteCount[player.id] || 0;
-              const barWidth = maxVotes > 0 ? (votes / maxVotes) * 100 : 0;
               const voters = votersForPlayer[player.id] || [];
+              const isImposter = player.id === imposterId;
 
               return (
                 <div key={player.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  {/* Player Photo */}
+                  {/* Player Photo - Red border if imposter and all votes are in */}
                   <div style={{
                     width: '80px',
                     height: '80px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    border: '4px solid #977b48ff',
+                    border: `4px solid ${allPlayersVoted && isImposter ? '#ff0000' : '#977b48ff'}`,
                     backgroundColor: '#f3d985ff',
                     flexShrink: 0
                   }}>
@@ -174,8 +174,8 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                         transition: 'width 0.5s ease-out',
                         display: 'flex',
                         alignItems: 'center',
-                        padding: '0 5px',
-                        gap: '5px',
+                        padding: '0 0.5rem',
+                        gap: '0.3rem',
                         overflow: 'visible',
                         boxSizing: 'border-box'
                       }}>
