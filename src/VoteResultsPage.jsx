@@ -165,18 +165,17 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                     display: 'flex',
                     alignItems: 'center'
                   }}>
-                    {barWidth > 0 && (
+                    {voters.length > 0 && (
                       <div style={{
-                        width: `${barWidth}%`,
-                        minWidth: voters.length > 0 ? `${voters.length * (44 + 5) + 5}px` : '0px',
+                        width: `${voters.length * 50}px`,
                         height: '100%',
                         backgroundColor: '#dba952ff',
                         border: '4px solid #977b48ff',
                         transition: 'width 0.5s ease-out',
                         display: 'flex',
                         alignItems: 'center',
-                        padding: '0 5px',
-                        gap: '5px',
+                        padding: '0 0.5rem',
+                        gap: '0.3rem',
                         overflow: 'visible',
                         boxSizing: 'border-box'
                       }}>
