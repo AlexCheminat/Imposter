@@ -811,7 +811,6 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
   const [category, setCategory] = useState('');
   const [loading, setLoading] = useState(true);
   const [startingPlayer, setStartingPlayer] = useState(null);
-  const [isRefreshing, setIsRefreshing] = useState(false);
   
   // Check if current user is the imposter
   const isImposter = currentUser && imposterId && currentUser.firebaseId === imposterId;
@@ -861,7 +860,6 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         setCategory(wordData.category || '');
         setStartingPlayer(wordData.startingPlayer || null);
         setLoading(false);
-        setIsRefreshing(false);
       } else {
         // Generate random word using getRandomWord function
         const randomWordData = getRandomWord(['animals', 'food', 'objects', 'countries', 'jobs', 'sports', 'celebrities', 'brands']);
@@ -883,36 +881,11 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         setCategory(randomWordData.category);
         setStartingPlayer(randomPlayer ? randomPlayer.username : null);
         setLoading(false);
-        setIsRefreshing(false);
       }
     });
 
     return () => unsubscribe();
   }, [database, lobbyId, players]);
-
-  const handleRefresh = async () => {
-    if (!database || !lobbyId || isRefreshing) return;
-    
-    setIsRefreshing(true);
-    
-    const { ref, set } = database;
-    const wordRef = ref(database.db, `lobbies/${lobbyId}/currentWord`);
-    
-    // Generate new random word
-    const randomWordData = getRandomWord(['animals', 'food', 'objects', 'countries', 'jobs', 'sports', 'celebrities', 'brands']);
-    
-    // Select random starting player
-    const randomPlayerIndex = Math.floor(Math.random() * players.length);
-    const randomPlayer = players[randomPlayerIndex];
-    
-    await set(wordRef, {
-      word: randomWordData.word,
-      hint: randomWordData.hint,
-      category: randomWordData.category,
-      startingPlayer: randomPlayer ? randomPlayer.username : null,
-      generatedAt: Date.now()
-    });
-  };
 
   const handleConfirm = () => {
     if (!selectedPlayer) {
@@ -951,10 +924,6 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           100% {
             transform: translateY(100vh) rotate(360deg);
           }
-        }
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
         }
       `}</style>
       
@@ -996,36 +965,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.5rem',
-            position: 'relative'
+            gap: '0.5rem'
           }}>
-            {/* Refresh Button */}
-            <button
-              onClick={handleRefresh}
-              disabled={isRefreshing || loading}
-              style={{
-                position: 'absolute',
-                top: '1rem',
-                right: '1rem',
-                backgroundColor: 'transparent',
-                border: 'none',
-                cursor: isRefreshing || loading ? 'not-allowed' : 'pointer',
-                padding: '0.5rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                opacity: isRefreshing || loading ? 0.5 : 1
-              }}
-            >
-              <RotateCw 
-                size={24} 
-                color="#6f6f6fff"
-                style={{
-                  animation: isRefreshing ? 'spin 1s linear infinite' : 'none'
-                }}
-              />
-            </button>
-
             {loading ? 'Generating word...' : (
               <>
                 {isImposter ? (
