@@ -122,6 +122,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
           <div style={{
             width: '100%',
             padding: '1rem 2rem',
+            paddinTop: '0.5rem',
             backgroundColor: '#c084fc',
             border: '4px solid #7c3aed',
             textAlign: 'center',

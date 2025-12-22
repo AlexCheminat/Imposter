@@ -131,7 +131,7 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
               height: 0,
               borderLeft: `${triangle.size}px solid transparent`,
               borderRight: `${triangle.size}px solid transparent`,
-              borderBottom: `${triangle.size * 1.732}px solid rgba(250, 150, 150, ${triangle.opacity})`,
+              borderBottom: `${triangle.size * 1.732}px solid rgba(150, 150, 149, ${triangle.opacity})`,
               animation: `float-down ${triangle.duration}s linear ${triangle.delay}s infinite`,
               pointerEvents: 'none'
             }}
