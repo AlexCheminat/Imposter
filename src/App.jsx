@@ -319,6 +319,7 @@ function App() {
           votes={votes}
           imposterId={imposterId}
           onContinue={handleContinue}
+          currentUser={currentUser}
         />
       )}
 
@@ -327,6 +328,7 @@ function App() {
           players={allPlayers}
           scores={scores}
           onNextRound={handleNextRound}
+          currentUser={currentUser}
         />
       )}
     </>
