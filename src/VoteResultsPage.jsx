@@ -168,6 +168,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                     {barWidth > 0 && (
                       <div style={{
                         width: `${barWidth}%`,
+                        minWidth: voters.length > 0 ? `${voters.length * 50}px` : '4px',
                         height: '100%',
                         backgroundColor: '#dba952ff',
                         border: '4px solid #977b48ff',
@@ -176,7 +177,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                         alignItems: 'center',
                         padding: '0 0.5rem',
                         gap: '0.3rem',
-                        overflow: 'hidden',
+                        overflow: 'visible',
                         boxSizing: 'border-box'
                       }}>
                         {/* Display voter photos inside the bar */}
