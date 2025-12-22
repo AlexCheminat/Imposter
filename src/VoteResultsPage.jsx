@@ -31,17 +31,17 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
 
   // Calculate votes for each player and track who voted for whom
   const voteCount = {};
-  const votersForPlayer = {}; // Track which players voted for each player
+  const votersForPlayer = {};
   
   players.forEach(player => {
     voteCount[player.id] = 0;
     votersForPlayer[player.id] = [];
   });
 
+  // Process votes and build voter lists
   Object.entries(votes).forEach(([voterId, vote]) => {
     if (vote.votedFor && voteCount[vote.votedFor] !== undefined) {
       voteCount[vote.votedFor]++;
-      // Find the voter player object
       const voter = players.find(p => p.id === voterId);
       if (voter) {
         votersForPlayer[vote.votedFor].push(voter);
@@ -73,8 +73,8 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
           margin: 0 !important;
           padding: 0 !important;
           overflow-x: hidden !important;
-          width: 100% !important;
           overflow-y: auto !important;
+          width: 100% !important;
         }
         @keyframes float-down {
           0% {
@@ -86,10 +86,10 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
         }
       `}</style>
       
-      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #93c5fd, #bfdbfe)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', margin: 0, boxSizing: 'border-box', position: 'fixed', top: 0, left: 0, overflow: 'auto' }}>
+      <div style={{ minHeight: '100vh', width: '100vw', background: 'linear-gradient(to bottom, #ddb96aff, #f0d28fff)', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '2rem', paddingBottom: '100px', margin: 0, boxSizing: 'border-box', position: 'relative', overflow: 'auto' }}>
         
         {/* Animated Triangles Background */}
-        {triangles.map(triangle => (
+        {triangles.map(triangle => ( 
           <div
             key={triangle.id}
             style={{
@@ -100,7 +100,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
               height: 0,
               borderLeft: `${triangle.size}px solid transparent`,
               borderRight: `${triangle.size}px solid transparent`,
-              borderBottom: `${triangle.size * 1.732}px solid rgba(147, 197, 253, ${triangle.opacity})`,
+              borderBottom: `${triangle.size * 1.732}px solid rgba(255, 153, 51, ${triangle.opacity})`,
               animation: `float-down ${triangle.duration}s linear ${triangle.delay}s infinite`,
               pointerEvents: 'none'
             }}
@@ -114,16 +114,16 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
             <div style={{
               width: '100%',
               padding: '1.5rem',
-              backgroundColor: '#93c5fd',
-              border: '4px solid #38475eff',
+              backgroundColor: '#f3d985ff',
+              border: '4px solid #977b48ff',
               textAlign: 'center',
               fontSize: '1rem',
               fontWeight: 'bold',
-              color: '#38475eff'
+              color: '#977b48ff'
             }}>
-              {imposterCaught 
-                ? 'Imposter has won/lost (This will only display once everyone has voted!)'
-                : 'Imposter has won/lost (This will only display once everyone has voted!)'}
+              {imposterCaught
+                ? 'L\'imposteur a perdu'
+                : 'L\'imposteur a gagné'}
             </div>
           )}
 
@@ -132,6 +132,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
             {sortedPlayers.map(player => {
               const votes = voteCount[player.id] || 0;
               const barWidth = maxVotes > 0 ? (votes / maxVotes) * 100 : 0;
+              const voters = votersForPlayer[player.id] || [];
 
               return (
                 <div key={player.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -141,8 +142,8 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                     height: '80px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    border: '4px solid #38475eff',
-                    backgroundColor: '#93c5fd',
+                    border: '4px solid #977b48ff',
+                    backgroundColor: '#f3d985ff',
                     flexShrink: 0
                   }}>
                     <img 
@@ -156,7 +157,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                     />
                   </div>
 
-                  {/* Vote Bar */}
+                  {/* Vote Bar with Voter Photos */}
                   <div style={{
                     flex: 1,
                     height: '60px',
@@ -164,21 +165,54 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                     display: 'flex',
                     alignItems: 'center'
                   }}>
-                    <div style={{
-                      width: `${barWidth}%`,
-                      height: '100%',
-                      backgroundColor: '#60a5fa',
-                      border: '4px solid #38475eff',
-                      transition: 'width 0.5s ease-out',
-                      minWidth: barWidth > 0 ? '4px' : '0'
-                    }} />
+                    {barWidth > 0 && (
+                      <div style={{
+                        width: `${barWidth}%`,
+                        height: '100%',
+                        backgroundColor: '#dba952ff',
+                        border: '4px solid #977b48ff',
+                        transition: 'width 0.5s ease-out',
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '0 0.5rem',
+                        gap: '0.3rem',
+                        overflow: 'hidden',
+                        boxSizing: 'border-box'
+                      }}>
+                        {/* Display voter photos inside the bar */}
+                        {voters.map((voter) => (
+                          <div
+                            key={voter.id}
+                            style={{
+                              width: '40px',
+                              height: '40px',
+                              borderRadius: '50%',
+                              overflow: 'hidden',
+                              border: '2px solid #977b48ff',
+                              backgroundColor: '#f3d985ff',
+                              flexShrink: 0
+                            }}
+                          >
+                            <img 
+                              src={voter.photo} 
+                              alt={voter.username}
+                              style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover'
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {/* Vote Count */}
                   <div style={{
                     fontSize: '1.5rem',
                     fontWeight: 'bold',
-                    color: '#38475eff',
+                    color: '#977b48ff',
                     minWidth: '30px',
                     textAlign: 'center'
                   }}>
@@ -196,19 +230,19 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                 onClick={onContinue}
                 style={{
                   padding: '1rem 5rem',
-                  backgroundColor: '#93c5fd',
-                  border: '4px solid #38475eff',
+                  backgroundColor: '#f3d985ff',
+                  border: '4px solid #977b48ff',
                   borderRadius: '9999px',
                   fontWeight: 'bold',
                   fontSize: '1.25rem',
-                  color: '#38475eff',
+                  color: '#977b48ff',
                   cursor: 'pointer',
                   minWidth: '250px'
                 }}
-                onMouseOver={(e) => e.target.style.backgroundColor = '#bfdbfe'}
-                onMouseOut={(e) => e.target.style.backgroundColor = '#93c5fd'}
+                onMouseOver={(e) => e.target.style.backgroundColor = '#dcb869ff'}
+                onMouseOut={(e) => e.target.style.backgroundColor = '#f3d985ff'}
               >
-                Continue
+                Continuer
               </button>
             </div>
           )}
