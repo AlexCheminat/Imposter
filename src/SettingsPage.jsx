@@ -131,7 +131,7 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
               height: 0,
               borderLeft: `${triangle.size}px solid transparent`,
               borderRight: `${triangle.size}px solid transparent`,
-              borderBottom: `${triangle.size * 1.732}px solid rgba(43, 43, 43, ${triangle.opacity})`,
+              borderBottom: `${triangle.size * 1.732}px solid rgba(250, 150, 150, ${triangle.opacity})`,
               animation: `float-down ${triangle.duration}s linear ${triangle.delay}s infinite`,
               pointerEvents: 'none'
             }}
@@ -145,8 +145,7 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
             position: 'absolute',
             top: '1.5rem',
             right: '1.5rem',
-            // backgroundColor: '#b3b3b3',
-            // border: '3px solid #6f6f6f',
+            border: '2px solid #d7d7d7ff',
             borderRadius: '50%',
             width: '60px',
             height: '60px',
@@ -172,7 +171,7 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
           textAlign: 'center',
           zIndex: 10
         }}>
-          Choisir les catégories
+          Choisir les Catégories
         </div>
 
         {/* Category Grid */}
