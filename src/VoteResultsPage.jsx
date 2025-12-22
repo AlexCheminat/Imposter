@@ -9,9 +9,16 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
   // Sort players by join time to determine host
   const sortedPlayersByJoinTime = [...players].sort((a, b) => a.joinedAt - b.joinedAt);
   
+  // Debug logs
+  console.log('VoteResults - Current User:', currentUser);
+  console.log('VoteResults - First Player:', sortedPlayersByJoinTime[0]);
+  console.log('VoteResults - All Players:', players);
+  
   // Check if current user is the first player (host)
   const isFirstPlayer = sortedPlayersByJoinTime.length > 0 && currentUser && 
                         sortedPlayersByJoinTime[0].id === currentUser.id;
+  
+  console.log('VoteResults - isFirstPlayer:', isFirstPlayer);
 
   // Generate animated triangles
   useEffect(() => {

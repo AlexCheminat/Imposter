@@ -6,9 +6,16 @@ export default function FinalResultsPage({ players = [], scores = {}, currentUse
   // Sort players by join time to determine host
   const sortedPlayersByJoinTime = [...players].sort((a, b) => a.joinedAt - b.joinedAt);
   
+  // Debug logs
+  console.log('FinalResults - Current User:', currentUser);
+  console.log('FinalResults - First Player:', sortedPlayersByJoinTime[0]);
+  console.log('FinalResults - All Players:', players);
+  
   // Check if current user is the first player (host)
   const isFirstPlayer = sortedPlayersByJoinTime.length > 0 && currentUser && 
                         sortedPlayersByJoinTime[0].id === currentUser.id;
+  
+  console.log('FinalResults - isFirstPlayer:', isFirstPlayer);
 
   // Generate animated triangles
   useEffect(() => {
