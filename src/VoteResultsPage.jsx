@@ -142,7 +142,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                     height: '80px',
                     borderRadius: '50%',
                     overflow: 'hidden',
-                    border: `4px solid ${allPlayersVoted && isImposter ? '#ff0000' : '#977b48ff'}`,
+                    border: `4px solid ${allPlayersVoted && isImposter ? '#ad5246ff' : '#977b48ff'}`,
                     backgroundColor: '#f3d985ff',
                     flexShrink: 0
                   }}>
