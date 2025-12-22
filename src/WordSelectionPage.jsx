@@ -789,7 +789,7 @@ const wordCategories = {
   ]
 };
 
-function getRandomWord(categories = ['animals', 'food', 'objects', 'countries', 'jobs', 'sports', 'celebrities', 'brands', 'empty']) {
+function getRandomWord(categories = ['animals', 'food', 'objects', 'places', 'jobs', 'sports', 'countries', 'celebrities', 'brands']) {
   const allWords = [];
   
   categories.forEach(category => {
@@ -816,6 +816,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
   const [loading, setLoading] = useState(true);
   const [startingPlayer, setStartingPlayer] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState(['animals', 'food', 'objects']);
   
   // Sort players by join time to determine host
   const sortedPlayers = [...players].sort((a, b) => a.joinedAt - b.joinedAt);
@@ -856,6 +857,23 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     document.body.style.overflow = 'auto';
   }, []);
 
+  // Load selected categories from Firebase
+  useEffect(() => {
+    if (!database || !lobbyId) return;
+
+    const { ref, onValue } = database;
+    const categoriesRef = ref(database.db, `lobbies/${lobbyId}/selectedCategories`);
+
+    const unsubscribe = onValue(categoriesRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data && Array.isArray(data) && data.length > 0) {
+        setSelectedCategories(data);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [database, lobbyId]);
+
   // Generate and sync word with Firebase
   useEffect(() => {
     if (!database || !lobbyId) return;
@@ -874,8 +892,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         setLoading(false);
         setIsRefreshing(false);
       } else {
-        // Generate random word using getRandomWord function
-        const randomWordData = getRandomWord(['animals', 'food', 'objects', 'countries', 'jobs', 'sports', 'celebrities', 'brands']);
+        // Generate random word using getRandomWord function with selected categories
+        const randomWordData = getRandomWord(selectedCategories);
         
         // Select random starting player
         const randomPlayerIndex = Math.floor(Math.random() * players.length);
@@ -899,9 +917,9 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     });
 
     return () => unsubscribe();
-  }, [database, lobbyId, players]);
+  }, [database, lobbyId, players, selectedCategories]);
 
-const handleRefresh = async () => {
+  const handleRefresh = async () => {
     if (!database || !lobbyId || isRefreshing) return;
     
     setIsRefreshing(true);
