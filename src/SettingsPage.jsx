@@ -13,7 +13,7 @@ const categories = [
   { id: 'empty', emoji: '🫙', name: 'Vide' }
 ];
 
-export default function CategorySettings({ onBack, database, lobbyId }) {
+export default function SettingsPage({ onBack, database, lobbyId }) {
   const [selectedCategories, setSelectedCategories] = useState(new Set(['animals', 'food', 'objects']));
   const [triangles, setTriangles] = useState([]);
 
