@@ -3,6 +3,7 @@ import { ref, push, onValue, set, remove } from 'firebase/database';
 import { database } from './firebase';
 import RegisterPage from './RegisterPage';
 import LobbyPage from './LobbyPage';
+import CategorySettings from './CategorySettings';
 import WordSelectionPage from './WordSelectionPage';
 import VoteResultsPage from './VoteResultsPage';
 import FinalResultsPage from './FinalResultsPage';
@@ -288,6 +289,14 @@ function App() {
     }
   };
 
+  const handleOpenSettings = () => {
+    setCurrentPage('settings');
+  };
+
+  const handleBackToLobby = () => {
+    setCurrentPage('lobby');
+  };
+
   return (
     <>
       {currentPage === 'register' && (
@@ -299,6 +308,15 @@ function App() {
           players={allPlayers}
           currentUser={currentUser}
           onStartGame={handleStartGame}
+          onOpenSettings={handleOpenSettings}
+        />
+      )}
+
+      {currentPage === 'settings' && (
+        <CategorySettings
+          onBack={handleBackToLobby}
+          database={{ db: database, ref, onValue, set }}
+          lobbyId={lobbyId}
         />
       )}
 

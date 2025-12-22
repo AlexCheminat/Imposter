@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
+import { Settings } from 'lucide-react';
 
-export default function LobbyPage({ players = [], currentUser, onStartGame }) {
+export default function LobbyPage({ players = [], currentUser, onStartGame, onOpenSettings }) {
   const [triangles, setTriangles] = useState([]);
   
   // Sort players by join time to determine host
@@ -30,7 +31,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
 
     document.body.style.margin = '0';
     document.body.style.padding = '0';
-    document.body.style.overflow = 'auto'; // Allow scrolling
+    document.body.style.overflow = 'auto';
   }, []);
 
   const handleStart = () => {
@@ -88,6 +89,32 @@ export default function LobbyPage({ players = [], currentUser, onStartGame }) {
             }}
           />
         ))}
+
+        {/* Settings Icon (only for host) */}
+        {isFirstPlayer && (
+          <button
+            onClick={onOpenSettings}
+            style={{
+              position: 'absolute',
+              top: '1.5rem',
+              right: '1.5rem',
+              backgroundColor: '#c084fc',
+              border: '3px solid #7c3aed',
+              borderRadius: '50%',
+              width: '60px',
+              height: '60px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              zIndex: 20
+            }}
+            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e9d5ff'}
+            onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#c084fc'}
+          >
+            <Settings size={30} color="#7c3aed" />
+          </button>
+        )}
         
         <div style={{ width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', position: 'relative', zIndex: 10, marginTop: '2rem' }}>
         

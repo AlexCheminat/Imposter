@@ -783,10 +783,13 @@ const wordCategories = {
     { word: 'YouTube', hint: 'Vidéo' },
     { word: 'Netflix', hint: 'Streaming' },
     { word: 'Disney+', hint: 'Films' },
+  ],
+
+  empty: [
   ]
 };
 
-function getRandomWord(categories = ['animals', 'food', 'objects', 'countries', 'jobs', 'sports', 'celebrities', 'brands']) {
+function getRandomWord(categories = ['animals', 'food', 'objects', 'countries', 'jobs', 'sports', 'celebrities', 'brands', 'empty']) {
   const allWords = [];
   
   categories.forEach(category => {
@@ -907,8 +910,8 @@ const handleRefresh = async () => {
     const wordRef = ref(database.db, `lobbies/${lobbyId}/currentWord`);
     const imposterRef = ref(database.db, `lobbies/${lobbyId}/gameState/imposterId`);
     
-    // Generate new random word
-    const randomWordData = getRandomWord(['animals', 'food', 'objects', 'countries', 'jobs', 'sports', 'celebrities', 'brands']);
+    // Generate new random word using selected categories
+    const randomWordData = getRandomWord(selectedCategories);
     
     // Select random starting player
     const randomPlayerIndex = Math.floor(Math.random() * players.length);
