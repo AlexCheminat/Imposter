@@ -891,14 +891,14 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     return () => unsubscribe();
   }, [database, lobbyId, players]);
 
-  const handleRefresh = async () => {
+const handleRefresh = async () => {
     if (!database || !lobbyId || isRefreshing) return;
     
     setIsRefreshing(true);
     
     const { ref, set } = database;
     const wordRef = ref(database.db, `lobbies/${lobbyId}/currentWord`);
-    const imposterRef = ref(database.db, `lobbies/${lobbyId}/imposterId`);
+    const imposterRef = ref(database.db, `lobbies/${lobbyId}/gameState/imposterId`);
     
     // Generate new random word
     const randomWordData = getRandomWord(['animals', 'food', 'objects', 'countries', 'jobs', 'sports', 'celebrities', 'brands']);
@@ -927,7 +927,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
       generatedAt: Date.now()
     });
     
-    await set(imposterRef, randomImposter ? randomImposter.gameState.imposterId : null);
+    await set(imposterRef, randomImposter ? randomImposter.id : null);
   };
 
   const handleConfirm = () => {
