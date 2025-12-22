@@ -16,7 +16,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
   
   // Check if current user is the first player (host)
   const isFirstPlayer = sortedPlayersByJoinTime.length > 0 && currentUser && 
-                        sortedPlayersByJoinTime[0].id === currentUser.id;
+                        sortedPlayersByJoinTime[0].id === currentUser.firebaseId;
   
   console.log('VoteResults - isFirstPlayer:', isFirstPlayer);
 

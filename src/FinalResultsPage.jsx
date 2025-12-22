@@ -13,7 +13,7 @@ export default function FinalResultsPage({ players = [], scores = {}, currentUse
   
   // Check if current user is the first player (host)
   const isFirstPlayer = sortedPlayersByJoinTime.length > 0 && currentUser && 
-                        sortedPlayersByJoinTime[0].id === currentUser.id;
+                        sortedPlayersByJoinTime[0].id === currentUser.firebaseId;
   
   console.log('FinalResults - isFirstPlayer:', isFirstPlayer);
 
