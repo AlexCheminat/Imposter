@@ -8,7 +8,7 @@ export default function FinalResultsPage({ players = [], scores = {}, currentUse
   
   // Check if current user is the first player (host)
   const isFirstPlayer = sortedPlayersByJoinTime.length > 0 && currentUser && 
-                        sortedPlayersByJoinTime[0].id === currentUser.firebaseId;
+                        sortedPlayersByJoinTime[0].id === currentUser.id;
 
   // Generate animated triangles
   useEffect(() => {
