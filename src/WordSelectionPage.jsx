@@ -814,9 +814,16 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
   const [startingPlayer, setStartingPlayer] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   
+  // Sort players by join time to determine host
+  const sortedPlayers = [...players].sort((a, b) => a.joinedAt - b.joinedAt);
+  
+  // Check if current user is the first player (host)
+  const isFirstPlayer = sortedPlayers.length > 0 && currentUser && 
+                        sortedPlayers[0].id === currentUser.firebaseId;
+
   // Check if current user is the imposter
   const isImposter = currentUser && imposterId && currentUser.firebaseId === imposterId;
-  
+
   console.log('===== IMPOSTER CHECK =====');
   console.log('Current User Firebase ID:', currentUser?.firebaseId);
   console.log('Imposter ID from props:', imposterId);
@@ -1016,6 +1023,7 @@ const handleRefresh = async () => {
             position: 'relative'
           }}>
             {/* Refresh Button */}
+            {isFirstPlayer && (
             <button
               onClick={handleRefresh}
               disabled={isRefreshing || loading}
@@ -1041,6 +1049,7 @@ const handleRefresh = async () => {
                 }}
               />
             </button>
+            )}
 
             {loading ? 'Generating word...' : (
               <>
