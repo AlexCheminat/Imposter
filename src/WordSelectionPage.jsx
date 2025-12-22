@@ -817,6 +817,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
   const [startingPlayer, setStartingPlayer] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState(['animals', 'food', 'objects']);
+  const [categoriesLoaded, setCategoriesLoaded] = useState(false);
   
   // Sort players by join time to determine host
   const sortedPlayers = [...players].sort((a, b) => a.joinedAt - b.joinedAt);
@@ -869,6 +870,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
       if (data && Array.isArray(data) && data.length > 0) {
         setSelectedCategories(data);
       }
+      setCategoriesLoaded(true);
     });
 
     return () => unsubscribe();
@@ -876,7 +878,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
 
   // Generate and sync word with Firebase
   useEffect(() => {
-    if (!database || !lobbyId) return;
+    if (!database || !lobbyId || !categoriesLoaded) return;
 
     const { ref, onValue, set } = database;
     const wordRef = ref(database.db, `lobbies/${lobbyId}/currentWord`);
@@ -917,7 +919,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     });
 
     return () => unsubscribe();
-  }, [database, lobbyId, players, selectedCategories]);
+  }, [database, lobbyId, players, selectedCategories, categoriesLoaded]);
 
   const handleRefresh = async () => {
     if (!database || !lobbyId || isRefreshing) return;
