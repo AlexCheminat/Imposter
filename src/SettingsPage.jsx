@@ -294,8 +294,8 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
                   >
                     {/* Emoji Box */}
                     <div style={{
-                      width: '75px',
-                      height: '75px',
+                      width: '72px',
+                      height: '72px',
                       background: isSelected 
                         ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.3) 100%)'
                         : 'rgba(255, 255, 255, 0.2)',
