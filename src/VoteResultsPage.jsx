@@ -73,7 +73,9 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
 
   // Check if imposter was caught
   const mostVotedPlayer = sortedPlayers[0];
-  const imposterCaught = mostVotedPlayer && mostVotedPlayer.id === imposterId;
+  const secondMostVotedPlayer = sortedPlayers[1];
+  const imposterCaught = mostVotedPlayer && mostVotedPlayer.id === imposterId
+                      && voteCount[mostVotedPlayer.id] > voteCount[secondMostVotedPlayer.id];
 
   return (
     <>
