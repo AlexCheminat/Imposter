@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ref, push, onValue, set, remove, onDisconnect } from 'firebase/database';
+import { ref, push, onValue, set, remove } from 'firebase/database';
 import { database } from './firebase';
 import RegisterPage from './RegisterPage';
 import LobbyPage from './LobbyPage';
@@ -16,62 +16,6 @@ function App() {
   const [votes, setVotes] = useState({});
   const [scores, setScores] = useState({});
   const [lobbyId] = useState('lobby-1');
-
-  // Check for existing session on mount
-  useEffect(() => {
-    const savedUser = sessionStorage.getItem('imposterGameUser');
-    if (savedUser) {
-      const userData = JSON.parse(savedUser);
-      
-      // Check if player still exists in Firebase
-      const playerRef = ref(database, `lobbies/${lobbyId}/players/${userData.firebaseId}`);
-      onValue(playerRef, (snapshot) => {
-        if (snapshot.exists()) {
-          // Player still exists, restore session
-          console.log('Restoring session for user:', userData.username);
-          setCurrentUser(userData);
-          
-          // Re-setup disconnect handler for restored session
-          onDisconnect(playerRef).remove();
-          
-          // Check game state to navigate to correct page
-          const gameStateRef = ref(database, `lobbies/${lobbyId}/gameState`);
-          onValue(gameStateRef, (gameSnapshot) => {
-            const gameState = gameSnapshot.val();
-            if (gameState && gameState.currentPage) {
-              setCurrentPage(gameState.currentPage);
-            } else {
-              setCurrentPage('lobby');
-            }
-          }, { onlyOnce: true });
-        } else {
-          // Player no longer exists, clear session
-          console.log('Player no longer exists in Firebase, clearing session');
-          sessionStorage.removeItem('imposterGameUser');
-        }
-      }, { onlyOnce: true });
-    } else {
-      // No saved session - check if lobby is empty
-      const playersRef = ref(database, `lobbies/${lobbyId}/players`);
-      onValue(playersRef, (snapshot) => {
-        const players = snapshot.val();
-        
-        if (!players || Object.keys(players).length === 0) {
-          // Lobby is empty, reset everything for fresh start
-          console.log('Lobby is empty, resetting game state');
-          const gameStateRef = ref(database, `lobbies/${lobbyId}/gameState`);
-          const votesRef = ref(database, `lobbies/${lobbyId}/votes`);
-          const wordRef = ref(database, `lobbies/${lobbyId}/currentWord`);
-          const scoresRef = ref(database, `lobbies/${lobbyId}/scores`);
-          
-          set(gameStateRef, null);
-          set(votesRef, null);
-          set(wordRef, null);
-          set(scoresRef, null);
-        }
-      }, { onlyOnce: true });
-    }
-  }, [lobbyId]);
 
   // Listen to players in the lobby
   useEffect(() => {
@@ -147,58 +91,26 @@ function App() {
     return () => unsubscribe();
   }, [lobbyId]);
 
-  // Set up presence system - more forgiving for mobile disconnections
+  // Remove player when they leave/close tab
   useEffect(() => {
     if (!currentUser) return;
 
-    const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}`);
+    const handleBeforeUnload = () => {
+      if (currentUser.firebaseId) {
+        const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}`);
+        remove(playerRef);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
     
-    // Update last seen timestamp periodically
-    const updatePresence = () => {
-      set(ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}/lastSeen`), Date.now());
-    };
-
-    // Update presence immediately
-    updatePresence();
-
-    // Update presence every 30 seconds while connected
-    const presenceInterval = setInterval(updatePresence, 30000);
-
-    // Set up onDisconnect to mark as disconnected (not remove)
-    onDisconnect(ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}/lastSeen`))
-      .set(Date.now());
-
-    console.log('Presence system set up for:', currentUser.username);
-
     return () => {
-      clearInterval(presenceInterval);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      if (currentUser.firebaseId) {
+        const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}`);
+        remove(playerRef);
+      }
     };
-  }, [currentUser, lobbyId]);
-
-  // Clean up truly inactive players (not seen for 5 minutes)
-  useEffect(() => {
-    if (!currentUser) return;
-
-    const cleanupInterval = setInterval(() => {
-      const playersRef = ref(database, `lobbies/${lobbyId}/players`);
-      onValue(playersRef, (snapshot) => {
-        const players = snapshot.val();
-        if (!players) return;
-
-        const now = Date.now();
-        const fiveMinutes = 5 * 60 * 1000;
-
-        Object.entries(players).forEach(([playerId, player]) => {
-          const lastSeen = player.lastSeen || player.joinedAt || 0;
-          if (now - lastSeen > fiveMinutes) {
-            console.log('Removing inactive player:', player.username);
-            remove(ref(database, `lobbies/${lobbyId}/players/${playerId}`));
-          }
-        });
-      }, { onlyOnce: true });
-    }, 60000); // Check every minute
-
-    return () => clearInterval(cleanupInterval);
   }, [currentUser, lobbyId]);
 
   const handleRegister = async (userData) => {
@@ -217,19 +129,12 @@ function App() {
         joinedAt: Date.now()
       });
       
-      // Set up automatic removal on disconnect
-      const playerRef = ref(database, `lobbies/${lobbyId}/players/${newPlayerRef.key}`);
-      onDisconnect(playerRef).remove();
-      
-      console.log('Player added to Firebase successfully and disconnect handler set!');
+      console.log('Player added to Firebase successfully!');
 
       const userWithId = {
         ...userData,
         firebaseId: newPlayerRef.key
       };
-      
-      // Save to sessionStorage
-      sessionStorage.setItem('imposterGameUser', JSON.stringify(userWithId));
       
       setCurrentUser(userWithId);
       setCurrentPage('lobby');
