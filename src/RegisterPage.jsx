@@ -120,7 +120,7 @@ export default function RegisterPage({ onRegister }) {
   useEffect(() => {
     document.body.style.margin = '0';
     document.body.style.padding = '0';
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'auto';
     
     startCamera();
     
@@ -204,6 +204,9 @@ export default function RegisterPage({ onRegister }) {
           transform: scale(1.02);
           box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
         }
+        .input-focus::placeholder {
+          color: rgba(255, 255, 255, 0.7);
+        }
       `}</style>
       
       <div style={{ 
@@ -216,10 +219,10 @@ export default function RegisterPage({ onRegister }) {
         padding: '2rem', 
         margin: 0, 
         boxSizing: 'border-box', 
-        position: 'fixed', 
+        position: 'relative', 
         top: 0, 
         left: 0, 
-        overflow: 'hidden' 
+        overflow: 'visible' 
       }}>
         
         {/* Floating Particles */}
@@ -264,7 +267,7 @@ export default function RegisterPage({ onRegister }) {
             marginBottom: '2rem',
             textShadow: '0 2px 10px rgba(0, 0, 0, 0.2)'
           }}>
-            Créer votre profil
+            Créer Votre Profil
           </h1>
         
           {/* Camera/Photo Circle */}
@@ -281,7 +284,7 @@ export default function RegisterPage({ onRegister }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 boxShadow: '0 15px 35px rgba(0, 0, 0, 0.3)',
-                animation: capturedImage ? 'pulse 2s infinite' : 'float 3s ease-in-out infinite',
+                animation: 'float 3s ease-in-out infinite',
                 position: 'relative'
               }}
             >
