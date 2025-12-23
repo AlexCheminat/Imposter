@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { ref, push, onValue, set, remove, serverTimestamp } from 'firebase/database';
+import { useState, useEffect } from 'react';
+import { ref, push, onValue, set, remove } from 'firebase/database';
 import { database } from './firebase';
 import RegisterPage from './RegisterPage';
 import LobbyPage from './LobbyPage';
@@ -17,123 +17,61 @@ function App() {
   const [scores, setScores] = useState({});
   const [lobbyId] = useState('lobby-1');
   const [isReconnecting, setIsReconnecting] = useState(true);
-  const heartbeatIntervalRef = useRef(null);
 
   // Try to reconnect user on mount
   useEffect(() => {
     const reconnectUser = async () => {
-      const storedUserId = localStorage.getItem('gameUserId');
-      const storedUsername = localStorage.getItem('gameUsername');
-      const storedPhoto = localStorage.getItem('gameUserPhoto');
-      
-      console.log('Attempting to reconnect user:', storedUserId);
-      
-      if (storedUserId && storedUsername) {
-        // Always re-add/update the user in the database
-        const playerRef = ref(database, `lobbies/${lobbyId}/players/${storedUserId}`);
+      try {
+        // Check if user data exists in memory (from before refresh)
+        const savedUserId = sessionStorage.getItem('currentUserId');
+        const savedUsername = sessionStorage.getItem('currentUsername');
+        const savedPhoto = sessionStorage.getItem('currentPhoto');
         
-        try {
-          await set(playerRef, {
-            username: storedUsername,
-            photo: storedPhoto,
-            joinedAt: Date.now(),
-            lastHeartbeat: Date.now()
-          });
+        if (savedUserId && savedUsername) {
+          console.log('Found saved user data, reconnecting...');
           
-          console.log('User reconnected successfully');
+          // Check if this player still exists in Firebase
+          const playerRef = ref(database, `lobbies/${lobbyId}/players/${savedUserId}`);
           
-          setCurrentUser({
-            username: storedUsername,
-            photo: storedPhoto,
-            firebaseId: storedUserId
-          });
-          setCurrentPage('lobby');
-        } catch (error) {
-          console.error('Error reconnecting user:', error);
+          onValue(playerRef, (snapshot) => {
+            if (snapshot.exists()) {
+              // Player still exists, reconnect them
+              console.log('Player found in Firebase, reconnecting...');
+              setCurrentUser({
+                username: savedUsername,
+                photo: savedPhoto,
+                firebaseId: savedUserId
+              });
+              
+              // Get current game state to set correct page
+              const gameStateRef = ref(database, `lobbies/${lobbyId}/gameState`);
+              onValue(gameStateRef, (gameSnapshot) => {
+                const gameState = gameSnapshot.val();
+                if (gameState && gameState.currentPage) {
+                  setCurrentPage(gameState.currentPage);
+                } else {
+                  setCurrentPage('lobby');
+                }
+              }, { onlyOnce: true });
+            } else {
+              // Player no longer exists, need to re-register
+              console.log('Player not found in Firebase, clearing saved data...');
+              sessionStorage.clear();
+              setCurrentPage('register');
+            }
+            setIsReconnecting(false);
+          }, { onlyOnce: true });
+        } else {
+          setIsReconnecting(false);
         }
-      } else {
-        console.log('No stored user found');
+      } catch (error) {
+        console.error('Error reconnecting user:', error);
+        setIsReconnecting(false);
       }
-      
-      setIsReconnecting(false);
     };
 
     reconnectUser();
   }, [lobbyId]);
-
-  // Heartbeat system - update lastHeartbeat every 5 seconds while user is active
-  useEffect(() => {
-    if (!currentUser || !currentUser.firebaseId) return;
-
-    const updateHeartbeat = async () => {
-      try {
-        const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}/lastHeartbeat`);
-        await set(playerRef, Date.now());
-        console.log('Heartbeat sent');
-      } catch (error) {
-        console.error('Error updating heartbeat:', error);
-      }
-    };
-
-    // Send heartbeat immediately
-    updateHeartbeat();
-
-    // Then send heartbeat every 5 seconds
-    heartbeatIntervalRef.current = setInterval(updateHeartbeat, 5000);
-
-    return () => {
-      if (heartbeatIntervalRef.current) {
-        clearInterval(heartbeatIntervalRef.current);
-      }
-    };
-  }, [currentUser, lobbyId]);
-
-  // Cleanup stale players - check every 10 seconds and remove players who haven't sent heartbeat in 30 seconds
-  useEffect(() => {
-    const cleanupInterval = setInterval(async () => {
-      const playersRef = ref(database, `lobbies/${lobbyId}/players`);
-      
-      onValue(playersRef, async (snapshot) => {
-        const data = snapshot.val();
-        if (!data) return;
-
-        const now = Date.now();
-        const TIMEOUT = 30000; // 30 seconds timeout
-
-        for (const [playerId, player] of Object.entries(data)) {
-          if (player.lastHeartbeat) {
-            const timeSinceHeartbeat = now - player.lastHeartbeat;
-            
-            // Remove player if they haven't sent a heartbeat in 30 seconds
-            if (timeSinceHeartbeat > TIMEOUT) {
-              console.log(`Removing stale player: ${player.username} (${timeSinceHeartbeat}ms since last heartbeat)`);
-              const playerRef = ref(database, `lobbies/${lobbyId}/players/${playerId}`);
-              await remove(playerRef);
-            }
-          }
-        }
-      }, { onlyOnce: true });
-    }, 10000); // Check every 10 seconds
-
-    return () => clearInterval(cleanupInterval);
-  }, [lobbyId]);
-
-  // Handle visibility change - send heartbeat when tab becomes visible
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (!document.hidden && currentUser && currentUser.firebaseId) {
-        const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}/lastHeartbeat`);
-        set(playerRef, Date.now());
-        console.log('Tab became visible, heartbeat sent');
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [currentUser, lobbyId]);
 
   // Listen to players in the lobby
   useEffect(() => {
@@ -164,7 +102,7 @@ function App() {
       console.log('Game state changed:', gameState);
       
       if (gameState) {
-        if (gameState.currentPage) {
+        if (gameState.currentPage && currentUser) {
           console.log('Navigating to:', gameState.currentPage);
           setCurrentPage(gameState.currentPage);
         }
@@ -177,7 +115,7 @@ function App() {
     });
 
     return () => unsubscribe();
-  }, [lobbyId]);
+  }, [lobbyId, currentUser]);
 
   // Listen to votes
   useEffect(() => {
@@ -209,6 +147,26 @@ function App() {
     return () => unsubscribe();
   }, [lobbyId]);
 
+  // Remove player when they leave/close tab
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const handleBeforeUnload = () => {
+      if (currentUser.firebaseId) {
+        const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}`);
+        remove(playerRef);
+        // Clear saved data when intentionally leaving
+        sessionStorage.clear();
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [currentUser, lobbyId]);
+
   const handleRegister = async (userData) => {
     console.log('handleRegister called with:', userData);
     
@@ -222,8 +180,7 @@ function App() {
       await set(newPlayerRef, {
         username: userData.username,
         photo: userData.photo,
-        joinedAt: Date.now(),
-        lastHeartbeat: Date.now()
+        joinedAt: Date.now()
       });
       
       console.log('Player added to Firebase successfully!');
@@ -233,10 +190,10 @@ function App() {
         firebaseId: newPlayerRef.key
       };
       
-      // Store user info in localStorage for reconnection
-      localStorage.setItem('gameUserId', newPlayerRef.key);
-      localStorage.setItem('gameUsername', userData.username);
-      localStorage.setItem('gameUserPhoto', userData.photo);
+      // Save user data to sessionStorage for reconnection after refresh
+      sessionStorage.setItem('currentUserId', newPlayerRef.key);
+      sessionStorage.setItem('currentUsername', userData.username);
+      sessionStorage.setItem('currentPhoto', userData.photo);
       
       setCurrentUser(userWithId);
       setCurrentPage('lobby');
@@ -411,7 +368,7 @@ function App() {
   if (isReconnecting) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center">
-        <div className="text-white text-2xl">Reconnecting...</div>
+        <div className="text-white text-xl">Reconnecting...</div>
       </div>
     );
   }
