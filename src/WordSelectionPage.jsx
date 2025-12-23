@@ -407,7 +407,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                   <>
                     <div style={{ 
                       fontSize: '1.125rem',
-                      paddingTop: '1rem',
+                      paddingTop: '3rem',
                       padding: '0.75rem 1.5rem',
                       background: 'rgba(255, 255, 255, 0.15)',
                       borderRadius: '15px',
