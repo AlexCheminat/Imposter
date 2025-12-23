@@ -20,7 +20,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
           id: i,
           left: Math.random() * 100,
           size: Math.random() * 4 + 2,
-          duration: Math.random() * 30 + 30,
+          duration: Math.random() * 10 + 15,
           delay: Math.random() * -20,
           opacity: Math.random() * 0.3 + 0.1
         });
@@ -272,25 +272,6 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
                           objectFit: 'cover'
                         }}
                       />
-                      {/* Host Crown */}
-                      {isHost && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '-10px',
-                          right: '-10px',
-                          background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
-                          borderRadius: '50%',
-                          width: '28px',
-                          height: '28px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          border: '2px solid white',
-                          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
-                        }}>
-                          <Crown size={16} color="white" fill="white" />
-                        </div>
-                      )}
                     </div>
 
                     {/* Player Username */}
