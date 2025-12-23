@@ -192,7 +192,7 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
           className="btn-hover"
           style={{
             position: 'absolute',
-            top: '1.5rem',
+            top: '4.5rem',
             right: '1.5rem',
             background: 'rgba(255, 255, 255, 0.25)',
             backdropFilter: 'blur(10px)',
@@ -228,6 +228,7 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
           {/* Title */}
           <h1 style={{
             textAlign: 'center',
+            top: '2rem',
             color: 'white',
             fontSize: '2.5rem',
             fontWeight: '700',
@@ -293,8 +294,8 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
                   >
                     {/* Emoji Box */}
                     <div style={{
-                      width: '85px',
-                      height: '85px',
+                      width: '75px',
+                      height: '75px',
                       background: isSelected 
                         ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.3) 100%)'
                         : 'rgba(255, 255, 255, 0.2)',
@@ -348,22 +349,6 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
                 );
               })}
             </div>
-          </div>
-
-          {/* Instructions */}
-          <div style={{
-            padding: '1rem 1.5rem',
-            background: 'rgba(255, 255, 255, 0.15)',
-            backdropFilter: 'blur(10px)',
-            border: '2px solid rgba(255, 255, 255, 0.3)',
-            borderRadius: '20px',
-            color: 'white',
-            fontSize: '0.9rem',
-            textAlign: 'center',
-            fontWeight: '500',
-            maxWidth: '500px'
-          }}>
-            Cliquez sur une catégorie pour la sélectionner ou la désélectionner
           </div>
         </div>
       </div>
