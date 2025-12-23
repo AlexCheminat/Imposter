@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Home } from 'lucide-react';
+import { Home, Check } from 'lucide-react';
 
 const categories = [
   { id: 'animals', emoji: '🐾', name: 'Animaux' },
@@ -15,25 +15,25 @@ const categories = [
 
 export default function SettingsPage({ onBack, database, lobbyId }) {
   const [selectedCategories, setSelectedCategories] = useState(new Set(['animals', 'food', 'objects', 'countries', 'jobs', 'sports', 'celebrities', 'brands']));
-  const [triangles, setTriangles] = useState([]);
+  const [particles, setParticles] = useState([]);
 
-  // Generate animated triangles
+  // Generate floating particles
   useEffect(() => {
-    const generateTriangles = () => {
-      const newTriangles = [];
-      for (let i = 0; i < 8; i++) {
-        newTriangles.push({
+    const generateParticles = () => {
+      const newParticles = [];
+      for (let i = 0; i < 20; i++) {
+        newParticles.push({
           id: i,
           left: Math.random() * 100,
-          size: Math.random() * 30 + 20,
-          duration: Math.random() * 8 + 12,
-          delay: i * 2.5 - 20,
-          opacity: Math.random() * 0.25
+          size: Math.random() * 4 + 2,
+          duration: Math.random() * 10 + 15,
+          delay: Math.random() * -20,
+          opacity: Math.random() * 0.3 + 0.1
         });
       }
-      setTriangles(newTriangles);
+      setParticles(newParticles);
     };
-    generateTriangles();
+    generateParticles();
 
     document.body.style.margin = '0';
     document.body.style.padding = '0';
@@ -94,58 +94,109 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
           padding: 0 !important;
           overflow-x: hidden !important;
           width: 100% !important;
+          height: 100% !important;
         }
-        @keyframes float-down {
+        #root {
+          min-height: 100vh;
+        }
+        @keyframes drift {
           0% {
-            transform: translateY(-100px) rotate(0deg);
+            transform: translateY(100vh) rotate(0deg);
+            opacity: 0;
+          }
+          10% {
+            opacity: 1;
+          }
+          90% {
+            opacity: 1;
           }
           100% {
-            transform: translateY(100vh) rotate(360deg);
+            transform: translateY(-100px) rotate(360deg);
+            opacity: 0;
           }
+        }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes popIn {
+          from {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        .btn-hover {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-hover:hover {
+          transform: scale(1.05);
+        }
+        .btn-hover:active {
+          transform: scale(0.95);
+        }
+        .category-card {
+          transition: all 0.3s ease;
+        }
+        .category-card:hover {
+          transform: scale(1.08) !important;
+        }
+        .category-card:active {
+          transform: scale(0.98) !important;
         }
       `}</style>
       
       <div style={{ 
         minHeight: '100vh', 
-        width: '100vw', 
-        background: 'linear-gradient(to bottom, #212121ff, #0b0b0bff)', 
+        width: '100%', 
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', 
         display: 'flex', 
         flexDirection: 'column', 
         alignItems: 'center', 
         padding: '2rem', 
-        paddingBottom: '100px', 
-        margin: 0, 
+        paddingBottom: '3rem', 
         boxSizing: 'border-box', 
         position: 'relative' 
       }}>
         
-        {/* Animated Triangles Background */}
-        {triangles.map(triangle => (
+        {/* Floating Particles */}
+        {particles.map(particle => (
           <div
-            key={triangle.id}
+            key={particle.id}
             style={{
               position: 'absolute',
-              left: `${triangle.left}%`,
-              top: '-100px',
-              width: 0,
-              height: 0,
-              borderLeft: `${triangle.size}px solid transparent`,
-              borderRight: `${triangle.size}px solid transparent`,
-              borderBottom: `${triangle.size * 1.732}px solid rgba(150, 150, 149, ${triangle.opacity})`,
-              animation: `float-down ${triangle.duration}s linear ${triangle.delay}s infinite`,
+              left: `${particle.left}%`,
+              bottom: '-20px',
+              width: `${particle.size}px`,
+              height: `${particle.size}px`,
+              borderRadius: '50%',
+              backgroundColor: `rgba(255, 255, 255, ${particle.opacity})`,
+              animation: `drift ${particle.duration}s linear ${particle.delay}s infinite`,
               pointerEvents: 'none'
             }}
           />
         ))}
 
-        {/* Home Icon */}
+        {/* Home Button */}
         <button
           onClick={onBack}
+          className="btn-hover"
           style={{
             position: 'absolute',
             top: '1.5rem',
             right: '1.5rem',
-            border: '2px solid #d7d7d7ff',
+            background: 'rgba(255, 255, 255, 0.25)',
+            backdropFilter: 'blur(10px)',
+            border: '2px solid rgba(255, 255, 255, 0.4)',
             borderRadius: '50%',
             width: '60px',
             height: '60px',
@@ -153,104 +204,167 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            zIndex: 20
+            zIndex: 20,
+            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)'
           }}
-          onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#c9c9c9ff'}
-          onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#b3b3b3ff'}
         >
-          <Home size={90} color="#d7d7d7ff" />
+          <Home size={28} color="white" />
         </button>
 
-        {/* Title */}
-        <div style={{
-          fontSize: '2rem',
-          fontWeight: 'bold',
-          color: '#d7d7d7ff',
-          marginTop: '1rem',
-          marginBottom: '2rem',
-          textAlign: 'center',
-          zIndex: 10
-        }}>
-          Choisir les Catégories
-        </div>
-
-        {/* Category Grid */}
+        {/* Main Container */}
         <div style={{
           width: '100%',
-          maxWidth: '600px',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '1.5rem',
+          maxWidth: '700px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '2rem',
           position: 'relative',
-          zIndex: 10
+          zIndex: 10,
+          marginTop: '4rem',
+          animation: 'fadeInUp 0.6s ease-out'
         }}>
-          {categories.map(category => {
-            const isSelected = selectedCategories.has(category.id);
-            
-            return (
-              <div
-                key={category.id}
-                onClick={() => toggleCategory(category.id)}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  cursor: 'pointer',
-                  transition: 'transform 0.2s',
-                  transform: isSelected ? 'scale(1)' : 'scale(0.95)',
-                  opacity: isSelected ? 1 : 0.5
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = 'scale(1.05)';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = isSelected ? 'scale(1)' : 'scale(0.95)';
-                }}
-              >
-                {/* Emoji Box */}
-                <div style={{
-                  width: '90px',
-                  height: '90px',
-                  backgroundColor: '#d7d7d7ff',
-                  border: `4px solid ${isSelected ? '#73e79eff' : '#9a9a9aff'}`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '3.5rem',
-                  borderRadius: '8px',
-                  boxShadow: isSelected ? '0 4px 12px rgba(116, 168, 135, 0.3)' : 'none'
-                }}>
-                  {category.emoji}
-                </div>
 
-                {/* Category Name */}
-                <div style={{
-                  fontSize: '1rem',
-                  fontWeight: '600',
-                  color: isSelected ? '#73e79eff' : '#d7d7d7ff',
-                  textAlign: 'center'
-                }}>
-                  {category.name}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+          {/* Title */}
+          <h1 style={{
+            textAlign: 'center',
+            color: 'white',
+            fontSize: '2.5rem',
+            fontWeight: '700',
+            textShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
+            marginBottom: '-0.5rem'
+          }}>
+            Catégories
+          </h1>
 
-        {/* Selected Count */}
-        <div style={{
-          marginTop: '2rem',
-          padding: '1rem 2rem',
-          backgroundColor: '#333333ff',
-          border: '3px solid #d7d7d7ff',
-          borderRadius: '8px',
-          fontSize: '1rem',
-          fontWeight: '600',
-          color: '#d7d7d7ff',
-          zIndex: 10
-        }}>
-          {selectedCategories.size} catégorie{selectedCategories.size > 1 ? 's' : ''} sélectionnée{selectedCategories.size > 1 ? 's' : ''}
+          {/* Selected Count Card */}
+          <div style={{
+            padding: '1rem 2rem',
+            background: 'rgba(255, 255, 255, 0.2)',
+            backdropFilter: 'blur(15px)',
+            border: '2px solid rgba(255, 255, 255, 0.4)',
+            borderRadius: '25px',
+            fontSize: '1.125rem',
+            fontWeight: '600',
+            color: 'white',
+            boxShadow: '0 8px 25px rgba(0, 0, 0, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem'
+          }}>
+            <Check size={24} />
+            <span>{selectedCategories.size} sélectionnée{selectedCategories.size > 1 ? 's' : ''}</span>
+          </div>
+
+          {/* Category Grid Container */}
+          <div style={{
+            width: '100%',
+            background: 'rgba(255, 255, 255, 0.15)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '30px',
+            border: '2px solid rgba(255, 255, 255, 0.3)',
+            padding: '2rem 1.5rem',
+            boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3)'
+          }}>
+            {/* Category Grid */}
+            <div style={{
+              width: '100%',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '1.5rem'
+            }}>
+              {categories.map((category, index) => {
+                const isSelected = selectedCategories.has(category.id);
+                
+                return (
+                  <div
+                    key={category.id}
+                    onClick={() => toggleCategory(category.id)}
+                    className="category-card"
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                      cursor: 'pointer',
+                      opacity: isSelected ? 1 : 0.5,
+                      animation: `popIn 0.4s ease-out ${index * 0.05}s backwards`
+                    }}
+                  >
+                    {/* Emoji Box */}
+                    <div style={{
+                      width: '85px',
+                      height: '85px',
+                      background: isSelected 
+                        ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.3) 100%)'
+                        : 'rgba(255, 255, 255, 0.2)',
+                      backdropFilter: 'blur(10px)',
+                      border: isSelected 
+                        ? '3px solid rgba(16, 185, 129, 0.8)' 
+                        : '3px solid rgba(255, 255, 255, 0.4)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '2.5rem',
+                      borderRadius: '20px',
+                      boxShadow: isSelected 
+                        ? '0 8px 25px rgba(16, 185, 129, 0.3)' 
+                        : '0 4px 15px rgba(0, 0, 0, 0.15)',
+                      position: 'relative'
+                    }}>
+                      {category.emoji}
+                      {/* Check Mark */}
+                      {isSelected && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '-8px',
+                          right: '-8px',
+                          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                          borderRadius: '50%',
+                          width: '28px',
+                          height: '28px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          border: '2px solid white',
+                          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                        }}>
+                          <Check size={16} color="white" strokeWidth={3} />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Category Name */}
+                    <div style={{
+                      fontSize: '0.875rem',
+                      fontWeight: '600',
+                      color: 'white',
+                      textAlign: 'center',
+                      textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
+                    }}>
+                      {category.name}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Instructions */}
+          <div style={{
+            padding: '1rem 1.5rem',
+            background: 'rgba(255, 255, 255, 0.15)',
+            backdropFilter: 'blur(10px)',
+            border: '2px solid rgba(255, 255, 255, 0.3)',
+            borderRadius: '20px',
+            color: 'white',
+            fontSize: '0.9rem',
+            textAlign: 'center',
+            fontWeight: '500',
+            maxWidth: '500px'
+          }}>
+            Cliquez sur une catégorie pour la sélectionner ou la désélectionner
+          </div>
         </div>
       </div>
     </>
