@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ref, push, onValue, set, remove } from 'firebase/database';
+import { ref, push, onValue, set, remove, onDisconnect } from 'firebase/database';
 import { database } from './firebase';
 import RegisterPage from './RegisterPage';
 import LobbyPage from './LobbyPage';
@@ -30,6 +30,9 @@ function App() {
           // Player still exists, restore session
           console.log('Restoring session for user:', userData.username);
           setCurrentUser(userData);
+          
+          // Re-setup disconnect handler for restored session
+          onDisconnect(playerRef).remove();
           
           // Check game state to navigate to correct page
           const gameStateRef = ref(database, `lobbies/${lobbyId}/gameState`);
@@ -184,7 +187,11 @@ function App() {
         joinedAt: Date.now()
       });
       
-      console.log('Player added to Firebase successfully!');
+      // Set up automatic removal on disconnect
+      const playerRef = ref(database, `lobbies/${lobbyId}/players/${newPlayerRef.key}`);
+      onDisconnect(playerRef).remove();
+      
+      console.log('Player added to Firebase successfully and disconnect handler set!');
 
       const userWithId = {
         ...userData,
