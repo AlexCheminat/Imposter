@@ -147,18 +147,58 @@ function App() {
     return () => unsubscribe();
   }, [lobbyId]);
 
-  // Set up Firebase onDisconnect handler - handles real disconnections intelligently
+  // Set up presence system - more forgiving for mobile disconnections
   useEffect(() => {
     if (!currentUser) return;
 
-    // Firebase's onDisconnect is smart about temporary vs permanent disconnections
     const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}`);
-    onDisconnect(playerRef).remove();
+    
+    // Update last seen timestamp periodically
+    const updatePresence = () => {
+      set(ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}/lastSeen`), Date.now());
+    };
 
-    console.log('Disconnect handler set up for:', currentUser.username);
+    // Update presence immediately
+    updatePresence();
 
-    // No cleanup needed - Firebase handles it automatically
-    // This allows the app to be backgrounded without removing the player
+    // Update presence every 30 seconds while connected
+    const presenceInterval = setInterval(updatePresence, 30000);
+
+    // Set up onDisconnect to mark as disconnected (not remove)
+    onDisconnect(ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}/lastSeen`))
+      .set(Date.now());
+
+    console.log('Presence system set up for:', currentUser.username);
+
+    return () => {
+      clearInterval(presenceInterval);
+    };
+  }, [currentUser, lobbyId]);
+
+  // Clean up truly inactive players (not seen for 5 minutes)
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const cleanupInterval = setInterval(() => {
+      const playersRef = ref(database, `lobbies/${lobbyId}/players`);
+      onValue(playersRef, (snapshot) => {
+        const players = snapshot.val();
+        if (!players) return;
+
+        const now = Date.now();
+        const fiveMinutes = 5 * 60 * 1000;
+
+        Object.entries(players).forEach(([playerId, player]) => {
+          const lastSeen = player.lastSeen || player.joinedAt || 0;
+          if (now - lastSeen > fiveMinutes) {
+            console.log('Removing inactive player:', player.username);
+            remove(ref(database, `lobbies/${lobbyId}/players/${playerId}`));
+          }
+        });
+      }, { onlyOnce: true });
+    }, 60000); // Check every minute
+
+    return () => clearInterval(cleanupInterval);
   }, [currentUser, lobbyId]);
 
   const handleRegister = async (userData) => {
