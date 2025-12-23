@@ -17,6 +17,39 @@ function App() {
   const [scores, setScores] = useState({});
   const [lobbyId] = useState('lobby-1');
 
+  // Check for existing session on mount
+  useEffect(() => {
+    const savedUser = sessionStorage.getItem('imposterGameUser');
+    if (savedUser) {
+      const userData = JSON.parse(savedUser);
+      
+      // Check if player still exists in Firebase
+      const playerRef = ref(database, `lobbies/${lobbyId}/players/${userData.firebaseId}`);
+      onValue(playerRef, (snapshot) => {
+        if (snapshot.exists()) {
+          // Player still exists, restore session
+          console.log('Restoring session for user:', userData.username);
+          setCurrentUser(userData);
+          
+          // Check game state to navigate to correct page
+          const gameStateRef = ref(database, `lobbies/${lobbyId}/gameState`);
+          onValue(gameStateRef, (gameSnapshot) => {
+            const gameState = gameSnapshot.val();
+            if (gameState && gameState.currentPage) {
+              setCurrentPage(gameState.currentPage);
+            } else {
+              setCurrentPage('lobby');
+            }
+          }, { onlyOnce: true });
+        } else {
+          // Player no longer exists, clear session
+          console.log('Player no longer exists in Firebase, clearing session');
+          sessionStorage.removeItem('imposterGameUser');
+        }
+      }, { onlyOnce: true });
+    }
+  }, [lobbyId]);
+
   // Listen to players in the lobby
   useEffect(() => {
     const playersRef = ref(database, `lobbies/${lobbyId}/players`);
@@ -99,6 +132,7 @@ function App() {
       if (currentUser.firebaseId) {
         const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}`);
         remove(playerRef);
+        sessionStorage.removeItem('imposterGameUser');
       }
     };
 
@@ -109,6 +143,7 @@ function App() {
       if (currentUser.firebaseId) {
         const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}`);
         remove(playerRef);
+        sessionStorage.removeItem('imposterGameUser');
       }
     };
   }, [currentUser, lobbyId]);
@@ -135,6 +170,9 @@ function App() {
         ...userData,
         firebaseId: newPlayerRef.key
       };
+      
+      // Save to sessionStorage
+      sessionStorage.setItem('imposterGameUser', JSON.stringify(userWithId));
       
       setCurrentUser(userWithId);
       setCurrentPage('lobby');
