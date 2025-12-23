@@ -121,8 +121,8 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
           {/* Player Count - Fixed at top */}
           <div style={{
             width: '100%',
+            paddingTop: '5rem',
             padding: '1rem 2rem',
-            paddinTop: '5rem',
             backgroundColor: '#c084fc',
             border: '4px solid #7c3aed',
             textAlign: 'center',
