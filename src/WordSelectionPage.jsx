@@ -534,7 +534,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                       fontSize: '1.125rem',
                       fontWeight: '600',
                       color: 'white',
-                      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15)'
+                      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15)',
+                      minWidth: 0
                     }}>
                       {player.username}
                     </div>
