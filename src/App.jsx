@@ -147,28 +147,18 @@ function App() {
     return () => unsubscribe();
   }, [lobbyId]);
 
-  // Remove player when they leave/close tab
+  // Set up Firebase onDisconnect handler - handles real disconnections intelligently
   useEffect(() => {
     if (!currentUser) return;
 
-    const handleBeforeUnload = () => {
-      if (currentUser.firebaseId) {
-        const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}`);
-        remove(playerRef);
-        sessionStorage.removeItem('imposterGameUser');
-      }
-    };
+    // Firebase's onDisconnect is smart about temporary vs permanent disconnections
+    const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}`);
+    onDisconnect(playerRef).remove();
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      if (currentUser.firebaseId) {
-        const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}`);
-        remove(playerRef);
-        sessionStorage.removeItem('imposterGameUser');
-      }
-    };
+    console.log('Disconnect handler set up for:', currentUser.username);
+
+    // No cleanup needed - Firebase handles it automatically
+    // This allows the app to be backgrounded without removing the player
   }, [currentUser, lobbyId]);
 
   const handleRegister = async (userData) => {
