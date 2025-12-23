@@ -157,15 +157,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     const randomPlayerIndex = Math.floor(Math.random() * players.length);
     const randomPlayer = players[randomPlayerIndex];
     
-    // Select random imposter (different from starting player if possible)
-    let randomImposterIndex;
-    if (players.length > 1) {
-      do {
-        randomImposterIndex = Math.floor(Math.random() * players.length);
-      } while (randomImposterIndex === randomPlayerIndex && players.length > 1);
-    } else {
-      randomImposterIndex = 0;
-    }
+    // Select random imposter (independently, can be anyone including starting player)
+    const randomImposterIndex = Math.floor(Math.random() * players.length);
     const randomImposter = players[randomImposterIndex];
     
     // Update both word and imposter in Firebase
@@ -412,6 +405,9 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
               <>
                 {isImposter ? (
                   <>
+                    <div style={{ fontSize: '1.5rem', textShadow: '0 2px 8px rgba(0, 0, 0, 0.4)' }}>
+                      Vous devez deviner!
+                    </div>
                     <div style={{ 
                       fontSize: '1.125rem', 
                       padding: '0.75rem 1.5rem',
@@ -541,7 +537,6 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                       boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15)'
                     }}>
                       {player.username}
-                      {isCurrentUser && <span style={{ fontSize: '0.875rem', opacity: 0.8, marginLeft: '0.5rem' }}>(Vous)</span>}
                     </div>
                   </div>
                 );
