@@ -20,7 +20,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
           id: i,
           left: Math.random() * 100,
           size: Math.random() * 4 + 2,
-          duration: Math.random() * 10 + 15,
+          duration: Math.random() * 30 + 30,
           delay: Math.random() * -20,
           opacity: Math.random() * 0.3 + 0.1
         });
@@ -152,7 +152,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
             className="btn-hover"
             style={{
               position: 'absolute',
-              top: '5.5rem',
+              top: '2.5rem',
               right: '1.5rem',
               background: 'rgba(255, 255, 255, 0.25)',
               backdropFilter: 'blur(10px)',
@@ -361,7 +361,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
               textAlign: 'center',
               fontWeight: '500'
             }}>
-              En attente que l'hôte lance la partie 🕰️
+              En attente que l'hôte lance la partie...
             </div>
           )}
         </div>
