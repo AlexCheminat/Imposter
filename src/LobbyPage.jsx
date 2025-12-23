@@ -129,7 +129,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
             fontWeight: 'bold',
             color: '#7c3aed'
           }}>
-            Player Count: {sortedPlayers.length}
+            Nombre de Joueurs: {sortedPlayers.length}
           </div>
 
           {/* Players List */}
