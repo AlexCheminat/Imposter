@@ -209,10 +209,18 @@ function App() {
         }
       });
 
-      // Find player with most votes
-      const mostVotedPlayerId = Object.keys(voteCount).reduce((a, b) => 
-        voteCount[a] > voteCount[b] ? a : b
-      );
+      // Sort players by vote count
+      const sortedPlayers = [...allPlayers].sort((a, b) => {
+        return (voteCount[b.id] || 0) - (voteCount[a.id] || 0);
+      });
+
+      // Find most and second most voted players
+      const mostVotedPlayer = sortedPlayers[0];
+      const secondMostVotedPlayer = sortedPlayers[1];
+      
+      // Imposter is only caught if they have the most votes AND it's not a tie
+      const imposterCaught = mostVotedPlayer && mostVotedPlayer.id === imposterId
+                          && voteCount[mostVotedPlayer.id] > (voteCount[secondMostVotedPlayer?.id] || 0);
 
       // Update scores
       const currentScores = { ...scores };
@@ -224,8 +232,8 @@ function App() {
         }
       });
 
-      // If imposter was caught (most voted), everyone else gets a point
-      if (mostVotedPlayerId === imposterId) {
+      // If imposter was caught (most voted and no tie), everyone else gets a point
+      if (imposterCaught) {
         console.log('Imposter was caught!');
         allPlayers.forEach(player => {
           if (player.id !== imposterId) {
@@ -233,7 +241,7 @@ function App() {
           }
         });
       } else {
-        // If imposter wasn't caught, imposter gets a point
+        // If imposter wasn't caught (wrong person voted or tie), imposter gets a point
         console.log('Imposter escaped!');
         currentScores[imposterId] = (currentScores[imposterId] || 0) + 1;
       }
