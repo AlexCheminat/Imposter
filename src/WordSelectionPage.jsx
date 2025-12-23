@@ -327,7 +327,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           gap: '2rem', 
           position: 'relative', 
           zIndex: 10, 
-          marginTop: '4rem',
+          marginTop: '7rem',
           animation: 'fadeInUp 0.6s ease-out'
         }}>
         
@@ -412,11 +412,9 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
               <>
                 {isImposter ? (
                   <>
-                    <div style={{ fontSize: '1.5rem', textShadow: '0 2px 8px rgba(0, 0, 0, 0.4)' }}>
-                      Vous devez deviner!
-                    </div>
                     <div style={{ 
-                      fontSize: '1.125rem', 
+                      fontSize: '1.125rem',
+                      paddingTop: '1rem',
                       padding: '0.75rem 1.5rem',
                       background: 'rgba(255, 255, 255, 0.15)',
                       borderRadius: '15px',
@@ -544,7 +542,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                       boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15)'
                     }}>
                       {player.username}
-                      {isCurrentUser && <span style={{ fontSize: '0.875rem', opacity: 0.8, marginLeft: '0.5rem' }}>(Vous)</span>}
+                      {isCurrentUser && <span style={{ fontSize: '0.875rem', opacity: 0.8, marginLeft: '0.5rem' }}></span>}
                     </div>
                   </div>
                 );
