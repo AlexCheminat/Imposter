@@ -52,7 +52,7 @@ function App() {
     };
   }, [currentUser, lobbyId]);
 
-  // Cleanup stale players - removes players who haven't sent heartbeat in 15 minutes
+  // Cleanup stale players - removes players who haven't sent heartbeat in 30 minutes
   useEffect(() => {
     const cleanupStalePlayers = async () => {
       try {
@@ -63,7 +63,7 @@ function App() {
           if (!data) return;
 
           const now = Date.now();
-          const fifteenMinutes = 15 * 60 * 1000; // 15 minutes in milliseconds
+          const fifteenMinutes = 30 * 60 * 1000; // 30 minutes in milliseconds
 
           for (const [playerId, player] of Object.entries(data)) {
             if (player.lastHeartbeat) {
