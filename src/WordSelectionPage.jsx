@@ -544,7 +544,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                       boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15)'
                     }}>
                       {player.username}
-                      {isCurrentUser && <span style={{ fontSize: '0.875rem', opacity: 0.8, marginLeft: '0.5rem' }}></span>}
+                      {isCurrentUser && <span style={{ fontSize: '0.875rem', opacity: 0.8, marginLeft: '0.5rem' }}>(Vous)</span>}
                     </div>
                   </div>
                 );
