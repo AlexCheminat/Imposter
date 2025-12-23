@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { ref, push, onValue, set, remove, onDisconnect } from 'firebase/database';
+import { useState, useEffect, useRef } from 'react';
+import { ref, push, onValue, set, remove, serverTimestamp } from 'firebase/database';
 import { database } from './firebase';
 import RegisterPage from './RegisterPage';
 import LobbyPage from './LobbyPage';
@@ -17,6 +17,7 @@ function App() {
   const [scores, setScores] = useState({});
   const [lobbyId] = useState('lobby-1');
   const [isReconnecting, setIsReconnecting] = useState(true);
+  const heartbeatIntervalRef = useRef(null);
 
   // Try to reconnect user on mount
   useEffect(() => {
@@ -28,49 +29,111 @@ function App() {
       console.log('Attempting to reconnect user:', storedUserId);
       
       if (storedUserId && storedUsername) {
-        // Check if this user still exists in the database
+        // Always re-add/update the user in the database
         const playerRef = ref(database, `lobbies/${lobbyId}/players/${storedUserId}`);
         
-        onValue(playerRef, (snapshot) => {
-          if (snapshot.exists()) {
-            // User still exists, reconnect them
-            console.log('User found in database, reconnecting...');
-            setCurrentUser({
-              username: storedUsername,
-              photo: storedPhoto,
-              firebaseId: storedUserId
-            });
-            setCurrentPage('lobby');
-          } else {
-            // User was removed, re-add them
-            console.log('User not found, re-adding to database...');
-            set(playerRef, {
-              username: storedUsername,
-              photo: storedPhoto,
-              joinedAt: Date.now()
-            }).then(() => {
-              // Set up disconnect handler
-              onDisconnect(playerRef).remove();
-              
-              setCurrentUser({
-                username: storedUsername,
-                photo: storedPhoto,
-                firebaseId: storedUserId
-              });
-              setCurrentPage('lobby');
-            });
-          }
-          setIsReconnecting(false);
-        }, { onlyOnce: true });
+        try {
+          await set(playerRef, {
+            username: storedUsername,
+            photo: storedPhoto,
+            joinedAt: Date.now(),
+            lastHeartbeat: Date.now()
+          });
+          
+          console.log('User reconnected successfully');
+          
+          setCurrentUser({
+            username: storedUsername,
+            photo: storedPhoto,
+            firebaseId: storedUserId
+          });
+          setCurrentPage('lobby');
+        } catch (error) {
+          console.error('Error reconnecting user:', error);
+        }
       } else {
-        // No stored user, show register page
         console.log('No stored user found');
-        setIsReconnecting(false);
       }
+      
+      setIsReconnecting(false);
     };
 
     reconnectUser();
   }, [lobbyId]);
+
+  // Heartbeat system - update lastHeartbeat every 5 seconds while user is active
+  useEffect(() => {
+    if (!currentUser || !currentUser.firebaseId) return;
+
+    const updateHeartbeat = async () => {
+      try {
+        const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}/lastHeartbeat`);
+        await set(playerRef, Date.now());
+        console.log('Heartbeat sent');
+      } catch (error) {
+        console.error('Error updating heartbeat:', error);
+      }
+    };
+
+    // Send heartbeat immediately
+    updateHeartbeat();
+
+    // Then send heartbeat every 5 seconds
+    heartbeatIntervalRef.current = setInterval(updateHeartbeat, 5000);
+
+    return () => {
+      if (heartbeatIntervalRef.current) {
+        clearInterval(heartbeatIntervalRef.current);
+      }
+    };
+  }, [currentUser, lobbyId]);
+
+  // Cleanup stale players - check every 10 seconds and remove players who haven't sent heartbeat in 30 seconds
+  useEffect(() => {
+    const cleanupInterval = setInterval(async () => {
+      const playersRef = ref(database, `lobbies/${lobbyId}/players`);
+      
+      onValue(playersRef, async (snapshot) => {
+        const data = snapshot.val();
+        if (!data) return;
+
+        const now = Date.now();
+        const TIMEOUT = 30000; // 30 seconds timeout
+
+        for (const [playerId, player] of Object.entries(data)) {
+          if (player.lastHeartbeat) {
+            const timeSinceHeartbeat = now - player.lastHeartbeat;
+            
+            // Remove player if they haven't sent a heartbeat in 30 seconds
+            if (timeSinceHeartbeat > TIMEOUT) {
+              console.log(`Removing stale player: ${player.username} (${timeSinceHeartbeat}ms since last heartbeat)`);
+              const playerRef = ref(database, `lobbies/${lobbyId}/players/${playerId}`);
+              await remove(playerRef);
+            }
+          }
+        }
+      }, { onlyOnce: true });
+    }, 10000); // Check every 10 seconds
+
+    return () => clearInterval(cleanupInterval);
+  }, [lobbyId]);
+
+  // Handle visibility change - send heartbeat when tab becomes visible
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && currentUser && currentUser.firebaseId) {
+        const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}/lastHeartbeat`);
+        set(playerRef, Date.now());
+        console.log('Tab became visible, heartbeat sent');
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [currentUser, lobbyId]);
 
   // Listen to players in the lobby
   useEffect(() => {
@@ -159,11 +222,9 @@ function App() {
       await set(newPlayerRef, {
         username: userData.username,
         photo: userData.photo,
-        joinedAt: Date.now()
+        joinedAt: Date.now(),
+        lastHeartbeat: Date.now()
       });
-      
-      // Set up automatic removal when user disconnects
-      onDisconnect(newPlayerRef).remove();
       
       console.log('Player added to Firebase successfully!');
 
