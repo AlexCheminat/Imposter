@@ -538,6 +538,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                       minWidth: 0
                     }}>
                       {player.username}
+                      {isCurrentUser && <span style={{ fontSize: '0.875rem', opacity: 0.8, marginLeft: '0.5rem' }}>(Vous)</span>}
                     </div>
                   </div>
                 );
