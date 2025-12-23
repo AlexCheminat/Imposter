@@ -144,6 +144,10 @@ export default function RegisterPage({ onRegister }) {
           padding: 0 !important;
           overflow-x: hidden !important;
           width: 100% !important;
+          height: 100% !important;
+        }
+        #root {
+          min-height: 100vh;
         }
         @keyframes float {
           0%, 100% {
@@ -211,18 +215,13 @@ export default function RegisterPage({ onRegister }) {
       
       <div style={{ 
         minHeight: '100vh', 
-        width: '100vw', 
+        width: '100%', 
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', 
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'center', 
         padding: '2rem', 
-        margin: 0, 
-        boxSizing: 'border-box', 
-        position: 'relative', 
-        top: 0, 
-        left: 0, 
-        overflow: 'visible' 
+        boxSizing: 'border-box'
       }}>
         
         {/* Floating Particles */}
