@@ -412,6 +412,9 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
               <>
                 {isImposter ? (
                   <>
+                    <div style={{ fontSize: '1.5rem', textShadow: '0 2px 8px rgba(0, 0, 0, 0.4)' }}>
+                      Vous devez deviner!
+                    </div>
                     <div style={{ 
                       fontSize: '1.125rem', 
                       padding: '0.75rem 1.5rem',
