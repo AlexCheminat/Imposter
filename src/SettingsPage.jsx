@@ -192,7 +192,7 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
           className="btn-hover"
           style={{
             position: 'absolute',
-            top: '4.5rem',
+            top: '3rem',
             right: '1.5rem',
             background: 'rgba(255, 255, 255, 0.25)',
             backdropFilter: 'blur(10px)',
