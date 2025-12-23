@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ref, push, onValue, set, remove } from 'firebase/database';
+import { ref, push, onValue, set, remove, onDisconnect } from 'firebase/database';
 import { database } from './firebase';
 import RegisterPage from './RegisterPage';
 import LobbyPage from './LobbyPage';
@@ -16,6 +16,61 @@ function App() {
   const [votes, setVotes] = useState({});
   const [scores, setScores] = useState({});
   const [lobbyId] = useState('lobby-1');
+  const [isReconnecting, setIsReconnecting] = useState(true);
+
+  // Try to reconnect user on mount
+  useEffect(() => {
+    const reconnectUser = async () => {
+      const storedUserId = localStorage.getItem('gameUserId');
+      const storedUsername = localStorage.getItem('gameUsername');
+      const storedPhoto = localStorage.getItem('gameUserPhoto');
+      
+      console.log('Attempting to reconnect user:', storedUserId);
+      
+      if (storedUserId && storedUsername) {
+        // Check if this user still exists in the database
+        const playerRef = ref(database, `lobbies/${lobbyId}/players/${storedUserId}`);
+        
+        onValue(playerRef, (snapshot) => {
+          if (snapshot.exists()) {
+            // User still exists, reconnect them
+            console.log('User found in database, reconnecting...');
+            setCurrentUser({
+              username: storedUsername,
+              photo: storedPhoto,
+              firebaseId: storedUserId
+            });
+            setCurrentPage('lobby');
+          } else {
+            // User was removed, re-add them
+            console.log('User not found, re-adding to database...');
+            set(playerRef, {
+              username: storedUsername,
+              photo: storedPhoto,
+              joinedAt: Date.now()
+            }).then(() => {
+              // Set up disconnect handler
+              onDisconnect(playerRef).remove();
+              
+              setCurrentUser({
+                username: storedUsername,
+                photo: storedPhoto,
+                firebaseId: storedUserId
+              });
+              setCurrentPage('lobby');
+            });
+          }
+          setIsReconnecting(false);
+        }, { onlyOnce: true });
+      } else {
+        // No stored user, show register page
+        console.log('No stored user found');
+        setIsReconnecting(false);
+      }
+    };
+
+    reconnectUser();
+  }, [lobbyId]);
 
   // Listen to players in the lobby
   useEffect(() => {
@@ -91,28 +146,6 @@ function App() {
     return () => unsubscribe();
   }, [lobbyId]);
 
-  // Remove player when they leave/close tab
-  useEffect(() => {
-    if (!currentUser) return;
-
-    const handleBeforeUnload = () => {
-      if (currentUser.firebaseId) {
-        const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}`);
-        remove(playerRef);
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      if (currentUser.firebaseId) {
-        const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}`);
-        remove(playerRef);
-      }
-    };
-  }, [currentUser, lobbyId]);
-
   const handleRegister = async (userData) => {
     console.log('handleRegister called with:', userData);
     
@@ -129,12 +162,20 @@ function App() {
         joinedAt: Date.now()
       });
       
+      // Set up automatic removal when user disconnects
+      onDisconnect(newPlayerRef).remove();
+      
       console.log('Player added to Firebase successfully!');
 
       const userWithId = {
         ...userData,
         firebaseId: newPlayerRef.key
       };
+      
+      // Store user info in localStorage for reconnection
+      localStorage.setItem('gameUserId', newPlayerRef.key);
+      localStorage.setItem('gameUsername', userData.username);
+      localStorage.setItem('gameUserPhoto', userData.photo);
       
       setCurrentUser(userWithId);
       setCurrentPage('lobby');
@@ -304,6 +345,15 @@ function App() {
   const handleBackToLobby = () => {
     setCurrentPage('lobby');
   };
+
+  // Show loading while reconnecting
+  if (isReconnecting) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center">
+        <div className="text-white text-2xl">Reconnecting...</div>
+      </div>
+    );
+  }
 
   return (
     <>
