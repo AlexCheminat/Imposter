@@ -47,6 +47,26 @@ function App() {
           sessionStorage.removeItem('imposterGameUser');
         }
       }, { onlyOnce: true });
+    } else {
+      // No saved session - check if lobby is empty
+      const playersRef = ref(database, `lobbies/${lobbyId}/players`);
+      onValue(playersRef, (snapshot) => {
+        const players = snapshot.val();
+        
+        if (!players || Object.keys(players).length === 0) {
+          // Lobby is empty, reset everything for fresh start
+          console.log('Lobby is empty, resetting game state');
+          const gameStateRef = ref(database, `lobbies/${lobbyId}/gameState`);
+          const votesRef = ref(database, `lobbies/${lobbyId}/votes`);
+          const wordRef = ref(database, `lobbies/${lobbyId}/currentWord`);
+          const scoresRef = ref(database, `lobbies/${lobbyId}/scores`);
+          
+          set(gameStateRef, null);
+          set(votesRef, null);
+          set(wordRef, null);
+          set(scoresRef, null);
+        }
+      }, { onlyOnce: true });
     }
   }, [lobbyId]);
 
