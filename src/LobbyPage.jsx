@@ -116,12 +116,11 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
           </button>
         )}
         
-        <div style={{ width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', position: 'relative', zIndex: 10, marginTop: '2rem' }}>
+        <div style={{ width: '100%', maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', position: 'relative', zIndex: 10, marginTop: '5rem' }}>
         
           {/* Player Count - Fixed at top */}
           <div style={{
             width: '100%',
-            paddingTop: '5rem',
             padding: '1rem 2rem',
             backgroundColor: '#c084fc',
             border: '4px solid #7c3aed',
