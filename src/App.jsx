@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { ref, push, onValue, set, remove } from 'firebase/database';
+import { useState, useEffect, useRef } from 'react';
+import { ref, push, onValue, set, remove, serverTimestamp } from 'firebase/database';
 import { database } from './firebase';
 import RegisterPage from './RegisterPage';
 import LobbyPage from './LobbyPage';
@@ -17,6 +17,83 @@ function App() {
   const [scores, setScores] = useState({});
   const [lobbyId] = useState('lobby-1');
   const [isReconnecting, setIsReconnecting] = useState(true);
+  const heartbeatInterval = useRef(null);
+  const cleanupInterval = useRef(null);
+
+  // Heartbeat system - sends "I'm still here" signal every 30 seconds
+  useEffect(() => {
+    if (!currentUser) return;
+
+    const sendHeartbeat = async () => {
+      try {
+        const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}`);
+        await set(playerRef, {
+          username: currentUser.username,
+          photo: currentUser.photo,
+          joinedAt: currentUser.joinedAt || Date.now(),
+          lastHeartbeat: Date.now()
+        });
+        console.log('Heartbeat sent');
+      } catch (error) {
+        console.error('Error sending heartbeat:', error);
+      }
+    };
+
+    // Send initial heartbeat immediately
+    sendHeartbeat();
+
+    // Send heartbeat every 30 seconds
+    heartbeatInterval.current = setInterval(sendHeartbeat, 30000);
+
+    return () => {
+      if (heartbeatInterval.current) {
+        clearInterval(heartbeatInterval.current);
+      }
+    };
+  }, [currentUser, lobbyId]);
+
+  // Cleanup stale players - removes players who haven't sent heartbeat in 15 minutes
+  useEffect(() => {
+    const cleanupStalePlayers = async () => {
+      try {
+        const playersRef = ref(database, `lobbies/${lobbyId}/players`);
+        
+        onValue(playersRef, async (snapshot) => {
+          const data = snapshot.val();
+          if (!data) return;
+
+          const now = Date.now();
+          const fifteenMinutes = 15 * 60 * 1000; // 15 minutes in milliseconds
+
+          for (const [playerId, player] of Object.entries(data)) {
+            if (player.lastHeartbeat) {
+              const timeSinceLastHeartbeat = now - player.lastHeartbeat;
+              
+              if (timeSinceLastHeartbeat > fifteenMinutes) {
+                console.log(`Removing stale player: ${player.username} (inactive for ${Math.round(timeSinceLastHeartbeat / 60000)} minutes)`);
+                const stalePlayerRef = ref(database, `lobbies/${lobbyId}/players/${playerId}`);
+                await remove(stalePlayerRef);
+              }
+            }
+          }
+        }, { onlyOnce: true });
+      } catch (error) {
+        console.error('Error cleaning up stale players:', error);
+      }
+    };
+
+    // Run cleanup every 60 seconds
+    cleanupInterval.current = setInterval(cleanupStalePlayers, 60000);
+
+    // Run initial cleanup
+    cleanupStalePlayers();
+
+    return () => {
+      if (cleanupInterval.current) {
+        clearInterval(cleanupInterval.current);
+      }
+    };
+  }, [lobbyId]);
 
   // Try to reconnect user on mount
   useEffect(() => {
@@ -26,6 +103,7 @@ function App() {
         const savedUserId = sessionStorage.getItem('currentUserId');
         const savedUsername = sessionStorage.getItem('currentUsername');
         const savedPhoto = sessionStorage.getItem('currentPhoto');
+        const savedJoinedAt = sessionStorage.getItem('currentJoinedAt');
         
         if (savedUserId && savedUsername) {
           console.log('Found saved user data, reconnecting...');
@@ -40,7 +118,8 @@ function App() {
               setCurrentUser({
                 username: savedUsername,
                 photo: savedPhoto,
-                firebaseId: savedUserId
+                firebaseId: savedUserId,
+                joinedAt: parseInt(savedJoinedAt) || Date.now()
               });
               
               // Get current game state to set correct page
@@ -54,7 +133,7 @@ function App() {
                 }
               }, { onlyOnce: true });
             } else {
-              // Player no longer exists, need to re-register
+              // Player no longer exists (was removed for inactivity), need to re-register
               console.log('Player not found in Firebase, clearing saved data...');
               sessionStorage.clear();
               setCurrentPage('register');
@@ -147,26 +226,6 @@ function App() {
     return () => unsubscribe();
   }, [lobbyId]);
 
-  // Remove player when they leave/close tab
-  useEffect(() => {
-    if (!currentUser) return;
-
-    const handleBeforeUnload = () => {
-      if (currentUser.firebaseId) {
-        const playerRef = ref(database, `lobbies/${lobbyId}/players/${currentUser.firebaseId}`);
-        remove(playerRef);
-        // Clear saved data when intentionally leaving
-        sessionStorage.clear();
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [currentUser, lobbyId]);
-
   const handleRegister = async (userData) => {
     console.log('handleRegister called with:', userData);
     
@@ -177,23 +236,28 @@ function App() {
       const newPlayerRef = push(playersRef);
       console.log('Pushing to Firebase...');
       
+      const joinedAt = Date.now();
+      
       await set(newPlayerRef, {
         username: userData.username,
         photo: userData.photo,
-        joinedAt: Date.now()
+        joinedAt: joinedAt,
+        lastHeartbeat: Date.now()
       });
       
       console.log('Player added to Firebase successfully!');
 
       const userWithId = {
         ...userData,
-        firebaseId: newPlayerRef.key
+        firebaseId: newPlayerRef.key,
+        joinedAt: joinedAt
       };
       
       // Save user data to sessionStorage for reconnection after refresh
       sessionStorage.setItem('currentUserId', newPlayerRef.key);
       sessionStorage.setItem('currentUsername', userData.username);
       sessionStorage.setItem('currentPhoto', userData.photo);
+      sessionStorage.setItem('currentJoinedAt', joinedAt.toString());
       
       setCurrentUser(userWithId);
       setCurrentPage('lobby');
