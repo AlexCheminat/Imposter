@@ -522,15 +522,19 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                           : 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.3) 100%)')
                         : 'rgba(255, 255, 255, 0.2)',
                       backdropFilter: 'blur(10px)',
-                      border: isCurrentUser 
-                        ? (isImposter ? '2px solid rgba(239, 68, 68, 0.6)' : '2px solid rgba(16, 185, 129, 0.6)')
-                        : '2px solid rgba(255, 255, 255, 0.4)',
+                      border: isSelected 
+                        ? '3px solid #ef4444'
+                        : (isCurrentUser 
+                          ? (isImposter ? '2px solid rgba(239, 68, 68, 0.6)' : '2px solid rgba(16, 185, 129, 0.6)')
+                          : '2px solid rgba(255, 255, 255, 0.4)'),
                       borderRadius: '20px',
                       textAlign: 'center',
                       fontSize: '1.125rem',
                       fontWeight: '600',
                       color: 'white',
-                      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15)',
+                      boxShadow: isSelected 
+                        ? '0 0 25px rgba(239, 68, 68, 0.6), 0 4px 15px rgba(0, 0, 0, 0.15)'
+                        : '0 4px 15px rgba(0, 0, 0, 0.15)',
                       minWidth: '10rem'
                     }}>
                       {player.username}
