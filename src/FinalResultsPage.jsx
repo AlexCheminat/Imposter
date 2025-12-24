@@ -53,13 +53,10 @@ export default function FinalResultsPage({ players = [], scores = {}, currentUse
   // Find max score for scaling the bars
   const maxScore = Math.max(...playerScores.map(p => p.score), 1);
 
-  // Get medal/trophy for each position
-  const getMedalIcon = (index) => {
-    if (index === 0) return <Trophy size={28} color="#fbbf24" fill="#fbbf24" />;
-    if (index === 1) return <Medal size={28} color="#d1d5db" fill="#d1d5db" />;
-    if (index === 2) return <Award size={28} color="#d97706" fill="#d97706" />;
-    return null;
-  };
+  // Check if there's a clear winner (no tie at the top)
+  const topScore = sortedPlayers[0]?.score || 0;
+  const secondScore = sortedPlayers[1]?.score || -1;
+  const hasWinner = topScore > 0 && topScore > secondScore;
 
   return (
     <>
@@ -194,7 +191,7 @@ export default function FinalResultsPage({ players = [], scores = {}, currentUse
           </h1>
 
           {/* Winner Highlight - Only show if there's a clear winner */}
-          {sortedPlayers.length > 0 && sortedPlayers[0].score > 0 && (
+          {hasWinner && (
             <div style={{
               width: '100%',
               padding: '2rem',
@@ -232,7 +229,7 @@ export default function FinalResultsPage({ players = [], scores = {}, currentUse
               {sortedPlayers.map((player, index) => {
                 const score = player.score;
                 const barWidth = maxScore > 0 ? (score / maxScore) * 100 : 0;
-                const isWinner = index === 0 && score > 0;
+                const isWinner = hasWinner && index === 0;
 
                 return (
                   <div 
@@ -244,7 +241,7 @@ export default function FinalResultsPage({ players = [], scores = {}, currentUse
                       animation: `slideInRight 0.4s ease-out ${index * 0.1}s backwards`
                     }}
                   >
-                    {/* Player Photo with Medal */}
+                    {/* Player Photo */}
                     <div style={{
                       position: 'relative',
                       width: '70px',
@@ -269,25 +266,6 @@ export default function FinalResultsPage({ players = [], scores = {}, currentUse
                           objectFit: 'cover'
                         }}
                       />
-                      {/* Medal Badge */}
-                      {index < 3 && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '-8px',
-                          right: '-8px',
-                          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%)',
-                          borderRadius: '50%',
-                          width: '32px',
-                          height: '32px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          border: '2px solid white',
-                          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
-                        }}>
-                          {getMedalIcon(index)}
-                        </div>
-                      )}
                     </div>
 
                     {/* Score Bar */}
