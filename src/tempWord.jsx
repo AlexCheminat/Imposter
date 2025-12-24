@@ -1011,9 +1011,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         html, body {
           margin: 0 !important;
           padding: 0 !important;
-          overflow-x: hidden !important;
           width: 100% !important;
-          height: 100% !important;
           max-width: 100% !important;
         }
         body > div {
@@ -1090,7 +1088,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
       
       <div style={{ 
         minHeight: '100vh', 
-        width: '100%', 
+        width: '100vw',
+        margin: '0',
         background: isImposter 
           ? 'linear-gradient(135deg, #dc2626 0%, #991b1b 50%, #7f1d1d 100%)'
           : 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', 
@@ -1100,7 +1099,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         padding: '2rem', 
         paddingBottom: '3rem', 
         boxSizing: 'border-box', 
-        position: 'relative' 
+        position: 'relative',
+        overflow: 'hidden'
       }}>
         
         {/* Floating Particles */}
@@ -1131,7 +1131,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           gap: '2rem', 
           position: 'relative', 
           zIndex: 10, 
-          marginTop: '7rem',
+          marginTop: '2rem',
           animation: 'fadeInUp 0.6s ease-out'
         }}>
         
@@ -1163,7 +1163,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
             fontSize: '2rem',
             fontWeight: '700',
             color: 'white',
-            minHeight: '150px',
+            minHeight: '200px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -1217,8 +1217,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                 {isImposter ? (
                   <>
                     <div style={{ 
-                      fontSize: '1.125rem',
-                      paddingTop: '1rem',
+                      fontSize: '1.125rem', 
                       padding: '0.75rem 1.5rem',
                       background: 'rgba(255, 255, 255, 0.15)',
                       borderRadius: '15px',
@@ -1289,12 +1288,6 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                       gap: '1rem',
                       cursor: cannotSelect ? 'not-allowed' : 'pointer',
                       padding: '0.5rem',
-                      background: isSelected 
-                        ? 'linear-gradient(135deg, rgba(245, 87, 108, 0.3) 0%, rgba(240, 68, 56, 0.3) 100%)'
-                        : 'transparent',
-                      backdropFilter: isSelected ? 'blur(10px)' : 'none',
-                      borderRadius: '20px',
-                      border: `2px solid ${isSelected ? 'rgba(245, 87, 108, 0.6)' : 'transparent'}`,
                       opacity: cannotSelect ? 0.5 : 1,
                       animation: `slideIn 0.4s ease-out ${index * 0.1}s backwards`
                     }}
@@ -1335,19 +1328,22 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                           : 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.3) 100%)')
                         : 'rgba(255, 255, 255, 0.2)',
                       backdropFilter: 'blur(10px)',
-                      border: isCurrentUser 
-                        ? (isImposter ? '2px solid rgba(239, 68, 68, 0.6)' : '2px solid rgba(16, 185, 129, 0.6)')
-                        : '2px solid rgba(255, 255, 255, 0.4)',
+                      border: isSelected 
+                        ? '3px solid #ef4444'
+                        : (isCurrentUser 
+                          ? (isImposter ? '2px solid rgba(239, 68, 68, 0.6)' : '2px solid rgba(16, 185, 129, 0.6)')
+                          : '2px solid rgba(255, 255, 255, 0.4)'),
                       borderRadius: '20px',
                       textAlign: 'center',
                       fontSize: '1.125rem',
                       fontWeight: '600',
                       color: 'white',
-                      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15)',
-                      minWidth: 0
+                      boxShadow: isSelected 
+                        ? '0 0 25px rgba(239, 68, 68, 0.6), 0 4px 15px rgba(0, 0, 0, 0.15)'
+                        : '0 4px 15px rgba(0, 0, 0, 0.15)',
+                      minWidth: '10rem'
                     }}>
                       {player.username}
-                      {isCurrentUser && <span style={{ fontSize: '0.875rem', opacity: 0.8, marginLeft: '0.5rem' }}>(Vous)</span>}
                     </div>
                   </div>
                 );
