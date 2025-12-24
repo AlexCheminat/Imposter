@@ -38,10 +38,6 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
       setParticles(newParticles);
     };
     generateParticles();
-
-    document.body.style.margin = '0';
-    document.body.style.padding = '0';
-    document.body.style.overflow = 'auto';
   }, []);
 
   // Calculate votes for each player and track who voted for whom
@@ -85,21 +81,6 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
           margin: 0;
           padding: 0;
           box-sizing: border-box;
-        }
-        html, body {
-          margin: 0 !important;
-          padding: 0 !important;
-          overflow-x: hidden !important;
-          overflow-y: auto !important;
-          width: 100% !important;
-          height: 100% !important;
-          max-width: 100% !important;
-        }
-        body > div {
-          max-width: 100vw !important;
-        }
-        #root {
-          min-height: 100vh;
         }
         @keyframes drift {
           0% {
@@ -167,7 +148,8 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
         padding: '2rem', 
         paddingBottom: '3rem', 
         boxSizing: 'border-box', 
-        position: 'relative' 
+        position: 'relative',
+        overflowX: 'auto'
       }}>
         
         {/* Floating Particles */}
