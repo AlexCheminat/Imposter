@@ -968,15 +968,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     const randomPlayerIndex = Math.floor(Math.random() * players.length);
     const randomPlayer = players[randomPlayerIndex];
     
-    // Select random imposter (different from starting player if possible)
-    let randomImposterIndex;
-    if (players.length > 1) {
-      do {
-        randomImposterIndex = Math.floor(Math.random() * players.length);
-      } while (randomImposterIndex === randomPlayerIndex && players.length > 1);
-    } else {
-      randomImposterIndex = 0;
-    }
+    // Select random imposter (independently, can be anyone including starting player)
+    const randomImposterIndex = Math.floor(Math.random() * players.length);
     const randomImposter = players[randomImposterIndex];
     
     // Update both word and imposter in Firebase
@@ -1021,6 +1014,10 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           overflow-x: hidden !important;
           width: 100% !important;
           height: 100% !important;
+          max-width: 100% !important;
+        }
+        body > div {
+          max-width: 100vw !important;
         }
         #root {
           min-height: 100vh;
@@ -1086,7 +1083,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         .player-card {
           transition: all 0.3s ease;
         }
-        .player-card:hover {
+        .player-card:not(.disabled):hover {
           transform: translateX(5px);
         }
       `}</style>
@@ -1134,7 +1131,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           gap: '2rem', 
           position: 'relative', 
           zIndex: 10, 
-          marginTop: '2rem',
+          marginTop: '7rem',
           animation: 'fadeInUp 0.6s ease-out'
         }}>
         
@@ -1198,12 +1195,14 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  opacity: isRefreshing || loading ? 0.5 : 1
+                  opacity: isRefreshing || loading ? 0.5 : 1,
+                  padding: 0
                 }}
               >
                 <RotateCw 
                   size={22} 
                   color="white"
+                  strokeWidth={2}
                   style={{
                     animation: isRefreshing ? 'spin 1s linear infinite' : 'none'
                   }}
@@ -1217,11 +1216,9 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
               <>
                 {isImposter ? (
                   <>
-                    <div style={{ fontSize: '1.5rem', textShadow: '0 2px 8px rgba(0, 0, 0, 0.4)' }}>
-                      Vous devez deviner!
-                    </div>
                     <div style={{ 
-                      fontSize: '1.125rem', 
+                      fontSize: '1.125rem',
+                      paddingTop: '1rem',
                       padding: '0.75rem 1.5rem',
                       background: 'rgba(255, 255, 255, 0.15)',
                       borderRadius: '15px',
@@ -1285,7 +1282,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                   <div 
                     key={player.id} 
                     onClick={() => !cannotSelect && setSelectedPlayer(player)}
-                    className="player-card"
+                    className={`player-card ${cannotSelect ? 'disabled' : ''}`}
                     style={{ 
                       display: 'flex', 
                       alignItems: 'center', 
@@ -1346,7 +1343,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                       fontSize: '1.125rem',
                       fontWeight: '600',
                       color: 'white',
-                      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15)'
+                      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15)',
+                      minWidth: 0
                     }}>
                       {player.username}
                       {isCurrentUser && <span style={{ fontSize: '0.875rem', opacity: 0.8, marginLeft: '0.5rem' }}>(Vous)</span>}
