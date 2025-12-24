@@ -89,7 +89,10 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
         html, body {
           margin: 0 !important;
           padding: 0 !important;
+          overflow-x: hidden !important;
+          overflow-y: auto !important;
           width: 100% !important;
+          height: 100% !important;
           max-width: 100% !important;
         }
         body > div {
@@ -159,12 +162,12 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
         width: '100%', 
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', 
         display: 'flex', 
+        flexDirection: 'column', 
         alignItems: 'center', 
-        justifyContent: 'center', 
         padding: '2rem', 
-        boxSizing: 'border-box',
-        overflow: 'hidden',
-        position: 'relative'
+        paddingBottom: '3rem', 
+        boxSizing: 'border-box', 
+        position: 'relative' 
       }}>
         
         {/* Floating Particles */}
@@ -188,15 +191,14 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
         {/* Main Container */}
         <div style={{ 
           width: '100%', 
-          minWidth: 'min-content',
-          maxWidth: '90vw',
+          maxWidth: '600px', 
           display: 'flex', 
           flexDirection: 'column', 
           alignItems: 'center', 
           gap: '2rem', 
           position: 'relative', 
           zIndex: 10, 
-          marginTop: '2rem',
+          marginTop: '4rem',
           animation: 'fadeInUp 0.6s ease-out'
         }}>
         
@@ -278,7 +280,6 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
           {/* Vote Results Container */}
           <div style={{
             width: '100%',
-            minWidth: 'min-content',
             background: 'rgba(255, 255, 255, 0.15)',
             backdropFilter: 'blur(20px)',
             borderRadius: '30px',
@@ -300,9 +301,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                       display: 'flex', 
                       alignItems: 'center', 
                       gap: '1rem',
-                      animation: `slideInRight 0.4s ease-out ${index * 0.1}s backwards`,
-                      minWidth: 'min-content',
-                      width: '100%'
+                      animation: `slideInRight 0.4s ease-out ${index * 0.1}s backwards`
                     }}
                   >
                     {/* Player Photo - Red border if imposter and all votes are in */}
@@ -339,17 +338,19 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                       position: 'relative',
                       display: 'flex',
                       alignItems: 'center',
-                      minWidth: 'min-content'
+                      minWidth: 0,
+                      overflow: 'visible'
                     }}>
                       {voters.length > 0 && (
                         <div style={{
-                          width: `${voters.length * 53 + 5}px`,
+                          width: `${Math.min(voters.length * 53 + 5, 100)}%`,
+                          minWidth: `${voters.length * 53 + 5}px`,
                           height: '100%',
                           background: 'linear-gradient(135deg, rgba(245, 87, 108, 0.4) 0%, rgba(240, 68, 56, 0.4) 100%)',
                           backdropFilter: 'blur(10px)',
                           border: '2px solid rgba(255, 255, 255, 0.5)',
                           borderRadius: '15px',
-                          transition: 'width 0.5s ease-out',
+                          transition: 'width 0.5s ease-out, min-width 0.5s ease-out',
                           display: 'flex',
                           alignItems: 'center',
                           padding: '0 0.5rem',
