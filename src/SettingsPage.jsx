@@ -159,12 +159,12 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
         width: '100%', 
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', 
         display: 'flex', 
-        flexDirection: 'column', 
         alignItems: 'center', 
+        justifyContent: 'center', 
         padding: '2rem', 
-        paddingBottom: '3rem', 
-        boxSizing: 'border-box', 
-        position: 'relative' 
+        boxSizing: 'border-box',
+        overflow: 'hidden', // Add this
+        position: 'relative' // And this
       }}>
         
         {/* Floating Particles */}
