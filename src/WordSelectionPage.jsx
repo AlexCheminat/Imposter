@@ -320,7 +320,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           gap: '2rem', 
           position: 'relative', 
           zIndex: 10, 
-          marginTop: '4rem',
+          marginTop: '9rem',
           animation: 'fadeInUp 0.6s ease-out'
         }}>
         
@@ -339,7 +339,6 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           {/* Generated Word Card */}
           <div style={{
             width: '100%',
-            height: '250px',
             padding: '2.5rem 2rem',
             background: isImposter 
               ? 'linear-gradient(135deg, rgba(220, 38, 38, 0.3) 0%, rgba(153, 27, 27, 0.3) 100%)'
@@ -353,13 +352,13 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
             fontSize: '2rem',
             fontWeight: '700',
             color: 'white',
+            minHeight: '200px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             gap: '1rem',
             position: 'relative',
-            boxSizing: 'border-box',
             boxShadow: isImposter 
               ? '0 15px 40px rgba(220, 38, 38, 0.4)'
               : '0 15px 40px rgba(0, 0, 0, 0.3)',
@@ -480,16 +479,9 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                       alignItems: 'center', 
                       gap: '1rem',
                       cursor: cannotSelect ? 'not-allowed' : 'pointer',
-                      padding: '0.75rem',
-                      background: isSelected 
-                        ? 'linear-gradient(135deg, rgba(245, 87, 108, 0.3) 0%, rgba(240, 68, 56, 0.3) 100%)'
-                        : 'transparent',
-                      backdropFilter: isSelected ? 'blur(10px)' : 'none',
-                      borderRadius: '20px',
-                      border: `3px solid ${isSelected ? 'rgba(245, 87, 108, 0.6)' : 'transparent'}`,
+                      padding: '0.5rem',
                       opacity: cannotSelect ? 0.5 : 1,
-                      animation: `slideIn 0.4s ease-out ${index * 0.1}s backwards`,
-                      boxSizing: 'border-box'
+                      animation: `slideIn 0.4s ease-out ${index * 0.1}s backwards`
                     }}
                   >
                     {/* Player Photo */}
@@ -537,7 +529,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                       fontWeight: '600',
                       color: 'white',
                       boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15)',
-                      minWidth: 0
+                      minWidth: '10rem'
                     }}>
                       {player.username}
                     </div>
