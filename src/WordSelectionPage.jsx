@@ -279,7 +279,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
       
       <div style={{ 
         minHeight: '100vh', 
-        width: '100%', 
+        width: '100vw',
+        margin: '0',
         background: isImposter 
           ? 'linear-gradient(135deg, #dc2626 0%, #991b1b 50%, #7f1d1d 100%)'
           : 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', 
@@ -289,7 +290,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         padding: '2rem', 
         paddingBottom: '3rem', 
         boxSizing: 'border-box', 
-        position: 'relative' 
+        position: 'relative',
+        overflow: 'hidden'
       }}>
         
         {/* Floating Particles */}
