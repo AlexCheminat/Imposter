@@ -327,14 +327,14 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                     }}>
                       {voters.length > 0 && (
                         <div style={{
-                          width: `${Math.min(voters.length * 51 + 5)}%`,
-                          minWidth: `${voters.length * 51 + 5}px`,
+                          width: `${voters.length * 53 + 5}px`,
+                          maxWidth: '100%',
                           height: '100%',
                           background: 'linear-gradient(135deg, rgba(245, 87, 108, 0.4) 0%, rgba(240, 68, 56, 0.4) 100%)',
                           backdropFilter: 'blur(10px)',
                           border: '2px solid rgba(255, 255, 255, 0.5)',
                           borderRadius: '15px',
-                          transition: 'width 0.5s ease-out, min-width 0.5s ease-out',
+                          transition: 'width 0.5s ease-out',
                           display: 'flex',
                           alignItems: 'center',
                           padding: '0 0.5rem',
