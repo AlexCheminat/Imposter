@@ -320,7 +320,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           gap: '2rem', 
           position: 'relative', 
           zIndex: 10, 
-          marginTop: '9rem',
+          marginTop: '2rem',
           animation: 'fadeInUp 0.6s ease-out'
         }}>
         
@@ -405,9 +405,6 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
               <>
                 {isImposter ? (
                   <>
-                    <div style={{ fontSize: '1.5rem', textShadow: '0 2px 8px rgba(0, 0, 0, 0.4)' }}>
-                      Vous devez deviner!
-                    </div>
                     <div style={{ 
                       fontSize: '1.125rem', 
                       padding: '0.75rem 1.5rem',
