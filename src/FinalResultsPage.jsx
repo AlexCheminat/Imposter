@@ -170,7 +170,7 @@ export default function FinalResultsPage({ players = [], scores = {}, currentUse
           gap: '2rem', 
           position: 'relative', 
           zIndex: 10, 
-          marginTop: '2rem',
+          marginTop: '1rem',
           animation: 'fadeInUp 0.6s ease-out'
         }}>
         

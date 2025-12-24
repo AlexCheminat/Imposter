@@ -195,7 +195,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
           gap: '2rem', 
           position: 'relative', 
           zIndex: 10, 
-          marginTop: '4rem',
+          marginTop: '2rem',
           animation: 'fadeInUp 0.6s ease-out'
         }}>
         
