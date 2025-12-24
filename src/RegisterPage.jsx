@@ -7,6 +7,7 @@ export default function RegisterPage({ onRegister }) {
   const [username, setUsername] = useState('');
   const [cameraError, setCameraError] = useState(null);
   const [particles, setParticles] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
@@ -97,6 +98,8 @@ export default function RegisterPage({ onRegister }) {
   };
 
   const handleSubmit = () => {
+    if (isSubmitting) return; // Prevent multiple clicks
+    
     if (!capturedImage) {
       alert('Il faut prendre une photo !');
       return;
@@ -105,6 +108,8 @@ export default function RegisterPage({ onRegister }) {
       alert('Veuillez entrer votre nom !');
       return;
     }
+    
+    setIsSubmitting(true);
     
     if (onRegister) {
       onRegister({
@@ -192,11 +197,11 @@ export default function RegisterPage({ onRegister }) {
         .btn-hover {
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .btn-hover:hover {
+        .btn-hover:hover:not(:disabled) {
           transform: translateY(-2px);
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
-        .btn-hover:active {
+        .btn-hover:active:not(:disabled) {
           transform: translateY(0);
         }
         .input-focus {
@@ -220,8 +225,8 @@ export default function RegisterPage({ onRegister }) {
           justifyContent: 'center', 
           padding: '2rem', 
           boxSizing: 'border-box',
-          overflow: 'hidden', // Add this
-          position: 'relative' // And this
+          overflow: 'hidden',
+          position: 'relative'
         }}>
         
         {/* Floating Particles */}
@@ -347,20 +352,24 @@ export default function RegisterPage({ onRegister }) {
             {capturedImage ? (
               <button
                 onClick={retakePhoto}
+                disabled={isSubmitting}
                 className="btn-hover"
                 style={{
                   padding: '0.875rem 2.5rem',
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  background: isSubmitting 
+                    ? 'rgba(255, 255, 255, 0.2)' 
+                    : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                   border: '2px solid rgba(255, 255, 255, 0.5)',
                   borderRadius: '25px',
                   fontWeight: '600',
                   fontSize: '1rem',
                   color: 'white',
-                  cursor: 'pointer',
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                  opacity: isSubmitting ? 0.5 : 1,
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)'
+                  boxShadow: isSubmitting ? 'none' : '0 8px 20px rgba(0, 0, 0, 0.2)'
                 }}
               >
                 <RefreshCw size={20} />
@@ -399,6 +408,7 @@ export default function RegisterPage({ onRegister }) {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              disabled={isSubmitting}
               placeholder="Votre nom..."
               className="input-focus"
               style={{
@@ -413,7 +423,9 @@ export default function RegisterPage({ onRegister }) {
                 color: 'white',
                 outline: 'none',
                 backdropFilter: 'blur(10px)',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)'
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+                opacity: isSubmitting ? 0.6 : 1,
+                cursor: isSubmitting ? 'not-allowed' : 'text'
               }}
             />
           </div>
@@ -422,23 +434,29 @@ export default function RegisterPage({ onRegister }) {
           <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
             <button
               onClick={handleSubmit}
+              disabled={isSubmitting}
               className="btn-hover"
               style={{
                 width: '100%',
                 padding: '1.125rem 2rem',
-                background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                background: isSubmitting 
+                  ? 'rgba(255, 255, 255, 0.3)' 
+                  : 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
                 border: '2px solid rgba(255, 255, 255, 0.5)',
                 borderRadius: '25px',
                 fontWeight: '700',
                 fontSize: '1.125rem',
                 color: 'white',
-                cursor: 'pointer',
-                boxShadow: '0 10px 30px rgba(245, 87, 108, 0.4)',
+                cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                boxShadow: isSubmitting 
+                  ? 'none' 
+                  : '0 10px 30px rgba(245, 87, 108, 0.4)',
                 textTransform: 'uppercase',
-                letterSpacing: '1px'
+                letterSpacing: '1px',
+                opacity: isSubmitting ? 0.6 : 1
               }}
             >
-              C'est Parti ! 🚀
+              {isSubmitting ? 'En cours...' : "C'est Parti ! 🚀"}
             </button>
           </div>
         </div>
