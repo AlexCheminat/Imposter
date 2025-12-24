@@ -483,7 +483,6 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                       cursor: cannotSelect ? 'not-allowed' : 'pointer',
                       padding: isSelected ? '1rem' : '0.5rem',
                       opacity: cannotSelect ? 0.5 : 1,
-                      animation: `slideIn 0.4s ease-out ${index * 0.1}s backwards`,
                       background: isSelected ? 'rgba(239, 68, 68, 0.2)' : 'transparent',
                       border: isSelected ? '3px solid #ef4444' : '3px solid transparent',
                       borderRadius: '25px',
