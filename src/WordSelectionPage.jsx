@@ -320,7 +320,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           gap: '2rem', 
           position: 'relative', 
           zIndex: 10, 
-          marginTop: '7rem',
+          marginTop: '9rem',
           animation: 'fadeInUp 0.6s ease-out'
         }}>
         
@@ -535,7 +535,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                       fontWeight: '600',
                       color: 'white',
                       boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15)',
-                      minWidth: '200px'
+                      minWidth: '10.5rem'
                     }}>
                       {player.username}
                     </div>
