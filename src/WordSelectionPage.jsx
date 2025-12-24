@@ -343,17 +343,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
               marginBottom: '2rem',
               filter: 'drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3))'
             }}>
-              🔒
+              👆
             </div>
-            <h1 style={{
-              color: 'white',
-              fontSize: '2.5rem',
-              fontWeight: '700',
-              marginBottom: '1rem',
-              textShadow: '0 4px 15px rgba(0, 0, 0, 0.5)'
-            }}>
-              Prêt à découvrir?
-            </h1>
             <p style={{
               color: 'rgba(255, 255, 255, 0.8)',
               fontSize: '1.25rem',
@@ -361,24 +352,10 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
               maxWidth: '500px',
               margin: '0 auto 3rem auto'
             }}>
-              Cliquez n'importe où pour révéler votre rôle
+              Cliquez n'importe où pour révéler
             </p>
-            <div style={{
-              padding: '1rem 2.5rem',
-              background: 'rgba(255, 255, 255, 0.2)',
-              backdropFilter: 'blur(10px)',
-              border: '2px solid rgba(255, 255, 255, 0.4)',
-              borderRadius: '20px',
-              color: 'white',
-              fontSize: '1.125rem',
-              fontWeight: '600',
-              display: 'inline-block',
-              animation: 'pulseButton 2s infinite'
-            }}>
-              👆 Cliquez pour révéler
             </div>
           </div>
-        </div>
       )}
       
       <div style={{ 
