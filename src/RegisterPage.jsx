@@ -224,7 +224,9 @@ export default function RegisterPage({ onRegister }) {
         alignItems: 'center', 
         justifyContent: 'center', 
         padding: '2rem', 
-        boxSizing: 'border-box'
+        boxSizing: 'border-box',
+        overflow: 'hidden', // Add this
+        position: 'relative' // And this
       }}>
         
         {/* Floating Particles */}
