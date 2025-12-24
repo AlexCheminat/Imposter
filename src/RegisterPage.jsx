@@ -143,11 +143,6 @@ export default function RegisterPage({ onRegister }) {
           padding: 0 !important;
           width: 100% !important;
           max-width: 100% !important;
-          overflow-x: hidden;
-          height: 100%;
-        }
-        body {
-          overflow-y: auto;
         }
         #root {
           min-height: 100vh;
@@ -216,18 +211,18 @@ export default function RegisterPage({ onRegister }) {
         }
       `}</style>
       
-      <div style={{ 
-        minHeight: '100vh', 
-        width: '100%', 
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        padding: '2rem', 
-        boxSizing: 'border-box',
-        overflow: 'hidden', // Add this
-        position: 'relative' // And this
-      }}>
+        <div style={{ 
+          minHeight: '100vh', 
+          width: '100%', 
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          padding: '2rem', 
+          boxSizing: 'border-box',
+          overflow: 'hidden', // Add this
+          position: 'relative' // And this
+        }}>
         
         {/* Floating Particles */}
         {particles.map(particle => (
