@@ -120,7 +120,6 @@ export default function RegisterPage({ onRegister }) {
   useEffect(() => {
     document.body.style.margin = '0';
     document.body.style.padding = '0';
-    document.body.style.overflow = 'auto';
     
     startCamera();
     
