@@ -146,7 +146,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
         flexDirection: 'column', 
         alignItems: 'center', 
         padding: '2rem', 
-        paddingBottom: '2rem', 
+        paddingBottom: '0', 
         boxSizing: 'border-box', 
         position: 'relative',
         overflowX: 'auto'
