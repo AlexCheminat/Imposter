@@ -339,7 +339,6 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           {/* Generated Word Card */}
           <div style={{
             width: '100%',
-            height: '250px',
             padding: '2.5rem 2rem',
             background: isImposter 
               ? 'linear-gradient(135deg, rgba(220, 38, 38, 0.3) 0%, rgba(153, 27, 27, 0.3) 100%)'
@@ -353,13 +352,13 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
             fontSize: '2rem',
             fontWeight: '700',
             color: 'white',
+            minHeight: '200px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             gap: '1rem',
             position: 'relative',
-            boxSizing: 'border-box',
             boxShadow: isImposter 
               ? '0 15px 40px rgba(220, 38, 38, 0.4)'
               : '0 15px 40px rgba(0, 0, 0, 0.3)',
@@ -536,7 +535,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                       fontWeight: '600',
                       color: 'white',
                       boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15)',
-                      minWidth: 0
+                      minWidth: '5rem'
                     }}>
                       {player.username}
                     </div>
