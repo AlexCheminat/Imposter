@@ -200,9 +200,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         html, body {
           margin: 0 !important;
           padding: 0 !important;
-          overflow-x: hidden !important;
           width: 100% !important;
-          height: 100% !important;
           max-width: 100% !important;
         }
         body > div {
