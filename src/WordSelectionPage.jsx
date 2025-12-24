@@ -333,7 +333,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
             textShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
             marginBottom: '-1rem'
           }}>
-            {isImposter ? '🎭 Vous êtes l\'Imposteur!' : '🎯 Votre Mot'}
+            {isImposter ? '🦹 Vous êtes l\'Imposteur!' : '🎯 Votre Mot'}
           </h1>
 
           {/* Generated Word Card */}

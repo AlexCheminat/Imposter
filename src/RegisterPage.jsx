@@ -143,6 +143,11 @@ export default function RegisterPage({ onRegister }) {
           padding: 0 !important;
           width: 100% !important;
           max-width: 100% !important;
+          overflow-x: hidden;
+          height: 100%;
+        }
+        body {
+          overflow-y: auto;
         }
         #root {
           min-height: 100vh;
