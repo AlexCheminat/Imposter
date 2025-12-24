@@ -219,7 +219,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
           </h1>
 
           {/* Result Message - Only show when all votes are in */}
-          {allPlayersVoted && (
+          {allPlayersVoted ? (
             <div style={{
               width: '100%',
               padding: '2rem',
@@ -254,6 +254,26 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                   L'imposteur a gagné!
                 </>
               )}
+            </div>
+          ) : (
+            <div style={{
+              width: '100%',
+              padding: '2rem',
+              background: 'rgba(255, 255, 255, 0.2)',
+              backdropFilter: 'blur(20px)',
+              border: '3px solid rgba(255, 255, 255, 0.4)',
+              borderRadius: '30px',
+              textAlign: 'center',
+              fontSize: '1.5rem',
+              fontWeight: '700',
+              color: 'white',
+              boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.75rem'
+            }}>
+              ⏳ En attente des votes...
             </div>
           )}
 
