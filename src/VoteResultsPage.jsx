@@ -146,7 +146,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
         flexDirection: 'column', 
         alignItems: 'center', 
         padding: '2rem', 
-        paddingBottom: '3rem', 
+        paddingBottom: '2rem', 
         boxSizing: 'border-box', 
         position: 'relative',
         overflowX: 'auto'
@@ -180,7 +180,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
           gap: '2rem', 
           position: 'relative', 
           zIndex: 10, 
-          marginTop: '4rem',
+          marginTop: '2rem',
           animation: 'fadeInUp 0.6s ease-out'
         }}>
         
@@ -327,8 +327,8 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                     }}>
                       {voters.length > 0 && (
                         <div style={{
-                          width: `${Math.min(voters.length * 53 + 5, 100)}%`,
-                          minWidth: `${voters.length * 53 + 5}px`,
+                          width: `${Math.min(voters.length * 51 + 5, 100)}%`,
+                          minWidth: `${voters.length * 51 + 5}px`,
                           height: '100%',
                           background: 'linear-gradient(135deg, rgba(245, 87, 108, 0.4) 0%, rgba(240, 68, 56, 0.4) 100%)',
                           backdropFilter: 'blur(10px)',
