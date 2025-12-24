@@ -327,7 +327,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                     }}>
                       {voters.length > 0 && (
                         <div style={{
-                          width: `${Math.min(voters.length * 51 + 5, 100)}%`,
+                          width: `${Math.min(voters.length * 51 + 5)}%`,
                           minWidth: `${voters.length * 51 + 5}px`,
                           height: '100%',
                           background: 'linear-gradient(135deg, rgba(245, 87, 108, 0.4) 0%, rgba(240, 68, 56, 0.4) 100%)',
