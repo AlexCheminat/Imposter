@@ -279,8 +279,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
       
       <div style={{ 
         minHeight: '100vh', 
-        width: '100vw',
-        margin: '0',
+        width: '100%', 
         background: isImposter 
           ? 'linear-gradient(135deg, #dc2626 0%, #991b1b 50%, #7f1d1d 100%)'
           : 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', 
@@ -290,8 +289,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         padding: '2rem', 
         paddingBottom: '3rem', 
         boxSizing: 'border-box', 
-        position: 'relative',
-        overflow: 'hidden'
+        position: 'relative' 
       }}>
         
         {/* Floating Particles */}
@@ -322,7 +320,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           gap: '2rem', 
           position: 'relative', 
           zIndex: 10, 
-          marginTop: '9rem',
+          marginTop: '4rem',
           animation: 'fadeInUp 0.6s ease-out'
         }}>
         
@@ -341,6 +339,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           {/* Generated Word Card */}
           <div style={{
             width: '100%',
+            height: '250px',
             padding: '2.5rem 2rem',
             background: isImposter 
               ? 'linear-gradient(135deg, rgba(220, 38, 38, 0.3) 0%, rgba(153, 27, 27, 0.3) 100%)'
@@ -354,13 +353,13 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
             fontSize: '2rem',
             fontWeight: '700',
             color: 'white',
-            minHeight: '200px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             gap: '1rem',
             position: 'relative',
+            boxSizing: 'border-box',
             boxShadow: isImposter 
               ? '0 15px 40px rgba(220, 38, 38, 0.4)'
               : '0 15px 40px rgba(0, 0, 0, 0.3)',
@@ -481,7 +480,13 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                       alignItems: 'center', 
                       gap: '1rem',
                       cursor: cannotSelect ? 'not-allowed' : 'pointer',
-                      padding: '0.5rem',
+                      padding: isSelected ? '0.25rem' : '0.5rem',
+                      background: isSelected 
+                        ? 'linear-gradient(135deg, rgba(245, 87, 108, 0.3) 0%, rgba(240, 68, 56, 0.3) 100%)'
+                        : 'transparent',
+                      backdropFilter: isSelected ? 'blur(10px)' : 'none',
+                      borderRadius: '20px',
+                      border: `3px solid ${isSelected ? 'rgba(245, 87, 108, 0.6)' : 'transparent'}`,
                       opacity: cannotSelect ? 0.5 : 1,
                       animation: `slideIn 0.4s ease-out ${index * 0.1}s backwards`
                     }}
@@ -531,7 +536,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                       fontWeight: '600',
                       color: 'white',
                       boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15)',
-                      minWidth: '10rem'
+                      minWidth: 0
                     }}>
                       {player.username}
                     </div>
