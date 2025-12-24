@@ -309,26 +309,6 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                           objectFit: 'cover'
                         }}
                       />
-                      {/* Imposter Badge */}
-                      {allPlayersVoted && isImposter && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '-8px',
-                          right: '-8px',
-                          background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-                          borderRadius: '50%',
-                          width: '28px',
-                          height: '28px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          border: '2px solid white',
-                          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
-                          fontSize: '0.875rem'
-                        }}>
-                          😈
-                        </div>
-                      )}
                     </div>
 
                     {/* Vote Bar with Voter Photos */}
@@ -434,6 +414,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
           {/* Waiting message for non-hosts */}
           {allPlayersVoted && !isFirstPlayer && (
             <div style={{
+              width: '100%',
               padding: '1rem 2rem',
               background: 'rgba(255, 255, 255, 0.2)',
               backdropFilter: 'blur(10px)',
@@ -442,7 +423,8 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
               color: 'white',
               fontSize: '1rem',
               textAlign: 'center',
-              fontWeight: '500'
+              fontWeight: '500',
+              boxSizing: 'border-box'
             }}>
               En attente que l'hôte continue...
             </div>
