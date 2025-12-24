@@ -170,7 +170,7 @@ export default function FinalResultsPage({ players = [], scores = {}, currentUse
           gap: '2rem', 
           position: 'relative', 
           zIndex: 10, 
-          marginTop: '9rem',
+          marginTop: '16rem',
           animation: 'fadeInUp 0.6s ease-out'
         }}>
         
@@ -299,7 +299,6 @@ export default function FinalResultsPage({ players = [], scores = {}, currentUse
                           fontSize: '1rem',
                           animation: 'expandBar 0.8s ease-out'
                         }}>
-                          {player.username}
                         </div>
                       )}
                     </div>
