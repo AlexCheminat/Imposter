@@ -163,8 +163,8 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
         justifyContent: 'center', 
         padding: '2rem', 
         boxSizing: 'border-box',
-        overflow: 'hidden', // Add this
-        position: 'relative' // And this
+        overflow: 'hidden',
+        position: 'relative'
       }}>
         
         {/* Floating Particles */}
@@ -188,7 +188,8 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
         {/* Main Container */}
         <div style={{ 
           width: '100%', 
-          maxWidth: '600px', 
+          minWidth: 'min-content',
+          maxWidth: '90vw',
           display: 'flex', 
           flexDirection: 'column', 
           alignItems: 'center', 
@@ -277,6 +278,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
           {/* Vote Results Container */}
           <div style={{
             width: '100%',
+            minWidth: 'min-content',
             background: 'rgba(255, 255, 255, 0.15)',
             backdropFilter: 'blur(20px)',
             borderRadius: '30px',
@@ -298,7 +300,9 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                       display: 'flex', 
                       alignItems: 'center', 
                       gap: '1rem',
-                      animation: `slideInRight 0.4s ease-out ${index * 0.1}s backwards`
+                      animation: `slideInRight 0.4s ease-out ${index * 0.1}s backwards`,
+                      minWidth: 'min-content',
+                      width: '100%'
                     }}
                   >
                     {/* Player Photo - Red border if imposter and all votes are in */}
@@ -335,7 +339,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
                       position: 'relative',
                       display: 'flex',
                       alignItems: 'center',
-                      minWidth: 0
+                      minWidth: 'min-content'
                     }}>
                       {voters.length > 0 && (
                         <div style={{

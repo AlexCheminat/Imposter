@@ -299,7 +299,6 @@ export default function FinalResultsPage({ players = [], scores = {}, currentUse
                           fontSize: '1rem',
                           animation: 'expandBar 0.8s ease-out'
                         }}>
-                          {player.username}
                         </div>
                       )}
                     </div>
