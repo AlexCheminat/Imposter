@@ -280,15 +280,17 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
           {/* Vote Results Container */}
           <div style={{
             width: '100%',
+            minWidth: 'fit-content',
             background: 'rgba(255, 255, 255, 0.15)',
             backdropFilter: 'blur(20px)',
             borderRadius: '30px',
             border: '2px solid rgba(255, 255, 255, 0.3)',
             padding: '2rem 1.5rem',
-            boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3)'
+            boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3)',
+            overflow: 'visible'
           }}>
             {/* Vote Results - Bar Graph */}
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{ width: '100%', minWidth: 'fit-content', display: 'flex', flexDirection: 'column', gap: '1.5rem', overflow: 'visible' }}>
               {sortedPlayers.map((player, index) => {
                 const votes = voteCount[player.id] || 0;
                 const voters = votersForPlayer[player.id] || [];
