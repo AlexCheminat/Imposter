@@ -89,10 +89,7 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
         html, body {
           margin: 0 !important;
           padding: 0 !important;
-          overflow-x: hidden !important;
-          overflow-y: auto !important;
           width: 100% !important;
-          height: 100% !important;
           max-width: 100% !important;
         }
         body > div {

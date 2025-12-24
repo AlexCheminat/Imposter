@@ -63,9 +63,8 @@ export default function FinalResultsPage({ players = [], scores = {}, currentUse
         html, body {
           margin: 0 !important;
           padding: 0 !important;
-          overflow-x: hidden !important;
-          overflow-y: auto !important;
           width: 100% !important;
+          max-width: 100% !important;
         }
         @keyframes float-down {
           0% {
