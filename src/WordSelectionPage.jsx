@@ -1174,7 +1174,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         width: '100vw',
         margin: '0',
         background: isImposter 
-          ? 'linear-gradient(135deg, #dc2626 0%, #991b1b 50%, #7f1d1d 100%)'
+          // ? 'linear-gradient(135deg, #dc2626 0%, #991b1b 50%, #7f1d1d 100%)'
+          ? 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)'
           : 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', 
         display: 'flex', 
         flexDirection: 'column', 
