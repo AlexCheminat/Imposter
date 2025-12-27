@@ -356,10 +356,12 @@ function App() {
 
       // Find most voted player
       const mostVotedPlayer = sortedPlayers[0];
+      const secondMostVotedPlayer = sortedPlayers[1];
       const mostVotedCount = voteCount[mostVotedPlayer?.id] || 0;
-      
+      const secondMostVotedCount = voteCount[secondMostVotedPlayer?.id] || 0;
+
       // Check if imposter was caught (imposter has most votes)
-      const imposterCaught = mostVotedPlayer && mostVotedPlayer.id === imposterId;
+      const imposterCaught = mostVotedPlayer && mostVotedPlayer.id === imposterId && mostVotedCount > secondMostVotedCount;
 
       console.log('Vote counts:', voteCount);
       console.log('Most voted player:', mostVotedPlayer?.username, 'with', mostVotedCount, 'votes');
@@ -384,11 +386,21 @@ function App() {
       }
 
       // Subtract 1 point from the most voted player (if not the imposter)
-      if (mostVotedPlayer && mostVotedPlayer.id !== imposterId && mostVotedCount > 0) {
-        const oldScore = currentScores[mostVotedPlayer.id];
-        currentScores[mostVotedPlayer.id] = (currentScores[mostVotedPlayer.id] || 0) - 1;
-        console.log(`Subtracted 1 point from most voted player ${mostVotedPlayer.id} (${oldScore} -> ${currentScores[mostVotedPlayer.id]})`);
-      }
+      if (mostVotedCount > 0) {
+      // Find all players with the most votes
+      const playersWithMostVotes = sortedPlayers.filter(player => 
+        voteCount[player.id] === mostVotedCount
+      );
+      
+      // Subtract 1 point from each non-imposter with most votes
+      playersWithMostVotes.forEach(player => {
+        if (player.id !== imposterId) {
+          const oldScore = currentScores[player.id];
+          currentScores[player.id] = (currentScores[player.id] || 0) - 1;
+          console.log(`Subtracted 1 point from tied most voted player ${player.id} (${oldScore} -> ${currentScores[player.id]})`);
+        }
+      });
+    }
 
       console.log('Final scores after update:', JSON.stringify(currentScores));
 
