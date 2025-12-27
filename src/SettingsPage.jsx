@@ -57,6 +57,42 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
     return () => unsubscribe();
   }, [database, lobbyId]);
 
+  const [inTheDark, setInTheDark] = useState(false);
+
+  // Load selected categories from Firebase
+  useEffect(() => {
+    if (!database || !lobbyId) return;
+
+    const { ref, onValue } = database;
+    const categoriesRef = ref(database.db, `lobbies/${lobbyId}/selectedCategories`);
+
+    const unsubscribe = onValue(categoriesRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data && Array.isArray(data)) {
+        setSelectedCategories(new Set(data));
+      }
+    });
+
+    return () => unsubscribe();
+  }, [database, lobbyId]);
+
+  // Load "In the Dark" mode from Firebase
+  useEffect(() => {
+    if (!database || !lobbyId) return;
+
+    const { ref, onValue } = database;
+    const darkModeRef = ref(database.db, `lobbies/${lobbyId}/inTheDark`);
+
+    const unsubscribe = onValue(darkModeRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data !== null && data !== undefined) {
+        setInTheDark(data);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [database, lobbyId]);
+
   const toggleCategory = async (categoryId) => {
     const newSelected = new Set(selectedCategories);
     
