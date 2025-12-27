@@ -4,7 +4,8 @@ import { RotateCw, Play } from 'lucide-react';
 // Shortened word categories for context limits
 const wordCategories = {
   animals: [
-    { word: 'Chat', hint: 'Indépendant' }, { word: 'Chien', hint: 'Loyal' }
+    { word: 'Chat', hint: 'Indépendant' }, { word: 'Chien', hint: 'Loyal' }, { word: 'Lion', hint: 'Fierté' },
+    { word: 'Éléphant', hint: 'Savane' }, { word: 'Girafe', hint: 'Hauteur' }, { word: 'Tigre', hint: 'Solitaire' }
   ],
   food: [
     { word: 'Pomme', hint: 'Fruit' }, { word: 'Banane', hint: 'Énergie' }, { word: 'Orange', hint: 'Agrume' },
@@ -44,6 +45,15 @@ function getRandomWord(categories = ['animals', 'food', 'objects']) {
     }
   });
   return allWords.length > 0 ? allWords[Math.floor(Math.random() * allWords.length)] : { word: 'Pomme', hint: 'Fruit', category: 'food' };
+}
+
+function getRandomWordFromCategory(category) {
+  if (!wordCategories[category] || wordCategories[category].length === 0) {
+    return { word: 'Pomme', hint: 'Fruit', category: 'food' };
+  }
+  const words = wordCategories[category];
+  const randomWord = words[Math.floor(Math.random() * words.length)];
+  return { ...randomWord, category };
 }
 
 export default function WordSelectionPage({ players = [], currentUser, onConfirm, lobbyId, database, imposterId }) {
@@ -120,11 +130,11 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
       } else {
         const mainWord = getRandomWord(selectedCategories);
         
-        // Generate a different word for imposter
-        let impWord = getRandomWord(selectedCategories);
+        // Generate a different word for imposter from the SAME category
+        let impWord = getRandomWordFromCategory(mainWord.category);
         let attempts = 0;
         while (impWord.word === mainWord.word && attempts < 10) {
-          impWord = getRandomWord(selectedCategories);
+          impWord = getRandomWordFromCategory(mainWord.category);
           attempts++;
         }
         
@@ -153,11 +163,11 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     
     const mainWord = getRandomWord(selectedCategories);
     
-    // Generate a different word for imposter
-    let impWord = getRandomWord(selectedCategories);
+    // Generate a different word for imposter from the SAME category
+    let impWord = getRandomWordFromCategory(mainWord.category);
     let attempts = 0;
     while (impWord.word === mainWord.word && attempts < 10) {
-      impWord = getRandomWord(selectedCategories);
+      impWord = getRandomWordFromCategory(mainWord.category);
       attempts++;
     }
     

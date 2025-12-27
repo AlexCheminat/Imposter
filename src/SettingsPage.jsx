@@ -316,7 +316,7 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
                   marginBottom: '0.5rem',
                   textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
                 }}>
-                  🥸 Mode "Dans le Noir"
+                  🤷🏿‍♂️ Mode "Dans le Noir"
                 </h2>
                 <p style={{
                   color: 'rgba(255, 255, 255, 0.85)',
