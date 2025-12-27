@@ -354,29 +354,24 @@ function App() {
         }
       });
 
-      // Award points based on new scoring system
-      if (imposterCaught) {
-        console.log('Imposter was caught!');
-        
-        // Give 1 point to each player who voted for the imposter
-        Object.values(votes).forEach(vote => {
-          if (vote.votedFor === imposterId && vote.votedBy) {
-            currentScores[vote.votedBy] = (currentScores[vote.votedBy] || 0) + 1;
-            console.log(`Awarded 1 point to ${vote.votedBy} for voting for imposter`);
-          }
-        });
-      } else {
-        console.log('Imposter escaped!');
-        
+      // Give 1 point to each player who voted for the imposter
+      Object.values(votes).forEach(vote => {
+        if (vote.votedFor === imposterId && vote.votedBy) {
+          currentScores[vote.votedBy] = (currentScores[vote.votedBy] || 0) + 1;
+          console.log(`Awarded 1 point to ${vote.votedBy} for voting for imposter`);
+        }
+      });
+
+      if (!imposterCaught) {
         // Give 2 points to the imposter
         currentScores[imposterId] = (currentScores[imposterId] || 0) + 2;
         console.log(`Awarded 2 points to imposter ${imposterId}`);
-        
-        // Subtract 1 point from the most voted player (if not the imposter)
-        if (mostVotedPlayer && mostVotedPlayer.id !== imposterId && mostVotedCount > 0) {
-          currentScores[mostVotedPlayer.id] = (currentScores[mostVotedPlayer.id] || 0) - 1;
-          console.log(`Subtracted 1 point from most voted player ${mostVotedPlayer.id}`);
-        }
+      }
+
+      // Subtract 1 point from the most voted player (if not the imposter)
+      if (mostVotedPlayer && mostVotedPlayer.id !== imposterId && mostVotedCount > 0) {
+        currentScores[mostVotedPlayer.id] = (currentScores[mostVotedPlayer.id] || 0) - 1;
+        console.log(`Subtracted 1 point from most voted player ${mostVotedPlayer.id}`);
       }
 
       // Save scores to Firebase
