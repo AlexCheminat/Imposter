@@ -15,6 +15,7 @@ const categories = [
 
 export default function SettingsPage({ onBack, database, lobbyId }) {
   const [selectedCategories, setSelectedCategories] = useState(new Set(['animals', 'food', 'objects', 'countries', 'jobs', 'sports', 'celebrities', 'brands']));
+  const [inTheDarkMode, setInTheDarkMode] = useState(false);
   const [particles, setParticles] = useState([]);
 
   // Generate floating particles
@@ -40,57 +41,32 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
     document.body.style.overflow = 'auto';
   }, []);
 
-  // Load selected categories from Firebase
+  // Load selected categories and game mode from Firebase
   useEffect(() => {
     if (!database || !lobbyId) return;
 
     const { ref, onValue } = database;
     const categoriesRef = ref(database.db, `lobbies/${lobbyId}/selectedCategories`);
+    const gameModeRef = ref(database.db, `lobbies/${lobbyId}/inTheDarkMode`);
 
-    const unsubscribe = onValue(categoriesRef, (snapshot) => {
+    const unsubscribeCategories = onValue(categoriesRef, (snapshot) => {
       const data = snapshot.val();
       if (data && Array.isArray(data)) {
         setSelectedCategories(new Set(data));
       }
     });
 
-    return () => unsubscribe();
-  }, [database, lobbyId]);
-
-  const [inTheDark, setInTheDark] = useState(false);
-
-  // Load selected categories from Firebase
-  useEffect(() => {
-    if (!database || !lobbyId) return;
-
-    const { ref, onValue } = database;
-    const categoriesRef = ref(database.db, `lobbies/${lobbyId}/selectedCategories`);
-
-    const unsubscribe = onValue(categoriesRef, (snapshot) => {
+    const unsubscribeGameMode = onValue(gameModeRef, (snapshot) => {
       const data = snapshot.val();
-      if (data && Array.isArray(data)) {
-        setSelectedCategories(new Set(data));
+      if (data !== null) {
+        setInTheDarkMode(data);
       }
     });
 
-    return () => unsubscribe();
-  }, [database, lobbyId]);
-
-  // Load "In the Dark" mode from Firebase
-  useEffect(() => {
-    if (!database || !lobbyId) return;
-
-    const { ref, onValue } = database;
-    const darkModeRef = ref(database.db, `lobbies/${lobbyId}/inTheDark`);
-
-    const unsubscribe = onValue(darkModeRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data !== null && data !== undefined) {
-        setInTheDark(data);
-      }
-    });
-
-    return () => unsubscribe();
+    return () => {
+      unsubscribeCategories();
+      unsubscribeGameMode();
+    };
   }, [database, lobbyId]);
 
   const toggleCategory = async (categoryId) => {
@@ -114,6 +90,18 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
       const { ref, set } = database;
       const categoriesRef = ref(database.db, `lobbies/${lobbyId}/selectedCategories`);
       await set(categoriesRef, Array.from(newSelected));
+    }
+  };
+
+  const toggleInTheDarkMode = async () => {
+    const newMode = !inTheDarkMode;
+    setInTheDarkMode(newMode);
+
+    // Save to Firebase
+    if (database && lobbyId) {
+      const { ref, set } = database;
+      const gameModeRef = ref(database.db, `lobbies/${lobbyId}/inTheDarkMode`);
+      await set(gameModeRef, newMode);
     }
   };
 
@@ -188,6 +176,34 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
         .category-card:active {
           transform: scale(0.98) !important;
         }
+        .toggle-switch {
+          position: relative;
+          width: 60px;
+          height: 30px;
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 15px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+        .toggle-switch.active {
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+          border-color: rgba(16, 185, 129, 0.6);
+        }
+        .toggle-slider {
+          position: absolute;
+          top: 2px;
+          left: 2px;
+          width: 22px;
+          height: 22px;
+          background: white;
+          border-radius: 50%;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .toggle-switch.active .toggle-slider {
+          transform: translateX(30px);
+        }
       `}</style>
       
       <div style={{ 
@@ -199,8 +215,8 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
         justifyContent: 'center', 
         padding: '2rem', 
         boxSizing: 'border-box',
-        overflow: 'hidden', // Add this
-        position: 'relative' // And this
+        overflow: 'hidden',
+        position: 'relative'
       }}>
         
         {/* Floating Particles */}
@@ -270,8 +286,54 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
             textShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
             marginBottom: '-0.5rem'
           }}>
-            Catégories
+            Paramètres
           </h1>
+
+          {/* In The Dark Mode Toggle */}
+          <div style={{
+            width: '100%',
+            background: 'rgba(255, 255, 255, 0.15)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '30px',
+            border: '2px solid rgba(255, 255, 255, 0.3)',
+            padding: '2rem 2rem',
+            boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '1rem'
+            }}>
+              <div style={{ flex: 1 }}>
+                <h2 style={{
+                  color: 'white',
+                  fontSize: '1.5rem',
+                  fontWeight: '600',
+                  marginBottom: '0.5rem',
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
+                }}>
+                  🌑 Mode "Dans le Noir"
+                </h2>
+                <p style={{
+                  color: 'rgba(255, 255, 255, 0.85)',
+                  fontSize: '0.95rem',
+                  lineHeight: '1.5'
+                }}>
+                  L'imposteur ne sait pas qu'il est l'imposteur et reçoit un mot différent
+                </p>
+              </div>
+              <div
+                onClick={toggleInTheDarkMode}
+                className={`toggle-switch ${inTheDarkMode ? 'active' : ''}`}
+              >
+                <div className="toggle-slider" />
+              </div>
+            </div>
+          </div>
 
           {/* Selected Count Card */}
           <div style={{
@@ -289,7 +351,7 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
             gap: '0.5rem'
           }}>
             <Check size={24} />
-            <span>{selectedCategories.size} sélectionnée{selectedCategories.size > 1 ? 's' : ''}</span>
+            <span>{selectedCategories.size} catégorie{selectedCategories.size > 1 ? 's' : ''} sélectionnée{selectedCategories.size > 1 ? 's' : ''}</span>
           </div>
 
           {/* Category Grid Container */}
