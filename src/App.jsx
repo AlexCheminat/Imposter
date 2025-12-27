@@ -320,6 +320,23 @@ function App() {
     console.log('Continue clicked');
     
     try {
+      // First, read the current scores from Firebase to ensure we have the latest data
+      const scoresRef = ref(database, `lobbies/${lobbyId}/scores`);
+      const scoresSnapshot = await new Promise((resolve) => {
+        onValue(scoresRef, (snapshot) => {
+          resolve(snapshot);
+        }, { onlyOnce: true });
+      });
+      
+      const currentScores = scoresSnapshot.val() || {};
+      
+      // Initialize scores for new players
+      allPlayers.forEach(player => {
+        if (!currentScores[player.id]) {
+          currentScores[player.id] = 0;
+        }
+      });
+
       // Calculate scores based on votes
       const voteCount = {};
       allPlayers.forEach(player => {
@@ -344,39 +361,40 @@ function App() {
       // Check if imposter was caught (imposter has most votes)
       const imposterCaught = mostVotedPlayer && mostVotedPlayer.id === imposterId;
 
-      // Update scores
-      const currentScores = { ...scores };
-      
-      // Initialize scores for new players
-      allPlayers.forEach(player => {
-        if (!currentScores[player.id]) {
-          currentScores[player.id] = 0;
-        }
-      });
+      console.log('Vote counts:', voteCount);
+      console.log('Most voted player:', mostVotedPlayer?.username, 'with', mostVotedCount, 'votes');
+      console.log('Imposter ID:', imposterId);
+      console.log('Imposter caught:', imposterCaught);
+      console.log('Current scores before update:', JSON.stringify(currentScores));
 
       // Give 1 point to each player who voted for the imposter
       Object.values(votes).forEach(vote => {
         if (vote.votedFor === imposterId && vote.votedBy) {
+          const oldScore = currentScores[vote.votedBy];
           currentScores[vote.votedBy] = (currentScores[vote.votedBy] || 0) + 1;
-          console.log(`Awarded 1 point to ${vote.votedBy} for voting for imposter`);
+          console.log(`Awarded 1 point to ${vote.votedBy} for voting for imposter (${oldScore} -> ${currentScores[vote.votedBy]})`);
         }
       });
 
       if (!imposterCaught) {
         // Give 2 points to the imposter
+        const oldScore = currentScores[imposterId];
         currentScores[imposterId] = (currentScores[imposterId] || 0) + 2;
-        console.log(`Awarded 2 points to imposter ${imposterId}`);
+        console.log(`Awarded 2 points to imposter ${imposterId} (${oldScore} -> ${currentScores[imposterId]})`);
       }
 
       // Subtract 1 point from the most voted player (if not the imposter)
       if (mostVotedPlayer && mostVotedPlayer.id !== imposterId && mostVotedCount > 0) {
+        const oldScore = currentScores[mostVotedPlayer.id];
         currentScores[mostVotedPlayer.id] = (currentScores[mostVotedPlayer.id] || 0) - 1;
-        console.log(`Subtracted 1 point from most voted player ${mostVotedPlayer.id}`);
+        console.log(`Subtracted 1 point from most voted player ${mostVotedPlayer.id} (${oldScore} -> ${currentScores[mostVotedPlayer.id]})`);
       }
 
+      console.log('Final scores after update:', JSON.stringify(currentScores));
+
       // Save scores to Firebase
-      const scoresRef = ref(database, `lobbies/${lobbyId}/scores`);
       await set(scoresRef, currentScores);
+      console.log('Scores saved to Firebase successfully');
 
       // Move everyone to final results
       const gameStateRef = ref(database, `lobbies/${lobbyId}/gameState`);
