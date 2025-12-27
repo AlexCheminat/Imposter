@@ -337,13 +337,12 @@ function App() {
         return (voteCount[b.id] || 0) - (voteCount[a.id] || 0);
       });
 
-      // Find most and second most voted players
+      // Find most voted player
       const mostVotedPlayer = sortedPlayers[0];
-      const secondMostVotedPlayer = sortedPlayers[1];
+      const mostVotedCount = voteCount[mostVotedPlayer?.id] || 0;
       
-      // Imposter is only caught if they have the most votes AND it's not a tie
-      const imposterCaught = mostVotedPlayer && mostVotedPlayer.id === imposterId
-                          && voteCount[mostVotedPlayer.id] > (voteCount[secondMostVotedPlayer?.id] || 0);
+      // Check if imposter was caught (imposter has most votes)
+      const imposterCaught = mostVotedPlayer && mostVotedPlayer.id === imposterId;
 
       // Update scores
       const currentScores = { ...scores };
@@ -355,18 +354,29 @@ function App() {
         }
       });
 
-      // If imposter was caught (most voted and no tie), everyone else gets a point
+      // Award points based on new scoring system
       if (imposterCaught) {
         console.log('Imposter was caught!');
-        allPlayers.forEach(player => {
-          if (player.id !== imposterId) {
-            currentScores[player.id] = (currentScores[player.id] || 0) + 1;
+        
+        // Give 1 point to each player who voted for the imposter
+        Object.values(votes).forEach(vote => {
+          if (vote.votedFor === imposterId && vote.votedBy) {
+            currentScores[vote.votedBy] = (currentScores[vote.votedBy] || 0) + 1;
+            console.log(`Awarded 1 point to ${vote.votedBy} for voting for imposter`);
           }
         });
       } else {
-        // If imposter wasn't caught (wrong person voted or tie), imposter gets a point
         console.log('Imposter escaped!');
-        currentScores[imposterId] = (currentScores[imposterId] || 0) + 1;
+        
+        // Give 2 points to the imposter
+        currentScores[imposterId] = (currentScores[imposterId] || 0) + 2;
+        console.log(`Awarded 2 points to imposter ${imposterId}`);
+        
+        // Subtract 1 point from the most voted player (if not the imposter)
+        if (mostVotedPlayer && mostVotedPlayer.id !== imposterId && mostVotedCount > 0) {
+          currentScores[mostVotedPlayer.id] = (currentScores[mostVotedPlayer.id] || 0) - 1;
+          console.log(`Subtracted 1 point from most voted player ${mostVotedPlayer.id}`);
+        }
       }
 
       // Save scores to Firebase
