@@ -4,8 +4,7 @@ import { RotateCw, Play } from 'lucide-react';
 // Shortened word categories for context limits
 const wordCategories = {
   animals: [
-    { word: 'Chat', hint: 'Indépendant' }, { word: 'Chien', hint: 'Loyal' }, { word: 'Lion', hint: 'Fierté' },
-    { word: 'Éléphant', hint: 'Savane' }, { word: 'Girafe', hint: 'Hauteur' }, { word: 'Tigre', hint: 'Solitaire' }
+    { word: 'Chat', hint: 'Indépendant' }, { word: 'Chien', hint: 'Loyal' }
   ],
   food: [
     { word: 'Pomme', hint: 'Fruit' }, { word: 'Banane', hint: 'Énergie' }, { word: 'Orange', hint: 'Agrume' },
@@ -120,7 +119,15 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         setIsRefreshing(false);
       } else {
         const mainWord = getRandomWord(selectedCategories);
-        const impWord = getRandomWord(selectedCategories);
+        
+        // Generate a different word for imposter
+        let impWord = getRandomWord(selectedCategories);
+        let attempts = 0;
+        while (impWord.word === mainWord.word && attempts < 10) {
+          impWord = getRandomWord(selectedCategories);
+          attempts++;
+        }
+        
         const randPlayer = players[Math.floor(Math.random() * players.length)];
         
         await set(wordRef, {
@@ -145,7 +152,15 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     const imposterRef = ref(database.db, `lobbies/${lobbyId}/gameState/imposterId`);
     
     const mainWord = getRandomWord(selectedCategories);
-    const impWord = getRandomWord(selectedCategories);
+    
+    // Generate a different word for imposter
+    let impWord = getRandomWord(selectedCategories);
+    let attempts = 0;
+    while (impWord.word === mainWord.word && attempts < 10) {
+      impWord = getRandomWord(selectedCategories);
+      attempts++;
+    }
+    
     const randPlayer = players[Math.floor(Math.random() * players.length)];
     const randImposter = players[Math.floor(Math.random() * players.length)];
     
