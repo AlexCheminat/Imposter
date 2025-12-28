@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Camera, UserCircle2, RefreshCw, Sparkles } from 'lucide-react';
+import { Camera, UserCircle2, RefreshCw } from 'lucide-react';
 
 export default function RegisterPage({ onRegister }) {
   const [stream, setStream] = useState(null);
@@ -8,7 +8,6 @@ export default function RegisterPage({ onRegister }) {
   const [cameraError, setCameraError] = useState(null);
   const [particles, setParticles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [shake, setShake] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
@@ -17,14 +16,14 @@ export default function RegisterPage({ onRegister }) {
   useEffect(() => {
     const generateParticles = () => {
       const newParticles = [];
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < 20; i++) {
         newParticles.push({
           id: i,
           left: Math.random() * 100,
-          size: Math.random() * 6 + 2,
-          duration: Math.random() * 15 + 10,
+          size: Math.random() * 4 + 2,
+          duration: Math.random() * 10 + 15,
           delay: Math.random() * -20,
-          opacity: Math.random() * 0.4 + 0.1
+          opacity: Math.random() * 0.3 + 0.1
         });
       }
       setParticles(newParticles);
@@ -99,17 +98,13 @@ export default function RegisterPage({ onRegister }) {
   };
 
   const handleSubmit = () => {
-    if (isSubmitting) return;
+    if (isSubmitting) return; // Prevent multiple clicks
     
     if (!capturedImage) {
-      setShake(true);
-      setTimeout(() => setShake(false), 500);
       alert('Il faut prendre une photo !');
       return;
     }
     if (!username.trim()) {
-      setShake(true);
-      setTimeout(() => setShake(false), 500);
       alert('Veuillez entrer votre nom !');
       return;
     }
@@ -121,12 +116,16 @@ export default function RegisterPage({ onRegister }) {
         username: username,
         photo: capturedImage
       });
+    } else {
+      console.log('Registering:', { username, photo: capturedImage });
+      alert(`Bienvenue, ${username}! 🎉`);
     }
   };
 
   useEffect(() => {
     document.body.style.margin = '0';
     document.body.style.padding = '0';
+    
     startCamera();
     
     return () => {
@@ -155,13 +154,10 @@ export default function RegisterPage({ onRegister }) {
         }
         @keyframes float {
           0%, 100% {
-            transform: translateY(0) translateX(0) rotate(0deg);
+            transform: translateY(0) translateX(0);
           }
-          33% {
-            transform: translateY(-20px) translateX(10px) rotate(5deg);
-          }
-          66% {
-            transform: translateY(-10px) translateX(-10px) rotate(-5deg);
+          50% {
+            transform: translateY(-20px) translateX(10px);
           }
         }
         @keyframes drift {
@@ -198,96 +194,40 @@ export default function RegisterPage({ onRegister }) {
             transform: translateY(0);
           }
         }
-        @keyframes slideInScale {
-          from {
-            opacity: 0;
-            transform: scale(0.8) translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-          }
-        }
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          25% { transform: translateX(-10px); }
-          75% { transform: translateX(10px); }
-        }
-        @keyframes buttonPress {
-          0% { transform: scale(1); }
-          50% { transform: scale(0.95); }
-          100% { transform: scale(1); }
-        }
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @keyframes glowPulse {
-          0%, 100% { filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.5)); }
-          50% { filter: drop-shadow(0 0 20px rgba(167, 139, 250, 0.8)); }
-        }
         .btn-hover {
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          position: relative;
-          overflow: hidden;
-        }
-        .btn-hover::before {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 0;
-          height: 0;
-          border-radius: 50%;
-          background: rgba(255, 255, 255, 0.2);
-          transform: translate(-50%, -50%);
-          transition: width 0.6s, height 0.6s;
-        }
-        .btn-hover:hover::before {
-          width: 300px;
-          height: 300px;
         }
         .btn-hover:hover:not(:disabled) {
-          transform: translateY(-3px) scale(1.02);
-          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+          transform: translateY(-2px);
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
         .btn-hover:active:not(:disabled) {
-          animation: buttonPress 0.3s ease;
+          transform: translateY(0);
         }
         .input-focus {
-          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 0.3s ease;
         }
         .input-focus:focus {
-          transform: scale(1.03);
-          box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+          transform: scale(1.02);
+          box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
         }
-        .camera-circle {
-          animation: float 4s ease-in-out infinite;
-          transition: all 0.4s ease;
-        }
-        .camera-circle:hover {
-          transform: scale(1.05);
-        }
-        .shake {
-          animation: shake 0.5s ease;
-        }
-        .sparkle {
-          animation: glowPulse 2s ease-in-out infinite;
+        .input-focus::placeholder {
+          color: rgba(255, 255, 255, 0.7);
         }
       `}</style>
       
-      <div style={{ 
-        minHeight: '100vh', 
-        width: '100%', 
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        padding: '2rem', 
-        boxSizing: 'border-box',
-        overflow: 'hidden',
-        position: 'relative'
-      }}>
+        <div style={{ 
+          minHeight: '100vh', 
+          width: '100%', 
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center', 
+          padding: '2rem', 
+          boxSizing: 'border-box',
+          overflow: 'hidden',
+          position: 'relative'
+        }}>
         
         {/* Floating Particles */}
         {particles.map(particle => (
@@ -308,54 +248,35 @@ export default function RegisterPage({ onRegister }) {
         ))}
         
         {/* Glassmorphism Container */}
-        <div 
-          className={shake ? 'shake' : ''}
-          style={{ 
-            width: '100%', 
-            maxWidth: '420px', 
-            background: 'rgba(255, 255, 255, 0.15)', 
-            backdropFilter: 'blur(20px)',
-            borderRadius: '30px',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
-            padding: '3rem 2rem',
-            boxShadow: '0 25px 50px rgba(0, 0, 0, 0.3)',
-            position: 'relative',
-            zIndex: 10,
-            animation: 'slideInScale 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
-          }}>
+        <div style={{ 
+          width: '100%', 
+          maxWidth: '420px', 
+          background: 'rgba(255, 255, 255, 0.15)', 
+          backdropFilter: 'blur(20px)',
+          borderRadius: '30px',
+          border: '1px solid rgba(255, 255, 255, 0.3)',
+          padding: '3rem 2rem',
+          boxShadow: '0 25px 50px rgba(0, 0, 0, 0.3)',
+          position: 'relative',
+          zIndex: 10,
+          animation: 'fadeInUp 0.6s ease-out'
+        }}>
           
-          {/* Title with sparkle icon */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '0.75rem',
-            marginBottom: '2rem'
+          {/* Title */}
+          <h1 style={{
+            textAlign: 'center',
+            color: 'white',
+            fontSize: '2rem',
+            fontWeight: '700',
+            marginBottom: '2rem',
+            textShadow: '0 2px 10px rgba(0, 0, 0, 0.2)'
           }}>
-            <Sparkles size={32} color="white" className="sparkle" />
-            <h1 style={{
-              textAlign: 'center',
-              color: 'white',
-              fontSize: '2rem',
-              fontWeight: '700',
-              textShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
-              animation: 'fadeInUp 0.8s ease-out 0.2s backwards'
-            }}>
-              Créer Votre Profil
-            </h1>
-            <Sparkles size={32} color="white" className="sparkle" style={{ animationDelay: '1s' }} />
-          </div>
+            Créer Votre Profil
+          </h1>
         
           {/* Camera/Photo Circle */}
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            width: '100%', 
-            marginBottom: '2rem',
-            animation: 'fadeInUp 0.8s ease-out 0.3s backwards'
-          }}>
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '2rem' }}>
             <div 
-              className="camera-circle"
               style={{
                 width: '200px',
                 height: '200px',
@@ -366,9 +287,8 @@ export default function RegisterPage({ onRegister }) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: capturedImage 
-                  ? '0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(16, 185, 129, 0.5)'
-                  : '0 15px 35px rgba(0, 0, 0, 0.3)',
+                boxShadow: '0 15px 35px rgba(0, 0, 0, 0.3)',
+                animation: 'float 3s ease-in-out infinite',
                 position: 'relative'
               }}
             >
@@ -428,13 +348,7 @@ export default function RegisterPage({ onRegister }) {
           <canvas ref={canvasRef} style={{ display: 'none' }} />
 
           {/* Take Photo Button */}
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            width: '100%', 
-            marginBottom: '1.5rem',
-            animation: 'fadeInUp 0.8s ease-out 0.4s backwards'
-          }}>
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '1.5rem' }}>
             {capturedImage ? (
               <button
                 onClick={retakePhoto}
@@ -489,13 +403,7 @@ export default function RegisterPage({ onRegister }) {
           </div>
 
           {/* Username Input */}
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            width: '100%', 
-            marginBottom: '2rem',
-            animation: 'fadeInUp 0.8s ease-out 0.5s backwards'
-          }}>
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%', marginBottom: '2rem' }}>
             <input
               type="text"
               value={username}
@@ -523,12 +431,7 @@ export default function RegisterPage({ onRegister }) {
           </div>
 
           {/* Submit Button */}
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            width: '100%',
-            animation: 'fadeInUp 0.8s ease-out 0.6s backwards'
-          }}>
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
             <button
               onClick={handleSubmit}
               disabled={isSubmitting}
@@ -550,28 +453,10 @@ export default function RegisterPage({ onRegister }) {
                   : '0 10px 30px rgba(245, 87, 108, 0.4)',
                 textTransform: 'uppercase',
                 letterSpacing: '1px',
-                opacity: isSubmitting ? 0.6 : 1,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem'
+                opacity: isSubmitting ? 0.6 : 1
               }}
             >
-              {isSubmitting ? (
-                <>
-                  <div style={{
-                    width: '20px',
-                    height: '20px',
-                    border: '3px solid rgba(255, 255, 255, 0.3)',
-                    borderTop: '3px solid white',
-                    borderRadius: '50%',
-                    animation: 'spin 0.8s linear infinite'
-                  }} />
-                  En cours...
-                </>
-              ) : (
-                "C'est Parti ! 🚀"
-              )}
+              {isSubmitting ? 'En cours...' : "C'est Parti ! 🚀"}
             </button>
           </div>
         </div>
