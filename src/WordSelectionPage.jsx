@@ -254,9 +254,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
       
       <div style={{ 
         minHeight: '100vh', width: '100vw', margin: '0',
-        background: (isImposter && !inTheDarkMode)
-          ? 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)'
-          : 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', 
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', 
         display: 'flex', flexDirection: 'column', alignItems: 'center', 
         padding: '2rem', paddingBottom: '3rem', boxSizing: 'border-box', position: 'relative', overflow: 'hidden'
       }}>
@@ -283,21 +281,13 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
 
           <div style={{
             width: '100%', padding: '2.5rem 2rem',
-            background: (isImposter && !inTheDarkMode)
-              ? 'linear-gradient(135deg, rgba(220, 38, 38, 0.3) 0%, rgba(153, 27, 27, 0.3) 100%)'
-              : 'rgba(255, 255, 255, 0.2)',
+            background: 'rgba(255, 255, 255, 0.2)',
             backdropFilter: 'blur(20px)',
-            border: (isImposter && !inTheDarkMode)
-              // ? '3px solid rgba(239, 68, 68, 0.6)'
-              ? '3px solid rgba(255, 255, 255, 0.4)'
-              : '3px solid rgba(255, 255, 255, 0.4)',
+            border: '3px solid rgba(255, 255, 255, 0.4)',
             borderRadius: '30px', textAlign: 'center', fontSize: '2rem', fontWeight: '700', color: 'white',
             minHeight: '200px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
             gap: '1rem', position: 'relative',
-            boxShadow: (isImposter && !inTheDarkMode)
-              ? '0 15px 40px rgba(220, 38, 38, 0.4)'
-              : '0 15px 40px rgba(0, 0, 0, 0.3)',
-            animation: (isImposter && !inTheDarkMode) ? 'pulse 2s infinite' : 'none'
+            boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3)'
           }}>
             {isFirstPlayer && (
               <button onClick={handleRefresh} disabled={isRefreshing || loading} className="btn-hover"
@@ -373,11 +363,11 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                     <div style={{
                       width: '70px', height: '70px', borderRadius: '50%', overflow: 'hidden',
                       border: isCurrent 
-                        ? ((isImposter && !inTheDarkMode) ? '3px solid rgba(239, 68, 68, 0.8)' : '3px solid rgba(16, 185, 129, 0.8)')
+                        ? '3px solid rgba(16, 185, 129, 0.8)'
                         : '3px solid rgba(255, 255, 255, 0.6)',
                       backgroundColor: 'rgba(255, 255, 255, 0.1)', flexShrink: 0,
                       boxShadow: isCurrent 
-                        ? ((isImposter && !inTheDarkMode) ? '0 0 20px rgba(239, 68, 68, 0.5)' : '0 0 20px rgba(16, 185, 129, 0.5)')
+                        ? '0 0 20px rgba(16, 185, 129, 0.5)'
                         : '0 4px 15px rgba(0, 0, 0, 0.2)'
                     }}>
                       <img src={p.photo} alt={p.username} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -386,15 +376,13 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                     <div style={{
                       flex: 1, padding: '1rem 1.5rem',
                       background: isCurrent 
-                        ? ((isImposter && !inTheDarkMode)
-                          ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(220, 38, 38, 0.3) 100%)'
-                          : 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.3) 100%)')
+                        ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.3) 100%)'
                         : 'rgba(255, 255, 255, 0.2)',
                       backdropFilter: 'blur(10px)',
                       border: isSelected 
                         ? '3px solid #ef4444'
                         : (isCurrent 
-                          ? ((isImposter && !inTheDarkMode) ? '2px solid rgba(239, 68, 68, 0.6)' : '2px solid rgba(16, 185, 129, 0.6)')
+                          ? '2px solid rgba(16, 185, 129, 0.6)'
                           : '2px solid rgba(255, 255, 255, 0.4)'),
                       borderRadius: '20px', textAlign: 'center', fontSize: '1.125rem', fontWeight: '600', color: 'white',
                       boxShadow: isSelected 
