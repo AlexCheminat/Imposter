@@ -288,7 +288,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
               : 'rgba(255, 255, 255, 0.2)',
             backdropFilter: 'blur(20px)',
             border: (isImposter && !inTheDarkMode)
-              ? '3px solid rgba(239, 68, 68, 0.6)'
+              // ? '3px solid rgba(239, 68, 68, 0.6)'
+              ? '3px solid rgba(255, 255, 255, 0.4)'
               : '3px solid rgba(255, 255, 255, 0.4)',
             borderRadius: '30px', textAlign: 'center', fontSize: '2rem', fontWeight: '700', color: 'white',
             minHeight: '200px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
