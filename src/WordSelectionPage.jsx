@@ -276,7 +276,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
             textAlign: 'center', color: 'white', fontSize: '2rem', fontWeight: '700',
             textShadow: '0 4px 15px rgba(0, 0, 0, 0.3)', marginBottom: '-1rem'
           }}>
-            {showHintOnly ? '👹👺🦹😈🦹🏿🎭 Vous êtes l\'Imposteur!' : '🎯 Votre Mot'}
+            {showHintOnly ? '😈 Vous êtes l\'Imposteur!' : '🎯 Votre Mot'}
           </h1>
 
           <div style={{
