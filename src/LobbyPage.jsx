@@ -326,21 +326,18 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
                           onClick={() => handleRemovePlayer(player.id, player.username)}
                           className="remove-btn"
                           style={{
-                            background: 'rgba(239, 68, 68, 0.4)',
-                            backdropFilter: 'blur(10px)',
-                            border: '2px solid rgba(239, 68, 68, 0.7)',
-                            borderRadius: '50%',
-                            width: '60px',
-                            height: '60px',
+                            background: 'transparent',
+                            border: 'none',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             cursor: 'pointer',
-                            flexShrink: 0,
-                            boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)'
+                            padding: '0',
+                            position: 'absolute',
+                            right: '1rem'
                           }}
                         >
-                          <Trash2 size={28} color="white" strokeWidth={2.5} />
+                          <Trash2 size={28} color="#ef4444" strokeWidth={2.5} />
                         </button>
                       )}
                     </div>
