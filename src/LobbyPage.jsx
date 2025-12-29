@@ -316,7 +316,13 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
                       gap: '0.5rem',
                       position: 'relative'
                     }}>
-                      <div style={{ flex: 1, textAlign: 'center' }}>
+                      <div style={{ 
+                        position: 'absolute',
+                        left: 0,
+                        right: 0,
+                        textAlign: 'center',
+                        pointerEvents: 'none'
+                      }}>
                         {player.username}
                       </div>
                       
@@ -337,10 +343,11 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
                             justifyContent: 'center',
                             cursor: 'pointer',
                             flexShrink: 0,
-                            boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)'
+                            boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)',
+                            marginLeft: 'auto'
                           }}
                         >
-                          <Trash2 size={100} color="white" strokeWidth={2.5} />
+                          <Trash2 size={24} color="white" strokeWidth={2.5} />
                         </button>
                       )}
                     </div>
