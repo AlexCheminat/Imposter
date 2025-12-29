@@ -316,7 +316,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
                       gap: '0.5rem',
                       position: 'relative'
                     }}>
-                      <div style={{ flex: 1, textAlign: 'center', position: 'absolute' }}>
+                      <div style={{ flex: 1, textAlign: 'center'}}>
                         {player.username}
                       </div>
                       
