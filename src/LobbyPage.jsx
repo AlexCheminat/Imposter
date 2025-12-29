@@ -3,6 +3,7 @@ import { Settings, Users, Crown } from 'lucide-react';
 
 export default function LobbyPage({ players = [], currentUser, onStartGame, onOpenSettings }) {
   const [particles, setParticles] = useState([]);
+  const [isStarting, setIsStarting] = useState(false);
   
   // Sort players by join time to determine host
   const sortedPlayers = [...players].sort((a, b) => a.joinedAt - b.joinedAt);
@@ -35,12 +36,15 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
   }, []);
 
   const handleStart = () => {
+    if (isStarting) return;
+    setIsStarting(true);
     console.log('Start button clicked, calling onStartGame...');
     if (onStartGame) {
       onStartGame();
     } else {
       console.error('onStartGame prop not provided!');
       alert('Starting game...');
+      setIsStarting(false);
     }
   };
 
@@ -122,8 +126,8 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
         justifyContent: 'center', 
         padding: '2rem', 
         boxSizing: 'border-box',
-        overflow: 'hidden', // Add this
-        position: 'relative' // And this
+        overflow: 'hidden',
+        position: 'relative'
       }}>
         
         {/* Floating Particles */}
@@ -306,25 +310,29 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
           {isFirstPlayer && (
             <button
               onClick={handleStart}
+              disabled={isStarting}
               className="btn-hover"
               style={{
                 width: '100%',
                 maxWidth: '400px',
                 padding: '1.25rem 3rem',
-                background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                background: isStarting 
+                  ? 'linear-gradient(135deg, rgba(240, 147, 251, 0.5) 0%, rgba(245, 87, 108, 0.5) 100%)'
+                  : 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
                 border: '3px solid rgba(255, 255, 255, 0.5)',
                 borderRadius: '25px',
                 fontWeight: '700',
                 fontSize: '1.25rem',
                 color: 'white',
-                cursor: 'pointer',
+                cursor: isStarting ? 'not-allowed' : 'pointer',
                 boxShadow: '0 10px 30px rgba(245, 87, 108, 0.4)',
                 textTransform: 'uppercase',
                 letterSpacing: '1px',
-                marginTop: '1rem'
+                marginTop: '1rem',
+                opacity: isStarting ? 0.6 : 1
               }}
             >
-              Commencer la Partie 🚀
+              {isStarting ? 'Démarrage...' : 'Commencer la Partie 🚀'}
             </button>
           )}
 
