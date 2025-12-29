@@ -3,6 +3,7 @@ import { Trophy, XCircle, BarChart3 } from 'lucide-react';
 
 export default function VoteResultsPage({ players = [], votes = {}, imposterId, currentUser, onContinue }) {
   const [particles, setParticles] = useState([]);
+  const [hasContinued, setHasContinued] = useState(false);
 
   // Check if all players have voted
   const allPlayersVoted = Object.keys(votes).length === players.length && players.length > 0;
@@ -74,6 +75,11 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
   const imposterCaught = mostVotedPlayer && mostVotedPlayer.id === imposterId
                       && voteCount[mostVotedPlayer.id] > voteCount[secondMostVotedPlayer.id];
 
+  const handleContinue = () => {
+    setHasContinued(true);
+    if (onContinue) onContinue();
+  };
+
   return (
     <>
       <style>{`
@@ -135,6 +141,9 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
         }
         .btn-hover:active {
           transform: translateY(0);
+        }
+        .btn-hover:disabled:hover {
+          transform: none;
         }
       `}</style>
       
@@ -393,26 +402,32 @@ export default function VoteResultsPage({ players = [], votes = {}, imposterId, 
           {/* Continue Button - Only show when all votes are in AND user is host */}
           {allPlayersVoted && isFirstPlayer && (
             <button
-              onClick={onContinue}
+              onClick={handleContinue}
+              disabled={hasContinued}
               className="btn-hover"
               style={{
                 width: '100%',
                 maxWidth: '400px',
                 padding: '1.25rem 3rem',
-                background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                background: hasContinued
+                  ? 'linear-gradient(135deg, #94a3b8 0%, #64748b 100%)'
+                  : 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
                 border: '3px solid rgba(255, 255, 255, 0.5)',
                 borderRadius: '25px',
                 fontWeight: '700',
                 fontSize: '1.25rem',
                 color: 'white',
-                cursor: 'pointer',
-                boxShadow: '0 10px 30px rgba(245, 87, 108, 0.4)',
+                cursor: hasContinued ? 'not-allowed' : 'pointer',
+                boxShadow: hasContinued
+                  ? '0 10px 30px rgba(100, 116, 139, 0.4)'
+                  : '0 10px 30px rgba(245, 87, 108, 0.4)',
                 textTransform: 'uppercase',
                 letterSpacing: '1px',
-                marginTop: '1rem'
+                marginTop: '1rem',
+                opacity: hasContinued ? 0.6 : 1
               }}
             >
-              Continuer ➡️
+              {hasContinued ? 'En cours... ⏳' : 'Continuer ➡️'}
             </button>
           )}
 

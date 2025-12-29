@@ -854,6 +854,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
   const [categoriesLoaded, setCategoriesLoaded] = useState(false);
   const [showCover, setShowCover] = useState(true);
   const [lastGeneratedAt, setLastGeneratedAt] = useState(null);
+  const [hasVoted, setHasVoted] = useState(false);
   
   const sortedPlayers = [...players].sort((a, b) => a.joinedAt - b.joinedAt);
   const isFirstPlayer = sortedPlayers.length > 0 && currentUser && sortedPlayers[0].id === currentUser.firebaseId;
@@ -984,6 +985,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
       alert('Vous devez choisir un joueur!');
       return;
     }
+    setHasVoted(true);
     if (onConfirm) onConfirm({ selectedPlayer, word: generatedWord, hint, category });
   };
 
@@ -1013,6 +1015,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .btn-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); }
+        .btn-hover:disabled:hover { transform: none; }
         .player-card { transition: all 0.3s ease; }
         .player-card:not(.disabled):hover { transform: translateX(5px); }
         .cover-fade-out { animation: fadeOut 0.5s ease-out forwards; }
@@ -1181,16 +1184,22 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
             </div>
           </div>
 
-          <button onClick={handleConfirm} className="btn-hover"
+          <button onClick={handleConfirm} className="btn-hover" disabled={hasVoted}
             style={{
               width: '100%', maxWidth: '400px', padding: '1.25rem 3rem',
-              background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+              background: hasVoted 
+                ? 'linear-gradient(135deg, #94a3b8 0%, #64748b 100%)'
+                : 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
               border: '3px solid rgba(255, 255, 255, 0.5)', borderRadius: '25px',
-              fontWeight: '700', fontSize: '1.25rem', color: 'white', cursor: 'pointer',
-              boxShadow: '0 10px 30px rgba(245, 87, 108, 0.4)',
-              textTransform: 'uppercase', letterSpacing: '1px'
+              fontWeight: '700', fontSize: '1.25rem', color: 'white', 
+              cursor: hasVoted ? 'not-allowed' : 'pointer',
+              boxShadow: hasVoted 
+                ? '0 10px 30px rgba(100, 116, 139, 0.4)'
+                : '0 10px 30px rgba(245, 87, 108, 0.4)',
+              textTransform: 'uppercase', letterSpacing: '1px',
+              opacity: hasVoted ? 0.6 : 1
             }}>
-            Voter 🗳️
+            {hasVoted ? 'Vote Enregistré ✓' : 'Voter 🗳️'}
           </button>
         </div>
       </div>
