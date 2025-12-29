@@ -3,20 +3,14 @@ import { Trophy, Medal, Award } from 'lucide-react';
 
 export default function FinalResultsPage({ players = [], scores = {}, currentUser, onNextRound }) {
   const [particles, setParticles] = useState([]);
+  const [isStartingNewRound, setIsStartingNewRound] = useState(false);
 
   // Sort players by join time to determine host
   const sortedPlayersByJoinTime = [...players].sort((a, b) => a.joinedAt - b.joinedAt);
   
-  // Debug logs
-  console.log('FinalResults - Current User:', currentUser);
-  console.log('FinalResults - First Player:', sortedPlayersByJoinTime[0]);
-  console.log('FinalResults - All Players:', players);
-  
   // Check if current user is the first player (host)
   const isFirstPlayer = sortedPlayersByJoinTime.length > 0 && currentUser && 
                         sortedPlayersByJoinTime[0].id === currentUser.firebaseId;
-  
-  console.log('FinalResults - isFirstPlayer:', isFirstPlayer);
 
   // Generate floating particles
   useEffect(() => {
@@ -57,6 +51,12 @@ export default function FinalResultsPage({ players = [], scores = {}, currentUse
   const topScore = sortedPlayers[0]?.score || 0;
   const secondScore = sortedPlayers[1]?.score || -1;
   const hasWinner = topScore > 0 && topScore > secondScore;
+
+  const handleNextRound = () => {
+    if (isStartingNewRound) return;
+    setIsStartingNewRound(true);
+    if (onNextRound) onNextRound();
+  };
 
   return (
     <>
@@ -170,7 +170,7 @@ export default function FinalResultsPage({ players = [], scores = {}, currentUse
           gap: '2rem', 
           position: 'relative', 
           zIndex: 10, 
-          marginTop: '22rem',
+          marginTop: '2rem',
           animation: 'fadeInUp 0.6s ease-out'
         }}>
         
@@ -323,26 +323,30 @@ export default function FinalResultsPage({ players = [], scores = {}, currentUse
           {/* Next Round Button - Only show for host */}
           {isFirstPlayer && (
             <button
-              onClick={onNextRound}
+              onClick={handleNextRound}
+              disabled={isStartingNewRound}
               className="btn-hover"
               style={{
                 width: '100%',
                 maxWidth: '400px',
                 padding: '1.25rem 3rem',
-                background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                background: isStartingNewRound
+                  ? 'linear-gradient(135deg, rgba(240, 147, 251, 0.5) 0%, rgba(245, 87, 108, 0.5) 100%)'
+                  : 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
                 border: '3px solid rgba(255, 255, 255, 0.5)',
                 borderRadius: '25px',
                 fontWeight: '700',
                 fontSize: '1.25rem',
                 color: 'white',
-                cursor: 'pointer',
+                cursor: isStartingNewRound ? 'not-allowed' : 'pointer',
                 boxShadow: '0 10px 30px rgba(245, 87, 108, 0.4)',
                 textTransform: 'uppercase',
                 letterSpacing: '1px',
-                marginTop: '1rem'
+                marginTop: '1rem',
+                opacity: isStartingNewRound ? 0.6 : 1
               }}
             >
-              Nouvelle Partie 🎮
+              {isStartingNewRound ? 'Démarrage...' : 'Nouvelle Partie 🎮'}
             </button>
           )}
 
