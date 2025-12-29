@@ -312,36 +312,38 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
                       boxShadow: '0 4px 15px rgba(0, 0, 0, 0.15)',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.5rem'
+                      justifyContent: 'space-between',
+                      gap: '0.5rem',
+                      position: 'relative'
                     }}>
-                      {player.username}
-                      {isCurrentUser && <span style={{ fontSize: '0.875rem', opacity: 0.8 }}></span>}
+                      <div style={{ flex: 1, textAlign: 'center' }}>
+                        {player.username}
+                      </div>
+                      
+                      {/* Remove Button (only for host, not for themselves) */}
+                      {canRemove && (
+                        <button
+                          onClick={() => handleRemovePlayer(player.id, player.username)}
+                          className="remove-btn"
+                          style={{
+                            background: 'rgba(239, 68, 68, 0.4)',
+                            backdropFilter: 'blur(10px)',
+                            border: '2px solid rgba(239, 68, 68, 0.7)',
+                            borderRadius: '50%',
+                            width: '50px',
+                            height: '50px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            flexShrink: 0,
+                            boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)'
+                          }}
+                        >
+                          <Trash2 size={24} color="white" strokeWidth={2.5} />
+                        </button>
+                      )}
                     </div>
-
-                    {/* Remove Button (only for host, not for themselves) */}
-                    {canRemove && (
-                      <button
-                        onClick={() => handleRemovePlayer(player.id, player.username)}
-                        className="remove-btn"
-                        style={{
-                          background: 'rgba(239, 68, 68, 0.3)',
-                          backdropFilter: 'blur(10px)',
-                          border: '2px solid rgba(239, 68, 68, 0.6)',
-                          borderRadius: '50%',
-                          width: '45px',
-                          height: '45px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          cursor: 'pointer',
-                          flexShrink: 0,
-                          boxShadow: '0 4px 15px rgba(239, 68, 68, 0.3)'
-                        }}
-                      >
-                        <Trash2 size={20} color="white" />
-                      </button>
-                    )}
                   </div>
                 );
               })}
