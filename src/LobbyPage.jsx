@@ -340,7 +340,7 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
                             boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)'
                           }}
                         >
-                          <Trash2 size={24} color="white" strokeWidth={2.5} />
+                          <Trash2 size={100} color="white" strokeWidth={2.5} />
                         </button>
                       )}
                     </div>
