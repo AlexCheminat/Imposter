@@ -269,6 +269,17 @@ function App() {
     }
   };
 
+  const handleRemovePlayer = async (playerId) => {
+    try {
+      const playerRef = ref(database, `lobbies/${lobbyId}/players/${playerId}`);
+      await remove(playerRef);
+      console.log('Player removed successfully');
+    } catch (error) {
+      console.error('Error removing player:', error);
+      alert('Failed to remove player. Please try again.');
+    }
+  };
+
   const handleStartGame = async () => {
     console.log('handleStartGame called!');
     try {
@@ -484,6 +495,7 @@ function App() {
           currentUser={currentUser}
           onStartGame={handleStartGame}
           onOpenSettings={handleOpenSettings}
+          onRemovePlayer={handleRemovePlayer}
         />
       )}
 

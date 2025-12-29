@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Settings, Users, Crown } from 'lucide-react';
+import { Settings, Users, Trash2 } from 'lucide-react';
 
-export default function LobbyPage({ players = [], currentUser, onStartGame, onOpenSettings }) {
+export default function LobbyPage({ players = [], currentUser, onStartGame, onOpenSettings, onRemovePlayer }) {
   const [particles, setParticles] = useState([]);
   const [isStarting, setIsStarting] = useState(false);
   
@@ -45,6 +45,14 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
       console.error('onStartGame prop not provided!');
       alert('Starting game...');
       setIsStarting(false);
+    }
+  };
+
+  const handleRemovePlayer = (playerId, playerUsername) => {
+    if (window.confirm(`Êtes-vous sûr de vouloir retirer ${playerUsername} du lobby?`)) {
+      if (onRemovePlayer) {
+        onRemovePlayer(playerId);
+      }
     }
   };
 
@@ -113,7 +121,14 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
         }
         .player-card {
           transition: all 0.3s ease;
-          pointer-events: none;
+        }
+        .remove-btn {
+          transition: all 0.2s ease;
+          opacity: 0.7;
+        }
+        .remove-btn:hover {
+          opacity: 1;
+          transform: scale(1.1);
         }
       `}</style>
       
@@ -243,6 +258,8 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
               {sortedPlayers.map((player, index) => {
                 const isCurrentUser = currentUser && player.id === currentUser.firebaseId;
                 const isHost = index === 0;
+                const canRemove = isFirstPlayer && !isCurrentUser;
+                
                 return (
                   <div 
                     key={player.id} 
@@ -251,7 +268,8 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
                       display: 'flex', 
                       alignItems: 'center', 
                       gap: '1rem',
-                      animation: `slideIn 0.4s ease-out ${index * 0.1}s backwards`
+                      animation: `slideIn 0.4s ease-out ${index * 0.1}s backwards`,
+                      pointerEvents: 'auto'
                     }}
                   >
                     {/* Player Photo */}
@@ -300,6 +318,30 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
                       {player.username}
                       {isCurrentUser && <span style={{ fontSize: '0.875rem', opacity: 0.8 }}></span>}
                     </div>
+
+                    {/* Remove Button (only for host, not for themselves) */}
+                    {canRemove && (
+                      <button
+                        onClick={() => handleRemovePlayer(player.id, player.username)}
+                        className="remove-btn"
+                        style={{
+                          background: 'rgba(239, 68, 68, 0.3)',
+                          backdropFilter: 'blur(10px)',
+                          border: '2px solid rgba(239, 68, 68, 0.6)',
+                          borderRadius: '50%',
+                          width: '45px',
+                          height: '45px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          cursor: 'pointer',
+                          flexShrink: 0,
+                          boxShadow: '0 4px 15px rgba(239, 68, 68, 0.3)'
+                        }}
+                      >
+                        <Trash2 size={20} color="white" />
+                      </button>
+                    )}
                   </div>
                 );
               })}
