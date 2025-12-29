@@ -1,28 +1,26 @@
 import { useState, useEffect } from 'react';
-import { Settings, Users, Crown } from 'lucide-react';
+import { Settings, Users, Crown, Zap } from 'lucide-react';
 
 export default function LobbyPage({ players = [], currentUser, onStartGame, onOpenSettings }) {
   const [particles, setParticles] = useState([]);
+  const [pulseSettings, setPulseSettings] = useState(false);
+  const [isStarting, setIsStarting] = useState(false);
   
-  // Sort players by join time to determine host
   const sortedPlayers = [...players].sort((a, b) => a.joinedAt - b.joinedAt);
-  
-  // Check if current user is the first player (host)
   const isFirstPlayer = sortedPlayers.length > 0 && currentUser && 
                         sortedPlayers[0].id === currentUser.firebaseId;
 
-  // Generate floating particles
   useEffect(() => {
     const generateParticles = () => {
       const newParticles = [];
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 30; i++) {
         newParticles.push({
           id: i,
           left: Math.random() * 100,
-          size: Math.random() * 4 + 2,
-          duration: Math.random() * 10 + 15,
+          size: Math.random() * 6 + 2,
+          duration: Math.random() * 15 + 10,
           delay: Math.random() * -20,
-          opacity: Math.random() * 0.3 + 0.1
+          opacity: Math.random() * 0.4 + 0.1
         });
       }
       setParticles(newParticles);
@@ -34,82 +32,115 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
     document.body.style.overflow = 'auto';
   }, []);
 
+  // Pulse settings button every 5 seconds
+  useEffect(() => {
+    if (!isFirstPlayer) return;
+    const interval = setInterval(() => {
+      setPulseSettings(true);
+      setTimeout(() => setPulseSettings(false), 1000);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isFirstPlayer]);
+
   const handleStart = () => {
-    console.log('Start button clicked, calling onStartGame...');
+    if (isStarting) return; // Prevent multiple clicks
+    setIsStarting(true);
+    
     if (onStartGame) {
       onStartGame();
-    } else {
-      console.error('onStartGame prop not provided!');
-      alert('Starting game...');
     }
   };
 
   return (
     <>
       <style>{`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-        html, body {
-          margin: 0 !important;
-          padding: 0 !important;
-          width: 100% !important;
-          max-width: 100% !important;
-        }
-        #root {
-          min-height: 100vh;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { margin: 0 !important; padding: 0 !important; width: 100% !important; max-width: 100% !important; }
+        #root { min-height: 100vh; }
         @keyframes drift {
-          0% {
-            transform: translateY(100vh) rotate(0deg);
-            opacity: 0;
-          }
-          10% {
-            opacity: 1;
-          }
-          90% {
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(-100px) rotate(360deg);
-            opacity: 0;
-          }
+          0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
         }
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInLeft {
+          from { opacity: 0; transform: translateX(-50px); }
+          to { opacity: 1; transform: translateX(0); }
         }
-        @keyframes slideIn {
-          from {
-            opacity: 0;
-            transform: translateX(-30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
+        @keyframes slideInRight {
+          from { opacity: 0; transform: translateX(50px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+          from { opacity: 0; transform: scale(0.8); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+        @keyframes glowPulse {
+          0%, 100% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.5); }
+          50% { box-shadow: 0 0 40px rgba(251, 191, 36, 0.8); }
+        }
+        @keyframes settingsPulse {
+          0%, 100% { transform: scale(1) rotate(0deg); }
+          25% { transform: scale(1.1) rotate(10deg); }
+          75% { transform: scale(1.1) rotate(-10deg); }
+        }
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes shimmer {
+          0% { background-position: -1000px 0; }
+          100% { background-position: 1000px 0; }
         }
         .btn-hover {
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
+          overflow: hidden;
+        }
+        .btn-hover::before {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 0;
+          height: 0;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.3);
+          transform: translate(-50%, -50%);
+          transition: width 0.6s, height 0.6s;
+        }
+        .btn-hover:hover::before {
+          width: 300px;
+          height: 300px;
         }
         .btn-hover:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+          transform: translateY(-3px) scale(1.02);
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
         }
         .btn-hover:active {
-          transform: translateY(0);
+          transform: translateY(-1px) scale(0.98);
         }
         .player-card {
-          transition: all 0.3s ease;
-          pointer-events: none;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .player-card:hover {
+          transform: translateX(10px) scale(1.02);
+        }
+        .host-crown {
+          animation: bounce 2s ease-in-out infinite;
+        }
+        .settings-pulse {
+          animation: settingsPulse 0.5s ease-in-out;
+        }
+        .shimmer-effect {
+          background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #f093fb 100%);
+          background-size: 200% 100%;
+          animation: shimmer 3s linear infinite;
         }
       `}</style>
       
@@ -122,11 +153,10 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
         justifyContent: 'center', 
         padding: '2rem', 
         boxSizing: 'border-box',
-        overflow: 'hidden', // Add this
-        position: 'relative' // And this
+        overflow: 'hidden',
+        position: 'relative'
       }}>
         
-        {/* Floating Particles */}
         {particles.map(particle => (
           <div
             key={particle.id}
@@ -144,11 +174,10 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
           />
         ))}
 
-        {/* Settings Icon (only for host) */}
         {isFirstPlayer && (
           <button
             onClick={onOpenSettings}
-            className="btn-hover"
+            className={`btn-hover ${pulseSettings ? 'settings-pulse' : ''}`}
             style={{
               position: 'absolute',
               top: '3rem',
@@ -164,14 +193,14 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
               justifyContent: 'center',
               cursor: 'pointer',
               zIndex: 20,
-              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)'
+              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
+              animation: 'slideInRight 0.6s ease-out'
             }}
           >
             <Settings size={28} color="white" />
           </button>
         )}
 
-        {/* Main Container */}
         <div style={{ 
           width: '100%', 
           maxWidth: '600px', 
@@ -181,23 +210,21 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
           gap: '2rem', 
           position: 'relative', 
           zIndex: 10, 
-          marginTop: isFirstPlayer ? '5rem' : '2rem',
-          animation: 'fadeInUp 0.6s ease-out'
+          marginTop: isFirstPlayer ? '5rem' : '2rem'
         }}>
 
-          {/* Title */}
           <h1 style={{
             textAlign: 'center',
             color: 'white',
             fontSize: '2.5rem',
             fontWeight: '700',
             textShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
-            marginBottom: '-1rem'
+            marginBottom: '-1rem',
+            animation: 'fadeInUp 0.6s ease-out'
           }}>
             Salle d'attente
           </h1>
 
-          {/* Player Count Card */}
           <div style={{
             width: '100%',
             padding: '1.5rem 2rem',
@@ -213,13 +240,13 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '0.75rem'
+            gap: '0.75rem',
+            animation: 'scaleIn 0.6s ease-out 0.1s backwards'
           }}>
             <Users size={28} />
             <span>{sortedPlayers.length} {sortedPlayers.length === 1 ? 'Joueur' : 'Joueurs'}</span>
           </div>
 
-          {/* Players List Container */}
           <div style={{
             width: '100%',
             background: 'rgba(255, 255, 255, 0.15)',
@@ -228,7 +255,8 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
             border: '2px solid rgba(255, 255, 255, 0.3)',
             padding: '2rem 1.5rem',
             boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3)',
-            minHeight: '300px'
+            minHeight: '300px',
+            animation: 'fadeInUp 0.6s ease-out 0.2s backwards'
           }}>
             <div style={{ 
               width: '100%', 
@@ -247,20 +275,27 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
                       display: 'flex', 
                       alignItems: 'center', 
                       gap: '1rem',
-                      animation: `slideIn 0.4s ease-out ${index * 0.1}s backwards`
+                      animation: `slideInLeft 0.5s ease-out ${index * 0.1 + 0.3}s backwards`
                     }}
                   >
-                    {/* Player Photo */}
                     <div style={{
                       position: 'relative',
                       width: '70px',
                       height: '70px',
                       borderRadius: '50%',
                       overflow: 'hidden',
-                      border: `3px solid ${isCurrentUser ? '#10b981' : 'rgba(255, 255, 255, 0.6)'}`,
+                      border: isCurrentUser 
+                        ? '3px solid rgba(16, 185, 129, 0.8)' 
+                        : isHost 
+                        ? '3px solid rgba(251, 191, 36, 0.8)'
+                        : '3px solid rgba(255, 255, 255, 0.6)',
                       backgroundColor: 'rgba(255, 255, 255, 0.1)',
                       flexShrink: 0,
-                      boxShadow: isCurrentUser ? '0 0 20px rgba(16, 185, 129, 0.5)' : '0 4px 15px rgba(0, 0, 0, 0.2)'
+                      boxShadow: isCurrentUser 
+                        ? '0 0 20px rgba(16, 185, 129, 0.5)' 
+                        : isHost
+                        ? '0 0 20px rgba(251, 191, 36, 0.5)'
+                        : '0 4px 15px rgba(0, 0, 0, 0.2)'
                     }}>
                       <img 
                         src={player.photo} 
@@ -271,17 +306,40 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
                           objectFit: 'cover'
                         }}
                       />
+                      {isHost && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '-8px',
+                          right: '-8px',
+                          width: '32px',
+                          height: '32px',
+                          background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+                          borderRadius: '50%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: '0 2px 10px rgba(251, 191, 36, 0.5)',
+                          border: '2px solid white'
+                        }}>
+                          <Crown size={16} color="white" className="host-crown" />
+                        </div>
+                      )}
                     </div>
 
-                    {/* Player Username */}
                     <div style={{
                       flex: 1,
                       padding: '1rem 1.5rem',
                       background: isCurrentUser 
                         ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.3) 100%)'
+                        : isHost
+                        ? 'linear-gradient(135deg, rgba(251, 191, 36, 0.3) 0%, rgba(245, 158, 11, 0.3) 100%)'
                         : 'rgba(255, 255, 255, 0.2)',
                       backdropFilter: 'blur(10px)',
-                      border: `2px solid ${isCurrentUser ? 'rgba(16, 185, 129, 0.6)' : 'rgba(255, 255, 255, 0.4)'}`,
+                      border: isCurrentUser 
+                        ? '2px solid rgba(16, 185, 129, 0.6)'
+                        : isHost
+                        ? '2px solid rgba(251, 191, 36, 0.6)'
+                        : '2px solid rgba(255, 255, 255, 0.4)',
                       borderRadius: '20px',
                       textAlign: 'center',
                       fontSize: '1.125rem',
@@ -294,7 +352,8 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
                       gap: '0.5rem'
                     }}>
                       {player.username}
-                      {isCurrentUser && <span style={{ fontSize: '0.875rem', opacity: 0.8 }}></span>}
+                      {isHost && <span style={{ fontSize: '0.875rem', opacity: 0.8 }}>👑 Hôte</span>}
+                      {isCurrentUser && !isHost && <span style={{ fontSize: '0.875rem', opacity: 0.8 }}>✨ Vous</span>}
                     </div>
                   </div>
                 );
@@ -302,33 +361,59 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
             </div>
           </div>
 
-          {/* Start Button (only for first player) */}
           {isFirstPlayer && (
             <button
               onClick={handleStart}
-              className="btn-hover"
+              disabled={isStarting}
+              className={`btn-hover ${isStarting ? '' : 'shimmer-effect'}`}
               style={{
                 width: '100%',
                 maxWidth: '400px',
                 padding: '1.25rem 3rem',
-                background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                background: isStarting 
+                  ? 'rgba(255, 255, 255, 0.3)'
+                  : 'linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #f093fb 100%)',
+                backgroundSize: isStarting ? '100% 100%' : '200% 100%',
                 border: '3px solid rgba(255, 255, 255, 0.5)',
                 borderRadius: '25px',
                 fontWeight: '700',
                 fontSize: '1.25rem',
                 color: 'white',
-                cursor: 'pointer',
-                boxShadow: '0 10px 30px rgba(245, 87, 108, 0.4)',
+                cursor: isStarting ? 'not-allowed' : 'pointer',
+                boxShadow: isStarting ? 'none' : '0 10px 30px rgba(245, 87, 108, 0.4)',
                 textTransform: 'uppercase',
                 letterSpacing: '1px',
-                marginTop: '1rem'
+                marginTop: '1rem',
+                animation: isStarting ? 'none' : 'scaleIn 0.6s ease-out 0.4s backwards',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.75rem',
+                opacity: isStarting ? 0.6 : 1
               }}
             >
-              Commencer la Partie 🚀
+              {isStarting ? (
+                <>
+                  <div style={{
+                    width: '20px',
+                    height: '20px',
+                    border: '3px solid rgba(255, 255, 255, 0.3)',
+                    borderTop: '3px solid white',
+                    borderRadius: '50%',
+                    animation: 'spin 0.8s linear infinite'
+                  }} />
+                  Lancement...
+                </>
+              ) : (
+                <>
+                  <Zap size={24} fill="white" />
+                  Commencer la Partie
+                  <Zap size={24} fill="white" />
+                </>
+              )}
             </button>
           )}
 
-          {/* Waiting message for non-hosts */}
           {!isFirstPlayer && (
             <div style={{
               padding: '1rem 2rem',
@@ -339,9 +424,10 @@ export default function LobbyPage({ players = [], currentUser, onStartGame, onOp
               color: 'white',
               fontSize: '1rem',
               textAlign: 'center',
-              fontWeight: '500'
+              fontWeight: '500',
+              animation: 'fadeInUp 0.8s ease-out 0.5s backwards'
             }}>
-              En attente que l'hôte lance la partie...
+              ⏳ En attente que l'hôte lance la partie...
             </div>
           )}
         </div>
