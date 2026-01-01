@@ -820,7 +820,7 @@ const wordCategories = {
   ]
 };
 
-function getRandomWord(categories = ['animals', 'food', 'objects']) {
+function getRandomWord(categories = ['animals', 'food', 'objects', 'places', 'jobs', 'sports', 'countries', 'celebrities', 'brands']) {
   const allWords = [];
   categories.forEach(c => {
     if (wordCategories[c]) {
@@ -849,7 +849,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
   const [loading, setLoading] = useState(true);
   const [startingPlayer, setStartingPlayer] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState(['animals', 'food', 'objects']);
+  const [selectedCategories, setSelectedCategories] = useState(['animals', 'food', 'objects', 'places', 'jobs', 'sports', 'countries', 'celebrities', 'brands']);
   const [inTheDarkMode, setInTheDarkMode] = useState(false);
   const [categoriesLoaded, setCategoriesLoaded] = useState(false);
   const [showCover, setShowCover] = useState(true);
