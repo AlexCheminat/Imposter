@@ -670,6 +670,8 @@ const wordCategories = {
 
     { word: 'Tony Parker', hint: 'NBA' },
     { word: 'Teddy Riner', hint: 'Judo' },
+
+    { word: 'Jeff', hint: 'Spécial'}
   ],
 
   brands: [
