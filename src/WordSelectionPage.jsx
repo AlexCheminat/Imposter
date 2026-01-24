@@ -741,10 +741,100 @@ const wordCategories = {
     { word: 'YouTube', hint: 'Vidéo' },
     { word: 'Netflix', hint: 'Streaming' },
     { word: 'Disney+', hint: 'Films' },
+  ],
+
+  fictionalCharacters: [
+    // Dessins animés / Animation
+    { word: 'Garfield', hint: 'Lazagne' },
+    { word: 'Scooby-Doo', hint: 'Mystère' },
+    { word: 'Winnie l’Ourson', hint: 'Miel' },
+    { word: 'Mickey Mouse', hint: 'Icône' },
+    { word: 'Donald Duck', hint: 'Colère' },
+    { word: 'Bugs Bunny', hint: 'Carotte' },
+    { word: 'Homer Simpson', hint: 'Donut' },
+    { word: 'Bart Simpson', hint: 'Bêtise' },
+
+    // Films / Sagas
+    { word: 'Dark Vador', hint: 'Respiration' },
+    { word: 'Luke Skywalker', hint: 'Héritage' },
+    { word: 'Yoda', hint: 'Sagesse' },
+    { word: 'Harry Potter', hint: 'Sortilège' },
+    { word: 'Gandalf', hint: 'Guide' },
+    { word: 'Indiana Jones', hint: 'Artefact' },
+    { word: 'James Bond', hint: 'Espion' },
+    { word: 'Jack Sparrow', hint: 'Rhum' },
+
+    // Super-héros
+    { word: 'Batman', hint: 'Nuit' },
+    { word: 'Superman', hint: 'Invincible' },
+    { word: 'Spider-Man', hint: 'Agilité' },
+    { word: 'Iron Man', hint: 'Armure' },
+    { word: 'Captain America', hint: 'Bouclier' },
+    { word: 'Hulk', hint: 'Colère' },
+    { word: 'Wonder Woman', hint: 'Amazone' },
+
+    // Jeux vidéo
+    { word: 'Mario', hint: 'Plombier' },
+    { word: 'Luigi', hint: 'Ombre' },
+    { word: 'Sonic', hint: 'Vitesse' },
+    { word: 'Pikachu', hint: 'Électricité' },
+
+    // Séries / autres
+    { word: 'Sherlock Holmes', hint: 'Déduction' },
+
+    // Classiques
+    { word: 'Peter Pan', hint: 'Enfance' },
+    { word: 'Pinocchio', hint: 'Mensonge' },
+    { word: 'Le Petit Prince', hint: 'Planète' },
+
+    { word: 'Shrek', hint: 'Marais' },
+    { word: 'Kung Fu Panda', hint: 'Paix' },
+    { word: 'Simba', hint: 'Destin' },
+    { word: 'Scar', hint: 'Trahison' },
+    { word: 'Buzz l’Éclair', hint: 'Infini' },
+    { word: 'Woody', hint: 'Cowboy' },
+    { word: 'Nemo', hint: 'Océan' },
+    { word: 'Dory', hint: 'Mémoire' },
+
+    // Films / séries cultes
+    { word: 'Terminator', hint: 'Futur' },
+    { word: 'Rocky Balboa', hint: 'Persévérance' },
+    { word: 'Forrest Gump', hint: 'Course' },
+
+    // Classiques supplémentaires
+    { word: 'Dracula', hint: 'Immortel' },
+    { word: 'Frankenstein', hint: 'Créature' },
+    { word: 'Zorro', hint: 'Masque' },
+    { word: 'Tarzan', hint: 'Jungle' },
+    { word: 'Hercule', hint: 'Force' },
+    { word: 'Achille', hint: 'Faiblesse' },
+    { word: 'Ulysse', hint: 'Voyage' },
+
+    { word: 'Olaf', hint: 'Été' },
+    { word: 'Aladdin', hint: 'Vœux' },
+    { word: 'Mulan', hint: 'Honneur' },
+    { word: 'Stitch', hint: 'Ohana' },
+    { word: 'Wall-E', hint: 'Solitude' },
+    { word: 'Ratatouille', hint: 'Cuisine' },
+
+    // Star Wars (encore)
+    { word: 'Chewbacca', hint: 'Loyal' },
+    { word: 'R2-D2', hint: 'Astromech' },
+
+    // Jeux vidéo (encore)
+    { word: 'Donkey Kong', hint: 'Jungle' },
+    { word: 'Bowser', hint: 'Rivalité' },
+
+    // Classiques universels
+    { word: 'Robin des Bois', hint: 'Justice' },
+    { word: 'Le Chat Botté', hint: 'Ruse' },
+    { word: 'Cendrillon', hint: 'Minuit' },
+    { word: 'Blanche-Neige', hint: 'Pomme' },
+    { word: 'La Belle et la Bête', hint: 'Malédiction' },
   ]
 };
 
-function getRandomWord(categories = ['animals', 'food', 'objects', 'places', 'jobs', 'sports', 'countries', 'celebrities', 'brands']) {
+function getRandomWord(categories = ['animals', 'food', 'objects', 'places', 'jobs', 'sports', 'countries', 'celebrities', 'brands', 'fictionalCharacters']) {
   const allWords = [];
   categories.forEach(c => {
     if (wordCategories[c]) {
@@ -773,7 +863,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
   const [loading, setLoading] = useState(true);
   const [startingPlayer, setStartingPlayer] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState(['animals', 'food', 'objects', 'places', 'jobs', 'sports', 'countries', 'celebrities', 'brands']);
+  const [selectedCategories, setSelectedCategories] = useState(['animals', 'food', 'objects', 'places', 'jobs', 'sports', 'countries', 'celebrities', 'brands', 'fictionalCharacters']);
   const [inTheDarkMode, setInTheDarkMode] = useState(false);
   const [categoriesLoaded, setCategoriesLoaded] = useState(false);
   const [showCover, setShowCover] = useState(true);

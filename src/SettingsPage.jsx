@@ -10,11 +10,11 @@ const categories = [
   { id: 'sports', emoji: '⚽', name: 'Sports' },
   { id: 'celebrities', emoji: '⭐', name: 'Célébrités' },
   { id: 'brands', emoji: '🏷️', name: 'Marques' },
-  { id: 'empty', emoji: '🫙', name: 'Vide' }
+  { id: 'fictionalCharacters', emoji: '🎥', name: 'Fiction' }
 ];
 
 export default function SettingsPage({ onBack, database, lobbyId }) {
-  const [selectedCategories, setSelectedCategories] = useState(new Set(['animals', 'food', 'objects', 'countries', 'jobs', 'sports', 'celebrities', 'brands']));
+  const [selectedCategories, setSelectedCategories] = useState(new Set(['animals', 'food', 'objects', 'countries', 'jobs', 'sports', 'celebrities', 'brands', 'fictionalCharacters']));
   const [inTheDarkMode, setInTheDarkMode] = useState(false);
   const [particles, setParticles] = useState([]);
 
