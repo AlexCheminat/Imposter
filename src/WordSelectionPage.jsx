@@ -865,6 +865,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState(['animals', 'food', 'objects', 'places', 'jobs', 'sports', 'countries', 'celebrities', 'brands', 'fictionalCharacters']);
   const [inTheDarkMode, setInTheDarkMode] = useState(false);
+  const [drawingBoardEnabled, setDrawingBoardEnabled] = useState(false);
   const [categoriesLoaded, setCategoriesLoaded] = useState(false);
   const [showCover, setShowCover] = useState(true);
   const [lastGeneratedAt, setLastGeneratedAt] = useState(null);
@@ -901,6 +902,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     
     const categoriesRef = ref(database.db, `lobbies/${lobbyId}/selectedCategories`);
     const gameModeRef = ref(database.db, `lobbies/${lobbyId}/inTheDarkMode`);
+    const drawingBoardRef = ref(database.db, `lobbies/${lobbyId}/drawingBoardEnabled`);
 
     const unsubCat = onValue(categoriesRef, (s) => {
       const d = s.val();
@@ -913,7 +915,12 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
       if (d !== null) setInTheDarkMode(d);
     });
 
-    return () => { unsubCat(); unsubMode(); };
+    const unsubDrawing = onValue(drawingBoardRef, (s) => {
+      const d = s.val();
+      if (d !== null) setDrawingBoardEnabled(d);
+    });
+
+    return () => { unsubCat(); unsubMode(); unsubDrawing(); };
   }, [database, lobbyId]);
 
   // Generate and sync words
@@ -1275,89 +1282,91 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           </div>
 
           {/* Drawing Pad */}
-          <div style={{
-            width: '100%', background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(20px)',
-            borderRadius: '30px', border: '2px solid rgba(255, 255, 255, 0.3)',
-            padding: '1.5rem', boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3)'
-          }}>
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center',
-              marginBottom: '1rem'
+          {drawingBoardEnabled && (
+            <div style={{
+              width: '100%', background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(20px)',
+              borderRadius: '30px', border: '2px solid rgba(255, 255, 255, 0.3)',
+              padding: '1.5rem', boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3)'
             }}>
-              <h2 style={{
-                color: 'white', fontSize: '1.25rem', fontWeight: '600',
-                textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                marginBottom: '1rem'
               }}>
-                🎨 Tableau de Dessin
-              </h2>
-              
-              <button onClick={clearCanvas} className="btn-hover"
-                style={{
-                  background: 'rgba(239, 68, 68, 0.8)', 
-                  backdropFilter: 'blur(10px)',
-                  border: '2px solid rgba(255, 255, 255, 0.4)', 
-                  borderRadius: '12px',
-                  padding: '0.5rem 1rem',
-                  cursor: 'pointer',
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '0.5rem',
-                  color: 'white',
-                  fontWeight: '600',
-                  fontSize: '0.9rem'
+                <h2 style={{
+                  color: 'white', fontSize: '1.25rem', fontWeight: '600',
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
                 }}>
-                <Trash2 size={18} />
-                Effacer
-              </button>
-            </div>
-
-            {/* Color palette */}
-            <div style={{ 
-              display: 'flex', 
-              gap: '0.75rem', 
-              marginBottom: '1rem',
-              justifyContent: 'center'
-            }}>
-              {colors.map(color => (
-                <div
-                  key={color}
-                  className={`color-btn ${currentColor === color ? 'active' : ''}`}
-                  onClick={() => setCurrentColor(color)}
+                  🎨 Tableau de Dessin
+                </h2>
+                
+                <button onClick={clearCanvas} className="btn-hover"
                   style={{
-                    width: '35px',
-                    height: '35px',
-                    borderRadius: '50%',
-                    backgroundColor: color,
-                    border: '3px solid rgba(255, 255, 255, 0.5)',
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
-                  }}
-                />
-              ))}
-            </div>
+                    background: 'rgba(239, 68, 68, 0.8)', 
+                    backdropFilter: 'blur(10px)',
+                    border: '2px solid rgba(255, 255, 255, 0.4)', 
+                    borderRadius: '12px',
+                    padding: '0.5rem 1rem',
+                    cursor: 'pointer',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '0.5rem',
+                    color: 'white',
+                    fontWeight: '600',
+                    fontSize: '0.9rem'
+                  }}>
+                  <Trash2 size={18} />
+                  Effacer
+                </button>
+              </div>
 
-            <canvas
-              ref={canvasRef}
-              onMouseDown={startDrawing}
-              onMouseMove={draw}
-              onMouseUp={stopDrawing}
-              onMouseLeave={stopDrawing}
-              onTouchStart={startDrawing}
-              onTouchMove={draw}
-              onTouchEnd={stopDrawing}
-              style={{
-                width: '100%',
-                height: 'auto',
-                maxHeight: '400px',
-                border: '3px solid rgba(255, 255, 255, 0.4)',
-                borderRadius: '15px',
-                cursor: 'crosshair',
-                touchAction: 'none',
-                display: 'block'
-              }}
-            />
-          </div>
+              {/* Color palette */}
+              <div style={{ 
+                display: 'flex', 
+                gap: '0.75rem', 
+                marginBottom: '1rem',
+                justifyContent: 'center'
+              }}>
+                {colors.map(color => (
+                  <div
+                    key={color}
+                    className={`color-btn ${currentColor === color ? 'active' : ''}`}
+                    onClick={() => setCurrentColor(color)}
+                    style={{
+                      width: '35px',
+                      height: '35px',
+                      borderRadius: '50%',
+                      backgroundColor: color,
+                      border: '3px solid rgba(255, 255, 255, 0.5)',
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                    }}
+                  />
+                ))}
+              </div>
+
+              <canvas
+                ref={canvasRef}
+                onMouseDown={startDrawing}
+                onMouseMove={draw}
+                onMouseUp={stopDrawing}
+                onMouseLeave={stopDrawing}
+                onTouchStart={startDrawing}
+                onTouchMove={draw}
+                onTouchEnd={stopDrawing}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  maxHeight: '400px',
+                  border: '3px solid rgba(255, 255, 255, 0.4)',
+                  borderRadius: '15px',
+                  cursor: 'crosshair',
+                  touchAction: 'none',
+                  display: 'block'
+                }}
+              />
+            </div>
+          )}
 
           <div style={{
             width: '100%', background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(20px)',

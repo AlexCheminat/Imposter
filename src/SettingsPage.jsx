@@ -16,6 +16,7 @@ const categories = [
 export default function SettingsPage({ onBack, database, lobbyId }) {
   const [selectedCategories, setSelectedCategories] = useState(new Set(['animals', 'food', 'objects', 'countries', 'jobs', 'sports', 'celebrities', 'brands', 'fictionalCharacters']));
   const [inTheDarkMode, setInTheDarkMode] = useState(false);
+  const [drawingBoardEnabled, setDrawingBoardEnabled] = useState(false);
   const [particles, setParticles] = useState([]);
 
   // Generate floating particles
@@ -41,13 +42,14 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
     document.body.style.overflow = 'auto';
   }, []);
 
-  // Load selected categories and game mode from Firebase
+  // Load selected categories, game mode, and drawing board setting from Firebase
   useEffect(() => {
     if (!database || !lobbyId) return;
 
     const { ref, onValue } = database;
     const categoriesRef = ref(database.db, `lobbies/${lobbyId}/selectedCategories`);
     const gameModeRef = ref(database.db, `lobbies/${lobbyId}/inTheDarkMode`);
+    const drawingBoardRef = ref(database.db, `lobbies/${lobbyId}/drawingBoardEnabled`);
 
     const unsubscribeCategories = onValue(categoriesRef, (snapshot) => {
       const data = snapshot.val();
@@ -63,9 +65,17 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
       }
     });
 
+    const unsubscribeDrawingBoard = onValue(drawingBoardRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data !== null) {
+        setDrawingBoardEnabled(data);
+      }
+    });
+
     return () => {
       unsubscribeCategories();
       unsubscribeGameMode();
+      unsubscribeDrawingBoard();
     };
   }, [database, lobbyId]);
 
@@ -102,6 +112,18 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
       const { ref, set } = database;
       const gameModeRef = ref(database.db, `lobbies/${lobbyId}/inTheDarkMode`);
       await set(gameModeRef, newMode);
+    }
+  };
+
+  const toggleDrawingBoard = async () => {
+    const newEnabled = !drawingBoardEnabled;
+    setDrawingBoardEnabled(newEnabled);
+
+    // Save to Firebase
+    if (database && lobbyId) {
+      const { ref, set } = database;
+      const drawingBoardRef = ref(database.db, `lobbies/${lobbyId}/drawingBoardEnabled`);
+      await set(drawingBoardRef, newEnabled);
     }
   };
 
@@ -329,6 +351,52 @@ export default function SettingsPage({ onBack, database, lobbyId }) {
               <div
                 onClick={toggleInTheDarkMode}
                 className={`toggle-switch ${inTheDarkMode ? 'active' : ''}`}
+              >
+                <div className="toggle-slider" />
+              </div>
+            </div>
+          </div>
+
+          {/* Drawing Board Toggle */}
+          <div style={{
+            width: '100%',
+            background: 'rgba(255, 255, 255, 0.15)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '30px',
+            border: '2px solid rgba(255, 255, 255, 0.3)',
+            padding: '2rem 2rem',
+            boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '1rem'
+            }}>
+              <div style={{ flex: 1 }}>
+                <h2 style={{
+                  color: 'white',
+                  fontSize: '1.5rem',
+                  fontWeight: '600',
+                  marginBottom: '0.5rem',
+                  textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
+                }}>
+                  🎨 Tableau de Dessin
+                </h2>
+                <p style={{
+                  color: 'rgba(255, 255, 255, 0.85)',
+                  fontSize: '0.95rem',
+                  lineHeight: '1.5'
+                }}>
+                  Afficher un tableau collaboratif pour dessiner pendant le jeu
+                </p>
+              </div>
+              <div
+                onClick={toggleDrawingBoard}
+                className={`toggle-switch ${drawingBoardEnabled ? 'active' : ''}`}
               >
                 <div className="toggle-slider" />
               </div>
