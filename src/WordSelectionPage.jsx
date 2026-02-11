@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { RotateCw, Play } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { RotateCw, Play, Trash2 } from 'lucide-react';
 
 // Shortened word categories for context limits
 const wordCategories = {
@@ -870,6 +870,12 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
   const [lastGeneratedAt, setLastGeneratedAt] = useState(null);
   const [hasVoted, setHasVoted] = useState(false);
   
+  // Drawing pad state
+  const canvasRef = useRef(null);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [currentColor, setCurrentColor] = useState('#ffffff');
+  const drawingTimeoutRef = useRef(null);
+  
   const sortedPlayers = [...players].sort((a, b) => a.joinedAt - b.joinedAt);
   const isFirstPlayer = sortedPlayers.length > 0 && currentUser && sortedPlayers[0].id === currentUser.firebaseId;
   const isImposter = currentUser && imposterId && currentUser.firebaseId === imposterId;
@@ -961,6 +967,127 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     return () => unsub();
   }, [database, lobbyId, players, selectedCategories, categoriesLoaded, lastGeneratedAt]);
 
+  // Drawing pad - sync canvas data
+  useEffect(() => {
+    if (!database || !lobbyId || !canvasRef.current) return;
+    
+    const { ref, onValue } = database;
+    const drawingRef = ref(database.db, `lobbies/${lobbyId}/drawing`);
+    
+    const unsub = onValue(drawingRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data && data.imageData) {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.onload = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0);
+        };
+        img.src = data.imageData;
+      }
+    });
+    
+    return () => unsub();
+  }, [database, lobbyId]);
+
+  // Initialize canvas
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    
+    // Set canvas size
+    canvas.width = 600;
+    canvas.height = 400;
+    
+    // Set background
+    ctx.fillStyle = 'rgba(30, 41, 59, 0.95)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }, []);
+
+  const getCoordinates = (e) => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
+    if (e.touches && e.touches[0]) {
+      return {
+        x: (e.touches[0].clientX - rect.left) * scaleX,
+        y: (e.touches[0].clientY - rect.top) * scaleY
+      };
+    }
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY
+    };
+  };
+
+  const startDrawing = (e) => {
+    e.preventDefault();
+    setIsDrawing(true);
+    const { x, y } = getCoordinates(e);
+    const ctx = canvasRef.current.getContext('2d');
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  };
+
+  const draw = (e) => {
+    if (!isDrawing) return;
+    e.preventDefault();
+    
+    const { x, y } = getCoordinates(e);
+    const ctx = canvasRef.current.getContext('2d');
+    
+    ctx.strokeStyle = currentColor;
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    
+    // Debounced sync to Firebase
+    if (drawingTimeoutRef.current) {
+      clearTimeout(drawingTimeoutRef.current);
+    }
+    
+    drawingTimeoutRef.current = setTimeout(() => {
+      syncCanvas();
+    }, 100);
+  };
+
+  const stopDrawing = () => {
+    if (isDrawing) {
+      setIsDrawing(false);
+      syncCanvas();
+    }
+  };
+
+  const syncCanvas = async () => {
+    if (!database || !lobbyId || !canvasRef.current) return;
+    
+    const { ref, set } = database;
+    const drawingRef = ref(database.db, `lobbies/${lobbyId}/drawing`);
+    const imageData = canvasRef.current.toDataURL();
+    
+    await set(drawingRef, {
+      imageData,
+      updatedAt: Date.now()
+    });
+  };
+
+  const clearCanvas = async () => {
+    if (!canvasRef.current) return;
+    
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'rgba(30, 41, 59, 0.95)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    await syncCanvas();
+  };
+
   const handleRefresh = async () => {
     if (!database || !lobbyId || isRefreshing) return;
     setIsRefreshing(true);
@@ -1009,6 +1136,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
   const displayWord = (isImposter && inTheDarkMode) ? imposterWord : generatedWord;
   const showHintOnly = isImposter && !inTheDarkMode;
 
+  const colors = ['#ffffff', '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
+
   return (
     <>
       <style>{`
@@ -1033,6 +1162,17 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
         .player-card { transition: all 0.3s ease; }
         .player-card:not(.disabled):hover { transform: translateX(5px); }
         .cover-fade-out { animation: fadeOut 0.5s ease-out forwards; }
+        .color-btn { 
+          transition: all 0.2s ease; 
+          cursor: pointer;
+        }
+        .color-btn:hover { 
+          transform: scale(1.1); 
+        }
+        .color-btn.active {
+          transform: scale(1.2);
+          box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+        }
       `}</style>
       
       {showCover && (
@@ -1132,6 +1272,91 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                 )}
               </>
             )}
+          </div>
+
+          {/* Drawing Pad */}
+          <div style={{
+            width: '100%', background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(20px)',
+            borderRadius: '30px', border: '2px solid rgba(255, 255, 255, 0.3)',
+            padding: '1.5rem', boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3)'
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              marginBottom: '1rem'
+            }}>
+              <h2 style={{
+                color: 'white', fontSize: '1.25rem', fontWeight: '600',
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
+              }}>
+                🎨 Tableau de Dessin
+              </h2>
+              
+              <button onClick={clearCanvas} className="btn-hover"
+                style={{
+                  background: 'rgba(239, 68, 68, 0.8)', 
+                  backdropFilter: 'blur(10px)',
+                  border: '2px solid rgba(255, 255, 255, 0.4)', 
+                  borderRadius: '12px',
+                  padding: '0.5rem 1rem',
+                  cursor: 'pointer',
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '0.5rem',
+                  color: 'white',
+                  fontWeight: '600',
+                  fontSize: '0.9rem'
+                }}>
+                <Trash2 size={18} />
+                Effacer
+              </button>
+            </div>
+
+            {/* Color palette */}
+            <div style={{ 
+              display: 'flex', 
+              gap: '0.75rem', 
+              marginBottom: '1rem',
+              justifyContent: 'center'
+            }}>
+              {colors.map(color => (
+                <div
+                  key={color}
+                  className={`color-btn ${currentColor === color ? 'active' : ''}`}
+                  onClick={() => setCurrentColor(color)}
+                  style={{
+                    width: '35px',
+                    height: '35px',
+                    borderRadius: '50%',
+                    backgroundColor: color,
+                    border: '3px solid rgba(255, 255, 255, 0.5)',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                  }}
+                />
+              ))}
+            </div>
+
+            <canvas
+              ref={canvasRef}
+              onMouseDown={startDrawing}
+              onMouseMove={draw}
+              onMouseUp={stopDrawing}
+              onMouseLeave={stopDrawing}
+              onTouchStart={startDrawing}
+              onTouchMove={draw}
+              onTouchEnd={stopDrawing}
+              style={{
+                width: '100%',
+                height: 'auto',
+                maxHeight: '400px',
+                border: '3px solid rgba(255, 255, 255, 0.4)',
+                borderRadius: '15px',
+                cursor: 'crosshair',
+                touchAction: 'none',
+                display: 'block'
+              }}
+            />
           </div>
 
           <div style={{

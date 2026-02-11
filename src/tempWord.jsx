@@ -1,201 +1,123 @@
-import { useState, useEffect } from 'react';
-import { RotateCw, Play } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { RotateCw, Play, Trash2 } from 'lucide-react';
 
-// Word categories directly in the file
+// Shortened word categories for context limits
 const wordCategories = {
   animals: [
-    { word: 'Chat', hint: 'Indépendant' },
-    { word: 'Chien', hint: 'Loyal' },
-    { word: 'Lion', hint: 'Fierté' },
-    { word: 'Tigre', hint: 'Solitaire' },
-    { word: 'Éléphant', hint: 'Savane' },
-    { word: 'Girafe', hint: 'Hauteur' },
-    { word: 'Zèbre', hint: 'Rayures' },
-    { word: 'Cheval', hint: 'Galop' },
-    { word: 'Vache', hint: 'Élevage' },
-    { word: 'Mouton', hint: 'Troupeau' },
-    { word: 'Chèvre', hint: 'Cornes' },
-    { word: 'Cochon', hint: 'Ferme' },
-    { word: 'Lapin', hint: 'Rapide' },
-    { word: 'Hamster', hint: 'Roue' },
-    { word: 'Souris', hint: 'Discret' },
-    { word: 'Rat', hint: 'Égout' },
-    { word: 'Écureuil', hint: 'Gland' },
-    { word: 'Ours', hint: 'Hibernation' },
-    { word: 'Loup', hint: 'Meute' },
-    { word: 'Renard', hint: 'Ruse' },
-    { word: 'Cerf', hint: 'Bois' },
-    { word: 'Biche', hint: 'Forêt' },
-    { word: 'Sanglier', hint: 'Défense' },
-    { word: 'Blaireau', hint: 'Terrier' },
-    { word: 'Hérisson', hint: 'Piquant' },
-    { word: 'Chauve-souris', hint: 'Nuit' },
+    { word: 'Loutre', hint: 'Joueuse' },
+    { word: 'Puma', hint: 'Montagne' },
+    { word: 'Guépard', hint: 'Sprint' },
+    { word: 'Hyène', hint: 'Charognard' },
+    { word: 'Okapi', hint: 'Rayé' },
+    { word: 'Tapir', hint: 'Museau' },
+    { word: 'Wombat', hint: 'Terrier' },
+    { word: 'Ornithorynque', hint: 'Étrange' },
+    { word: 'Fennec', hint: 'Oreilles' },
+    { word: 'Suricate', hint: 'Sentinelle' },
 
-    { word: 'Dauphin', hint: 'Intelligent' },
-    { word: 'Baleine', hint: 'Géant' },
-    { word: 'Requin', hint: 'Prédateur' },
-    { word: 'Poisson', hint: 'Eau' },
-    { word: 'Anguille', hint: 'Glissant' },
-    { word: 'Méduse', hint: 'Transparente' },
-    { word: 'Crabe', hint: 'Latéral' },
-    { word: 'Homard', hint: 'Carapace' },
-    { word: 'Crevette', hint: 'Rose' },
-    { word: 'Pieuvre', hint: 'Stratégie' },
-    { word: 'Calmar', hint: 'Encre' },
+    { word: 'Narval', hint: 'Défense' },
+    { word: 'Lamantin', hint: 'Paisible' },
+    { word: 'Espadon', hint: 'Épée' },
+    { word: 'Raie', hint: 'Aplatie' },
+    { word: 'Murène', hint: 'Cachette' },
+    { word: 'Esturgeon', hint: 'Ancien' },
+    { word: 'Hippocampe', hint: 'Dressé' },
 
-    { word: 'Tortue', hint: 'Lenteur' },
-    { word: 'Serpent', hint: 'Silencieux' },
-    { word: 'Lézard', hint: 'Solaire' },
-    { word: 'Iguane', hint: 'Tropical' },
-    { word: 'Crocodile', hint: 'Immobilité' },
-    { word: 'Alligator', hint: 'Marais' },
-    { word: 'Grenouille', hint: 'Amphibien' },
-    { word: 'Crapaud', hint: 'Terrestre' },
-    { word: 'Salamandre', hint: 'Humide' },
+    { word: 'Caméléon', hint: 'Couleurs' },
+    { word: 'Gecko', hint: 'Adhérence' },
+    { word: 'Boa', hint: 'Constriction' },
+    { word: 'Varan', hint: 'Massif' },
+    { word: 'Anaconda', hint: 'Étouffement' },
 
-    { word: 'Papillon', hint: 'Métamorphose' },
-    { word: 'Abeille', hint: 'Colonie' },
-    { word: 'Guêpe', hint: 'Piqûre' },
-    { word: 'Fourmi', hint: 'Travail' },
-    { word: 'Coccinelle', hint: 'Points' },
-    { word: 'Scarabée', hint: 'Carapace' },
-    { word: 'Moustique', hint: 'Nuisible' },
-    { word: 'Araignée', hint: 'Patience' },
-    { word: 'Scorpion', hint: 'Dard' },
+    { word: 'Luciole', hint: 'Lumière' },
+    { word: 'Mante', hint: 'Patience' },
+    { word: 'Phasme', hint: 'Camouflage' },
+    { word: 'Cigale', hint: 'Chant' },
+    { word: 'Bourdon', hint: 'Vrombissement' },
+    { word: 'Termite', hint: 'Colonie' },
 
-    { word: 'Pigeon', hint: 'Urbain' },
-    { word: 'Moineau', hint: 'Chant' },
-    { word: 'Aigle', hint: 'Altitude' },
-    { word: 'Faucon', hint: 'Vitesse' },
-    { word: 'Hibou', hint: 'Nocturne' },
-    { word: 'Chouette', hint: 'Nuit' },
-    { word: 'Corbeau', hint: 'Noir' },
-    { word: 'Perroquet', hint: 'Imitation' },
-    { word: 'Pingouin', hint: 'Froid' },
-    { word: 'Manchot', hint: 'Antarctique' },
-    { word: 'Autruche', hint: 'Rapide' },
-    { word: 'Paon', hint: 'Plumes' },
-    { word: 'Cygne', hint: 'Élégant' },
-    { word: 'Canard', hint: 'Étang' },
-    { word: 'Oie', hint: 'Bruyante' },
-    { word: 'Flamant', hint: 'Rose' },
+    { word: 'Pélican', hint: 'Bec' },
+    { word: 'Albatros', hint: 'Océan' },
+    { word: 'Martin-pêcheur', hint: 'Plongée' },
+    { word: 'Toucan', hint: 'Coloré' },
+    { word: 'Cormoran', hint: 'Plongeur' },
+    { word: 'Héron', hint: 'Immobilité' },
 
-    { word: 'Rhinocéros', hint: 'Massif' },
-    { word: 'Hippopotame', hint: 'Aquatique' },
-    { word: 'Singe', hint: 'Agilité' },
+    { word: 'Yak', hint: 'Altitude' },
+    { word: 'Bison', hint: 'Plaine' },
+    { word: 'Antilope', hint: 'Bond' },
+    { word: 'Gazelle', hint: 'Agile' },
+    { word: 'Mouflon', hint: 'Montagnard' },
+    { word: 'Caribou', hint: 'Migration' },
 
-    { word: 'Kangourou', hint: 'Australie' },
-    { word: 'Koala', hint: 'Eucalyptus' },
-    { word: 'Panda', hint: 'Bambou' },
-    { word: 'Chameau', hint: 'Désert' },
-    { word: 'Lama', hint: 'Andes' }
+    { word: 'Lynx', hint: 'Discret' },
+    { word: 'Zibeline', hint: 'Fourrure' },
+    { word: 'Glouton', hint: 'Vorace' },
+    { word: 'Ocelot', hint: 'Tacheté' }
   ],
 
   food: [
-    { word: 'Pomme', hint: 'Fruit' },
-    { word: 'Poire', hint: 'Juteux' },
-    { word: 'Banane', hint: 'Énergie' },
-    { word: 'Orange', hint: 'Agrume' },
-    { word: 'Citron', hint: 'Acide' },
-    { word: 'Mandarine', hint: 'Sucré' },
-    { word: 'Clémentine', hint: 'Hiver' },
-    { word: 'Fraise', hint: 'Dessert' },
-    { word: 'Framboise', hint: 'Baie' },
-    { word: 'Myrtille', hint: 'Antioxydant' },
-    { word: 'Mûre', hint: 'Sauvage' },
-    { word: 'Cerise', hint: 'Noyau' },
-    { word: 'Abricot', hint: 'Été' },
-    { word: 'Pêche', hint: 'Duvet' },
-    { word: 'Nectarine', hint: 'Lisse' },
-    { word: 'Prune', hint: 'Compote' },
-    { word: 'Raisin', hint: 'Grappe' },
-    { word: 'Melon', hint: 'Frais' },
-    { word: 'Pastèque', hint: 'Hydratant' },
-    { word: 'Ananas', hint: 'Tropical' },
-    { word: 'Mangue', hint: 'Exotique' },
-    { word: 'Kiwi', hint: 'Acide' },
-    { word: 'Figue', hint: 'Méditerranée' },
-    { word: 'Datte', hint: 'Sèche' },
-    { word: 'Olive', hint: 'Huile' },
+    { word: 'Grenade', hint: 'Graines' },
+    { word: 'Litchi', hint: 'Coque' },
+    { word: 'Papaye', hint: 'Digestif' },
+    { word: 'Goyave', hint: 'Parfumée' },
+    { word: 'Kaki', hint: 'Mûr' },
+    { word: 'Coing', hint: 'Gelée' },
+    { word: 'Cassis', hint: 'Acide' },
+    { word: 'Physalis', hint: 'Enveloppe' },
+    { word: 'Carambole', hint: 'Étoile' },
+    { word: 'Tamarin', hint: 'Aigre' },
 
-    { word: 'Pain', hint: 'Boulangerie' },
-    { word: 'Baguette', hint: 'Français' },
-    { word: 'Croissant', hint: 'Beurre' },
-    { word: 'Brioche', hint: 'Moelleux' },
-    { word: 'Focaccia', hint: 'Italien' },
-    { word: 'Pita', hint: 'Plat' },
-    { word: 'Tortilla', hint: 'Maïs' },
+    { word: 'Bagel', hint: 'Anneau' },
+    { word: 'Ciabatta', hint: 'Alvéolée' },
+    { word: 'Naan', hint: 'Chaud' },
+    { word: 'Chapati', hint: 'Fin' },
+    { word: 'Bretzel', hint: 'Torsadé' },
 
-    { word: 'Fromage', hint: 'Laitier' },
-    { word: 'Camembert', hint: 'Affinage' },
-    { word: 'Brie', hint: 'Doux' },
-    { word: 'Roquefort', hint: 'Cave' },
-    { word: 'Comté', hint: 'Montagne' },
-    { word: 'Emmental', hint: 'Fondue' },
-    { word: 'Gruyère', hint: 'Fondant' },
-    { word: 'Parmesan', hint: 'Râpé' },
-    { word: 'Chèvre', hint: 'Frais' },
-    { word: 'Mozzarella', hint: 'Filant' },
+    { word: 'Ricotta', hint: 'Crémeux' },
+    { word: 'Gorgonzola', hint: 'Persillé' },
+    { word: 'Pecorino', hint: 'Brebis' },
+    { word: 'Mascarpone', hint: 'Lisse' },
+    { word: 'Feta', hint: 'Salée' },
 
-    { word: 'Lait', hint: 'Boisson' },
-    { word: 'Beurre', hint: 'Gras' },
-    { word: 'Crème', hint: 'Épais' },
-    { word: 'Yaourt', hint: 'Fermenté' },
-    { word: 'Œuf', hint: 'Cuisine' },
+    { word: 'Kéfir', hint: 'Fermentation' },
+    { word: 'Lait ribot', hint: 'Breton' },
+    { word: 'Ayran', hint: 'Salé' },
 
-    { word: 'Riz', hint: 'Céréale' },
-    { word: 'Pâtes', hint: 'Blé' },
-    { word: 'Quinoa', hint: 'Graine' },
-    { word: 'Semoule', hint: 'Fine' },
-    { word: 'Couscous', hint: 'Maghreb' },
-    { word: 'Lentilles', hint: 'Protéines' },
-    { word: 'Pois', hint: 'Légumineuse' },
-    { word: 'Haricots', hint: 'Secs' },
-    { word: 'Pois chiches', hint: 'Légumineuse' },
+    { word: 'Boulgour', hint: 'Concassé' },
+    { word: 'Sarrasin', hint: 'Rustique' },
+    { word: 'Millet', hint: 'Ancien' },
+    { word: 'Orge', hint: 'Céréale' },
+    { word: 'Seigle', hint: 'Dense' },
 
-    { word: 'Poulet', hint: 'Volaille' },
-    { word: 'Bœuf', hint: 'Grillade' },
-    { word: 'Porc', hint: 'Charcuterie' },
-    { word: 'Agneau', hint: 'Tendre' },
-    { word: 'Dinde', hint: 'Fête' },
-    { word: 'Jambon', hint: 'Salé' },
-    { word: 'Saucisse', hint: 'Grillade' },
-    { word: 'Steak', hint: 'Grill' },
+    { word: 'Canard', hint: 'Confit' },
+    { word: 'Veau', hint: 'Blanc' },
+    { word: 'Lapereau', hint: 'Tendre' },
 
-    { word: 'Saumon', hint: 'Gravlax' },
-    { word: 'Thon', hint: 'Conserve' },
-    { word: 'Cabillaud', hint: 'Poisson' },
-    { word: 'Sardine', hint: 'Méditerranée' },
-    { word: 'Maquereau', hint: 'Fumé' },
+    { word: 'Truite', hint: 'Rivière' },
+    { word: 'Lieu', hint: 'Blanc' },
+    { word: 'Bar', hint: 'Marin' },
+    { word: 'Sole', hint: 'Fine' },
 
-    { word: 'Carotte', hint: 'Racine' },
-    { word: 'Pomme de terre', hint: 'Accompagnement' },
-    { word: 'Tomate', hint: 'Cuisine' },
-    { word: 'Concombre', hint: 'Frais' },
-    { word: 'Courgette', hint: 'Été' },
-    { word: 'Aubergine', hint: 'Grillée' },
-    { word: 'Poivron', hint: 'Croquant' },
-    { word: 'Oignon', hint: 'Piquant' },
-    { word: 'Ail', hint: 'Arôme' },
-    { word: 'Échalote', hint: 'Subtil' },
-    { word: 'Salade', hint: 'Feuille' },
-    { word: 'Épinard', hint: 'Feuille' },
+    { word: 'Betterave', hint: 'Terreux' },
+    { word: 'Fenouil', hint: 'Anisé' },
+    { word: 'Navet', hint: 'Doux' },
+    { word: 'Chou-fleur', hint: 'Blanc' },
+    { word: 'Panais', hint: 'Ancien' },
+    { word: 'Topinambour', hint: 'Oublié' },
 
-    { word: 'Sucre', hint: 'Doux' },
-    { word: 'Sel', hint: 'Salé' },
-    { word: 'Poivre', hint: 'Épice' },
-    { word: 'Miel', hint: 'Naturel' },
-    { word: 'Huile', hint: 'Cuisson' },
-    { word: 'Vinaigre', hint: 'Acide' },
+    { word: 'Cumin', hint: 'Chaud' },
+    { word: 'Curcuma', hint: 'Jaune' },
+    { word: 'Paprika', hint: 'Fumé' },
+    { word: 'Cannelle', hint: 'Sucrée' },
 
-    { word: 'Chocolat', hint: 'Cacao' },
-    { word: 'Biscuit', hint: 'Sec' },
-    { word: 'Gâteau', hint: 'Dessert' },
-    { word: 'Tarte', hint: 'Four' },
-    { word: 'Crêpe', hint: 'Garniture' },
-    { word: 'Glace', hint: 'Froid' }
+    { word: 'Brownie', hint: 'Dense' },
+    { word: 'Clafoutis', hint: 'Four' },
+    { word: 'Sorbet', hint: 'Glacé' },
+    { word: 'Panna cotta', hint: 'Italien' },
+    { word: 'Financier', hint: 'Amande' }
   ],
-  
+
   objects: [
     { word: 'Table', hint: 'Surface' },
     { word: 'Chaise', hint: 'Posture' },
@@ -748,6 +670,8 @@ const wordCategories = {
 
     { word: 'Tony Parker', hint: 'NBA' },
     { word: 'Teddy Riner', hint: 'Judo' },
+
+    { word: 'Jeff', hint: 'Spécial'}
   ],
 
   brands: [
@@ -817,171 +741,384 @@ const wordCategories = {
     { word: 'YouTube', hint: 'Vidéo' },
     { word: 'Netflix', hint: 'Streaming' },
     { word: 'Disney+', hint: 'Films' },
+  ],
+
+  fictionalCharacters: [
+    // Dessins animés / Animation
+    { word: 'Garfield', hint: 'Lazagne' },
+    { word: 'Scooby-Doo', hint: 'Mystère' },
+    { word: 'Winnie l’Ourson', hint: 'Miel' },
+    { word: 'Mickey Mouse', hint: 'Icône' },
+    { word: 'Donald Duck', hint: 'Colère' },
+    { word: 'Bugs Bunny', hint: 'Carotte' },
+    { word: 'Homer Simpson', hint: 'Donut' },
+    { word: 'Bart Simpson', hint: 'Bêtise' },
+
+    // Films / Sagas
+    { word: 'Dark Vador', hint: 'Respiration' },
+    { word: 'Luke Skywalker', hint: 'Héritage' },
+    { word: 'Yoda', hint: 'Sagesse' },
+    { word: 'Harry Potter', hint: 'Sortilège' },
+    { word: 'Gandalf', hint: 'Guide' },
+    { word: 'Indiana Jones', hint: 'Artefact' },
+    { word: 'James Bond', hint: 'Espion' },
+    { word: 'Jack Sparrow', hint: 'Rhum' },
+
+    // Super-héros
+    { word: 'Batman', hint: 'Nuit' },
+    { word: 'Superman', hint: 'Invincible' },
+    { word: 'Spider-Man', hint: 'Agilité' },
+    { word: 'Iron Man', hint: 'Armure' },
+    { word: 'Captain America', hint: 'Bouclier' },
+    { word: 'Hulk', hint: 'Colère' },
+    { word: 'Wonder Woman', hint: 'Amazone' },
+
+    // Jeux vidéo
+    { word: 'Mario', hint: 'Plombier' },
+    { word: 'Luigi', hint: 'Ombre' },
+    { word: 'Sonic', hint: 'Vitesse' },
+    { word: 'Pikachu', hint: 'Électricité' },
+
+    // Séries / autres
+    { word: 'Sherlock Holmes', hint: 'Déduction' },
+
+    // Classiques
+    { word: 'Peter Pan', hint: 'Enfance' },
+    { word: 'Pinocchio', hint: 'Mensonge' },
+    { word: 'Le Petit Prince', hint: 'Planète' },
+
+    { word: 'Shrek', hint: 'Marais' },
+    { word: 'Kung Fu Panda', hint: 'Paix' },
+    { word: 'Simba', hint: 'Destin' },
+    { word: 'Scar', hint: 'Trahison' },
+    { word: 'Buzz l’Éclair', hint: 'Infini' },
+    { word: 'Woody', hint: 'Cowboy' },
+    { word: 'Nemo', hint: 'Océan' },
+    { word: 'Dory', hint: 'Mémoire' },
+
+    // Films / séries cultes
+    { word: 'Terminator', hint: 'Futur' },
+    { word: 'Rocky Balboa', hint: 'Persévérance' },
+    { word: 'Forrest Gump', hint: 'Course' },
+
+    // Classiques supplémentaires
+    { word: 'Dracula', hint: 'Immortel' },
+    { word: 'Frankenstein', hint: 'Créature' },
+    { word: 'Zorro', hint: 'Masque' },
+    { word: 'Tarzan', hint: 'Jungle' },
+    { word: 'Hercule', hint: 'Force' },
+    { word: 'Achille', hint: 'Faiblesse' },
+    { word: 'Ulysse', hint: 'Voyage' },
+
+    { word: 'Olaf', hint: 'Été' },
+    { word: 'Aladdin', hint: 'Vœux' },
+    { word: 'Mulan', hint: 'Honneur' },
+    { word: 'Stitch', hint: 'Ohana' },
+    { word: 'Wall-E', hint: 'Solitude' },
+    { word: 'Ratatouille', hint: 'Cuisine' },
+
+    // Star Wars (encore)
+    { word: 'Chewbacca', hint: 'Loyal' },
+    { word: 'R2-D2', hint: 'Astromech' },
+
+    // Jeux vidéo (encore)
+    { word: 'Donkey Kong', hint: 'Jungle' },
+    { word: 'Bowser', hint: 'Rivalité' },
+
+    // Classiques universels
+    { word: 'Robin des Bois', hint: 'Justice' },
+    { word: 'Le Chat Botté', hint: 'Ruse' },
+    { word: 'Cendrillon', hint: 'Minuit' },
+    { word: 'Blanche-Neige', hint: 'Pomme' },
+    { word: 'La Belle et la Bête', hint: 'Malédiction' },
   ]
 };
 
-function getRandomWord(categories = ['animals', 'food', 'objects', 'places', 'jobs', 'sports', 'countries', 'celebrities', 'brands']) {
+function getRandomWord(categories = ['animals', 'food', 'objects', 'places', 'jobs', 'sports', 'countries', 'celebrities', 'brands', 'fictionalCharacters']) {
   const allWords = [];
-  
-  categories.forEach(category => {
-    if (wordCategories[category]) {
-      wordCategories[category].forEach(item => {
-        allWords.push({ ...item, category });
-      });
+  categories.forEach(c => {
+    if (wordCategories[c]) {
+      wordCategories[c].forEach(item => allWords.push({ ...item, category: c }));
     }
   });
-  
-  if (allWords.length === 0) {
+  return allWords.length > 0 ? allWords[Math.floor(Math.random() * allWords.length)] : { word: 'Pomme', hint: 'Fruit', category: 'food' };
+}
+
+function getRandomWordFromCategory(category) {
+  if (!wordCategories[category] || wordCategories[category].length === 0) {
     return { word: 'Pomme', hint: 'Fruit', category: 'food' };
   }
-  
-  return allWords[Math.floor(Math.random() * allWords.length)];
+  const words = wordCategories[category];
+  const randomWord = words[Math.floor(Math.random() * words.length)];
+  return { ...randomWord, category };
 }
 
 export default function WordSelectionPage({ players = [], currentUser, onConfirm, lobbyId, database, imposterId }) {
   const [particles, setParticles] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [generatedWord, setGeneratedWord] = useState('');
+  const [imposterWord, setImposterWord] = useState('');
   const [hint, setHint] = useState('');
   const [category, setCategory] = useState('');
   const [loading, setLoading] = useState(true);
   const [startingPlayer, setStartingPlayer] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState(['animals', 'food', 'objects']);
+  const [selectedCategories, setSelectedCategories] = useState(['animals', 'food', 'objects', 'places', 'jobs', 'sports', 'countries', 'celebrities', 'brands', 'fictionalCharacters']);
+  const [inTheDarkMode, setInTheDarkMode] = useState(false);
   const [categoriesLoaded, setCategoriesLoaded] = useState(false);
+  const [showCover, setShowCover] = useState(true);
+  const [lastGeneratedAt, setLastGeneratedAt] = useState(null);
+  const [hasVoted, setHasVoted] = useState(false);
   
-  // Sort players by join time to determine host
+  // Drawing pad state
+  const canvasRef = useRef(null);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [currentColor, setCurrentColor] = useState('#ffffff');
+  const drawingTimeoutRef = useRef(null);
+  
   const sortedPlayers = [...players].sort((a, b) => a.joinedAt - b.joinedAt);
-  
-  // Check if current user is the first player (host)
-  const isFirstPlayer = sortedPlayers.length > 0 && currentUser && 
-                        sortedPlayers[0].id === currentUser.firebaseId;
-
-  // Check if current user is the imposter
+  const isFirstPlayer = sortedPlayers.length > 0 && currentUser && sortedPlayers[0].id === currentUser.firebaseId;
   const isImposter = currentUser && imposterId && currentUser.firebaseId === imposterId;
 
-  console.log('===== IMPOSTER CHECK =====');
-  console.log('Current User Firebase ID:', currentUser?.firebaseId);
-  console.log('Imposter ID from props:', imposterId);
-  console.log('Is Imposter:', isImposter);
-  console.log('========================');
-
-  // Generate floating particles
   useEffect(() => {
     const generateParticles = () => {
       const newParticles = [];
       for (let i = 0; i < 20; i++) {
         newParticles.push({
-          id: i,
-          left: Math.random() * 100,
-          size: Math.random() * 4 + 2,
-          duration: Math.random() * 10 + 15,
-          delay: Math.random() * -20,
-          opacity: Math.random() * 0.3 + 0.1
+          id: i, left: Math.random() * 100, size: Math.random() * 4 + 2,
+          duration: Math.random() * 10 + 15, delay: Math.random() * -20, opacity: Math.random() * 0.3 + 0.1
         });
       }
       setParticles(newParticles);
     };
     generateParticles();
-
-    document.body.style.margin = '0';
-    document.body.style.padding = '0';
-    document.body.style.overflow = 'auto';
   }, []);
 
-  // Load selected categories from Firebase
+  // Load settings
   useEffect(() => {
     if (!database || !lobbyId) return;
-
     const { ref, onValue } = database;
+    
     const categoriesRef = ref(database.db, `lobbies/${lobbyId}/selectedCategories`);
+    const gameModeRef = ref(database.db, `lobbies/${lobbyId}/inTheDarkMode`);
 
-    const unsubscribe = onValue(categoriesRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data && Array.isArray(data) && data.length > 0) {
-        setSelectedCategories(data);
-      }
+    const unsubCat = onValue(categoriesRef, (s) => {
+      const d = s.val();
+      if (d && Array.isArray(d) && d.length > 0) setSelectedCategories(d);
       setCategoriesLoaded(true);
     });
 
-    return () => unsubscribe();
+    const unsubMode = onValue(gameModeRef, (s) => {
+      const d = s.val();
+      if (d !== null) setInTheDarkMode(d);
+    });
+
+    return () => { unsubCat(); unsubMode(); };
   }, [database, lobbyId]);
 
-  // Generate and sync word with Firebase
+  // Generate and sync words
   useEffect(() => {
     if (!database || !lobbyId || !categoriesLoaded) return;
-
     const { ref, onValue, set } = database;
     const wordRef = ref(database.db, `lobbies/${lobbyId}/currentWord`);
 
-    const unsubscribe = onValue(wordRef, async (snapshot) => {
-      const wordData = snapshot.val();
-      
-      if (wordData && wordData.word) {
-        setGeneratedWord(wordData.word);
-        setHint(wordData.hint || '');
-        setCategory(wordData.category || '');
-        setStartingPlayer(wordData.startingPlayer || null);
+    const unsub = onValue(wordRef, async (s) => {
+      const d = s.val();
+      if (d && d.word) {
+        // Check if the word was refreshed (new timestamp)
+        if (d.generatedAt && lastGeneratedAt && d.generatedAt !== lastGeneratedAt) {
+          setShowCover(true);
+        }
+        
+        setGeneratedWord(d.word);
+        setImposterWord(d.imposterWord || '');
+        setHint(d.hint || '');
+        setCategory(d.category || '');
+        setStartingPlayer(d.startingPlayer || null);
+        setLastGeneratedAt(d.generatedAt);
         setLoading(false);
         setIsRefreshing(false);
       } else {
-        // Generate random word using getRandomWord function with selected categories
-        const randomWordData = getRandomWord(selectedCategories);
+        const mainWord = getRandomWord(selectedCategories);
         
-        // Select random starting player
-        const randomPlayerIndex = Math.floor(Math.random() * players.length);
-        const randomPlayer = players[randomPlayerIndex];
+        // Generate a different word for imposter from the SAME category
+        let impWord = getRandomWordFromCategory(mainWord.category);
+        let attempts = 0;
+        while (impWord.word === mainWord.word && attempts < 10) {
+          impWord = getRandomWordFromCategory(mainWord.category);
+          attempts++;
+        }
+        
+        const randPlayer = players[Math.floor(Math.random() * players.length)];
+        const timestamp = Date.now();
         
         await set(wordRef, {
-          word: randomWordData.word,
-          hint: randomWordData.hint,
-          category: randomWordData.category,
-          startingPlayer: randomPlayer ? randomPlayer.username : null,
-          generatedAt: Date.now()
+          word: mainWord.word,
+          imposterWord: impWord.word,
+          hint: mainWord.hint,
+          category: mainWord.category,
+          startingPlayer: randPlayer ? randPlayer.username : null,
+          generatedAt: timestamp
         });
         
-        setGeneratedWord(randomWordData.word);
-        setHint(randomWordData.hint);
-        setCategory(randomWordData.category);
-        setStartingPlayer(randomPlayer ? randomPlayer.username : null);
-        setLoading(false);
-        setIsRefreshing(false);
+        setLastGeneratedAt(timestamp);
       }
     });
+    return () => unsub();
+  }, [database, lobbyId, players, selectedCategories, categoriesLoaded, lastGeneratedAt]);
 
-    return () => unsubscribe();
-  }, [database, lobbyId, players, selectedCategories, categoriesLoaded]);
+  // Drawing pad - sync canvas data
+  useEffect(() => {
+    if (!database || !lobbyId || !canvasRef.current) return;
+    
+    const { ref, onValue } = database;
+    const drawingRef = ref(database.db, `lobbies/${lobbyId}/drawing`);
+    
+    const unsub = onValue(drawingRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data && data.imageData) {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.onload = () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0);
+        };
+        img.src = data.imageData;
+      }
+    });
+    
+    return () => unsub();
+  }, [database, lobbyId]);
+
+  // Initialize canvas
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    
+    // Set canvas size
+    canvas.width = 600;
+    canvas.height = 400;
+    
+    // Set background
+    ctx.fillStyle = 'rgba(30, 41, 59, 0.95)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }, []);
+
+  const getCoordinates = (e) => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
+    if (e.touches && e.touches[0]) {
+      return {
+        x: (e.touches[0].clientX - rect.left) * scaleX,
+        y: (e.touches[0].clientY - rect.top) * scaleY
+      };
+    }
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY
+    };
+  };
+
+  const startDrawing = (e) => {
+    e.preventDefault();
+    setIsDrawing(true);
+    const { x, y } = getCoordinates(e);
+    const ctx = canvasRef.current.getContext('2d');
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  };
+
+  const draw = (e) => {
+    if (!isDrawing) return;
+    e.preventDefault();
+    
+    const { x, y } = getCoordinates(e);
+    const ctx = canvasRef.current.getContext('2d');
+    
+    ctx.strokeStyle = currentColor;
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    
+    // Debounced sync to Firebase
+    if (drawingTimeoutRef.current) {
+      clearTimeout(drawingTimeoutRef.current);
+    }
+    
+    drawingTimeoutRef.current = setTimeout(() => {
+      syncCanvas();
+    }, 100);
+  };
+
+  const stopDrawing = () => {
+    if (isDrawing) {
+      setIsDrawing(false);
+      syncCanvas();
+    }
+  };
+
+  const syncCanvas = async () => {
+    if (!database || !lobbyId || !canvasRef.current) return;
+    
+    const { ref, set } = database;
+    const drawingRef = ref(database.db, `lobbies/${lobbyId}/drawing`);
+    const imageData = canvasRef.current.toDataURL();
+    
+    await set(drawingRef, {
+      imageData,
+      updatedAt: Date.now()
+    });
+  };
+
+  const clearCanvas = async () => {
+    if (!canvasRef.current) return;
+    
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'rgba(30, 41, 59, 0.95)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    await syncCanvas();
+  };
 
   const handleRefresh = async () => {
     if (!database || !lobbyId || isRefreshing) return;
-    
     setIsRefreshing(true);
     
     const { ref, set } = database;
     const wordRef = ref(database.db, `lobbies/${lobbyId}/currentWord`);
     const imposterRef = ref(database.db, `lobbies/${lobbyId}/gameState/imposterId`);
     
-    // Generate new random word using selected categories
-    const randomWordData = getRandomWord(selectedCategories);
+    const mainWord = getRandomWord(selectedCategories);
     
-    // Select random starting player
-    const randomPlayerIndex = Math.floor(Math.random() * players.length);
-    const randomPlayer = players[randomPlayerIndex];
+    // Generate a different word for imposter from the SAME category
+    let impWord = getRandomWordFromCategory(mainWord.category);
+    let attempts = 0;
+    while (impWord.word === mainWord.word && attempts < 10) {
+      impWord = getRandomWordFromCategory(mainWord.category);
+      attempts++;
+    }
     
-    // Select random imposter (independently, can be anyone including starting player)
-    const randomImposterIndex = Math.floor(Math.random() * players.length);
-    const randomImposter = players[randomImposterIndex];
+    const randPlayer = players[Math.floor(Math.random() * players.length)];
+    const randImposter = players[Math.floor(Math.random() * players.length)];
     
-    // Update both word and imposter in Firebase
     await set(wordRef, {
-      word: randomWordData.word,
-      hint: randomWordData.hint,
-      category: randomWordData.category,
-      startingPlayer: randomPlayer ? randomPlayer.username : null,
+      word: mainWord.word,
+      imposterWord: impWord.word,
+      hint: mainWord.hint,
+      category: mainWord.category,
+      startingPlayer: randPlayer ? randPlayer.username : null,
       generatedAt: Date.now()
     });
     
-    await set(imposterRef, randomImposter ? randomImposter.id : null);
+    await set(imposterRef, randImposter ? randImposter.id : null);
   };
 
   const handleConfirm = () => {
@@ -989,224 +1126,121 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
       alert('Vous devez choisir un joueur!');
       return;
     }
-    
-    if (onConfirm) {
-      onConfirm({ 
-        selectedPlayer, 
-        word: generatedWord,
-        hint: hint,
-        category: category
-      });
-    }
+    setHasVoted(true);
+    if (onConfirm) onConfirm({ selectedPlayer, word: generatedWord, hint, category });
   };
+
+  const handleReveal = () => setShowCover(false);
+
+  // Display word logic
+  const displayWord = (isImposter && inTheDarkMode) ? imposterWord : generatedWord;
+  const showHintOnly = isImposter && !inTheDarkMode;
+
+  const colors = ['#ffffff', '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
 
   return (
     <>
       <style>{`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-        html, body {
-          margin: 0 !important;
-          padding: 0 !important;
-          width: 100% !important;
-          max-width: 100% !important;
-        }
-        body > div {
-          max-width: 100vw !important;
-        }
-        #root {
-          min-height: 100vh;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         @keyframes drift {
-          0% {
-            transform: translateY(100vh) rotate(0deg);
-            opacity: 0;
-          }
-          10% {
-            opacity: 1;
-          }
-          90% {
-            opacity: 1;
-          }
-          100% {
-            transform: translateY(-100px) rotate(360deg);
-            opacity: 0;
-          }
+          0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
         }
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        @keyframes slideIn {
-          from {
-            opacity: 0;
-            transform: translateX(-30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulse {
-          0%, 100% {
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5), 0 0 40px rgba(239, 68, 68, 0.3);
-          }
-          50% {
-            box-shadow: 0 0 30px rgba(239, 68, 68, 0.7), 0 0 60px rgba(239, 68, 68, 0.5);
-          }
+          0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.5), 0 0 40px rgba(239, 68, 68, 0.3); }
+          50% { box-shadow: 0 0 30px rgba(239, 68, 68, 0.7), 0 0 60px rgba(239, 68, 68, 0.5); }
         }
-        .btn-hover {
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        @keyframes fadeOut { from { opacity: 1; visibility: visible; } to { opacity: 0; visibility: hidden; } }
+        @keyframes scaleUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .btn-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); }
+        .btn-hover:disabled:hover { transform: none; }
+        .player-card { transition: all 0.3s ease; }
+        .player-card:not(.disabled):hover { transform: translateX(5px); }
+        .cover-fade-out { animation: fadeOut 0.5s ease-out forwards; }
+        .color-btn { 
+          transition: all 0.2s ease; 
+          cursor: pointer;
         }
-        .btn-hover:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        .color-btn:hover { 
+          transform: scale(1.1); 
         }
-        .btn-hover:active {
-          transform: translateY(0);
-        }
-        .player-card {
-          transition: all 0.3s ease;
-        }
-        .player-card:not(.disabled):hover {
-          transform: translateX(5px);
+        .color-btn.active {
+          transform: scale(1.2);
+          box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
         }
       `}</style>
       
+      {showCover && (
+        <div onClick={handleReveal} className={!showCover ? 'cover-fade-out' : ''}
+          style={{
+            position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+            background: 'linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            zIndex: 9999, cursor: 'pointer'
+          }}>
+          <div style={{ textAlign: 'center', animation: 'scaleUp 0.6s ease-out', padding: '2rem' }}>
+            <div style={{ fontSize: '5rem', marginBottom: '2rem', filter: 'drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3))' }}>🔒</div>
+            <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '1.25rem', marginBottom: '3rem', maxWidth: '500px', margin: '0 auto 3rem auto' }}>
+              👆 Cliquez n'importe où pour révéler
+            </p>
+          </div>
+        </div>
+      )}
+      
       <div style={{ 
-        minHeight: '100vh', 
-        width: '100vw',
-        margin: '0',
-        background: isImposter 
-          ? 'linear-gradient(135deg, #dc2626 0%, #991b1b 50%, #7f1d1d 100%)'
-          : 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center', 
-        padding: '2rem', 
-        paddingBottom: '3rem', 
-        boxSizing: 'border-box', 
-        position: 'relative',
-        overflow: 'hidden'
+        minHeight: '100vh', width: '100vw', margin: '0',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', 
+        display: 'flex', flexDirection: 'column', alignItems: 'center', 
+        padding: '2rem', paddingBottom: '3rem', boxSizing: 'border-box', position: 'relative', overflow: 'hidden'
       }}>
         
-        {/* Floating Particles */}
-        {particles.map(particle => (
-          <div
-            key={particle.id}
-            style={{
-              position: 'absolute',
-              left: `${particle.left}%`,
-              bottom: '-20px',
-              width: `${particle.size}px`,
-              height: `${particle.size}px`,
-              borderRadius: '50%',
-              backgroundColor: `rgba(255, 255, 255, ${particle.opacity})`,
-              animation: `drift ${particle.duration}s linear ${particle.delay}s infinite`,
-              pointerEvents: 'none'
-            }}
-          />
+        {particles.map(p => (
+          <div key={p.id} style={{
+            position: 'absolute', left: `${p.left}%`, bottom: '-20px', width: `${p.size}px`, height: `${p.size}px`,
+            borderRadius: '50%', backgroundColor: `rgba(255, 255, 255, ${p.opacity})`,
+            animation: `drift ${p.duration}s linear ${p.delay}s infinite`, pointerEvents: 'none'
+          }} />
         ))}
         
-        {/* Main Container */}
         <div style={{ 
-          width: '100%', 
-          maxWidth: '600px', 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center', 
-          gap: '2rem', 
-          position: 'relative', 
-          zIndex: 10, 
-          marginTop: '2rem',
-          animation: 'fadeInUp 0.6s ease-out'
+          width: '100%', maxWidth: '600px', display: 'flex', flexDirection: 'column', alignItems: 'center', 
+          gap: '2rem', position: 'relative', zIndex: 10, marginTop: '2rem', animation: 'fadeInUp 0.6s ease-out'
         }}>
         
-          {/* Title */}
           <h1 style={{
-            textAlign: 'center',
-            color: 'white',
-            fontSize: '2rem',
-            fontWeight: '700',
-            textShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
-            marginBottom: '-1rem'
+            textAlign: 'center', color: 'white', fontSize: '2rem', fontWeight: '700',
+            textShadow: '0 4px 15px rgba(0, 0, 0, 0.3)', marginBottom: '-1rem'
           }}>
-            {isImposter ? '🎭 Vous êtes l\'Imposteur!' : '🎯 Votre Mot'}
+            {showHintOnly ? '😈 Vous êtes l\'Imposteur!' : '🎯 Votre Mot'}
           </h1>
 
-          {/* Generated Word Card */}
           <div style={{
-            width: '100%',
-            padding: '2.5rem 2rem',
-            background: isImposter 
-              ? 'linear-gradient(135deg, rgba(220, 38, 38, 0.3) 0%, rgba(153, 27, 27, 0.3) 100%)'
-              : 'rgba(255, 255, 255, 0.2)',
+            width: '100%', padding: '2.5rem 2rem',
+            background: 'rgba(255, 255, 255, 0.2)',
             backdropFilter: 'blur(20px)',
-            border: isImposter 
-              ? '3px solid rgba(239, 68, 68, 0.6)'
-              : '3px solid rgba(255, 255, 255, 0.4)',
-            borderRadius: '30px',
-            textAlign: 'center',
-            fontSize: '2rem',
-            fontWeight: '700',
-            color: 'white',
-            minHeight: '200px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '1rem',
-            position: 'relative',
-            boxShadow: isImposter 
-              ? '0 15px 40px rgba(220, 38, 38, 0.4)'
-              : '0 15px 40px rgba(0, 0, 0, 0.3)',
-            animation: isImposter ? 'pulse 2s infinite' : 'none'
+            border: '3px solid rgba(255, 255, 255, 0.4)',
+            borderRadius: '30px', textAlign: 'center', fontSize: '2rem', fontWeight: '700', color: 'white',
+            minHeight: '200px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            gap: '1rem', position: 'relative',
+            boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3)'
           }}>
-            {/* Refresh Button */}
             {isFirstPlayer && (
-              <button
-                onClick={handleRefresh}
-                disabled={isRefreshing || loading}
-                className="btn-hover"
+              <button onClick={handleRefresh} disabled={isRefreshing || loading} className="btn-hover"
                 style={{
-                  position: 'absolute',
-                  top: '1rem',
-                  right: '1rem',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  backdropFilter: 'blur(10px)',
-                  border: '2px solid rgba(255, 255, 255, 0.4)',
-                  borderRadius: '50%',
-                  width: '45px',
-                  height: '45px',
-                  cursor: isRefreshing || loading ? 'not-allowed' : 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  opacity: isRefreshing || loading ? 0.5 : 1,
-                  padding: 0
-                }}
-              >
-                <RotateCw 
-                  size={22} 
-                  color="white"
-                  strokeWidth={2}
-                  style={{
-                    animation: isRefreshing ? 'spin 1s linear infinite' : 'none'
-                  }}
-                />
+                  position: 'absolute', top: '1rem', right: '1rem',
+                  background: 'rgba(255, 255, 255, 0.2)', backdropFilter: 'blur(10px)',
+                  border: '2px solid rgba(255, 255, 255, 0.4)', borderRadius: '50%',
+                  width: '45px', height: '45px', cursor: isRefreshing || loading ? 'not-allowed' : 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  opacity: isRefreshing || loading ? 0.5 : 1, padding: 0
+                }}>
+                <RotateCw size={22} color="white" strokeWidth={2}
+                  style={{ animation: isRefreshing ? 'spin 1s linear infinite' : 'none' }} />
               </button>
             )}
 
@@ -1214,33 +1248,23 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
               <div style={{ fontSize: '1.25rem' }}>Chargement...</div>
             ) : (
               <>
-                {isImposter ? (
-                  <>
-                    <div style={{ 
-                      fontSize: '1.125rem', 
-                      padding: '0.75rem 1.5rem',
-                      background: 'rgba(255, 255, 255, 0.15)',
-                      borderRadius: '15px',
-                      backdropFilter: 'blur(10px)'
-                    }}>
-                      💡 Indice: {hint}
-                    </div>
-                  </>
+                {showHintOnly ? (
+                  <div style={{ 
+                    fontSize: '1.125rem', padding: '0.75rem 1.5rem',
+                    background: 'rgba(255, 255, 255, 0.15)', borderRadius: '15px', backdropFilter: 'blur(10px)'
+                  }}>
+                    💡 Indice: {hint}
+                  </div>
                 ) : (
                   <div style={{ fontSize: '2.5rem', textShadow: '0 2px 8px rgba(0, 0, 0, 0.4)' }}>
-                    {generatedWord}
+                    {displayWord}
                   </div>
                 )}
                 {startingPlayer && (
                   <div style={{ 
-                    fontSize: '1rem', 
-                    opacity: 0.9,
-                    padding: '0.5rem 1rem',
-                    background: 'rgba(255, 255, 255, 0.15)',
-                    borderRadius: '12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem'
+                    fontSize: '1rem', opacity: 0.9, padding: '0.5rem 1rem',
+                    background: 'rgba(255, 255, 255, 0.15)', borderRadius: '12px',
+                    display: 'flex', alignItems: 'center', gap: '0.5rem'
                   }}>
                     <Play size={18} fill="white" />
                     {startingPlayer} commence
@@ -1250,100 +1274,148 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
             )}
           </div>
 
-          {/* Players List Section */}
+          {/* Drawing Pad */}
           <div style={{
-            width: '100%',
-            background: 'rgba(255, 255, 255, 0.15)',
-            backdropFilter: 'blur(20px)',
-            borderRadius: '30px',
-            border: '2px solid rgba(255, 255, 255, 0.3)',
-            padding: '2rem 1.5rem',
-            boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3)'
+            width: '100%', background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(20px)',
+            borderRadius: '30px', border: '2px solid rgba(255, 255, 255, 0.3)',
+            padding: '1.5rem', boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3)'
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              marginBottom: '1rem'
+            }}>
+              <h2 style={{
+                color: 'white', fontSize: '1.25rem', fontWeight: '600',
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
+              }}>
+                🎨 Tableau de Dessin
+              </h2>
+              
+              <button onClick={clearCanvas} className="btn-hover"
+                style={{
+                  background: 'rgba(239, 68, 68, 0.8)', 
+                  backdropFilter: 'blur(10px)',
+                  border: '2px solid rgba(255, 255, 255, 0.4)', 
+                  borderRadius: '12px',
+                  padding: '0.5rem 1rem',
+                  cursor: 'pointer',
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '0.5rem',
+                  color: 'white',
+                  fontWeight: '600',
+                  fontSize: '0.9rem'
+                }}>
+                <Trash2 size={18} />
+                Effacer
+              </button>
+            </div>
+
+            {/* Color palette */}
+            <div style={{ 
+              display: 'flex', 
+              gap: '0.75rem', 
+              marginBottom: '1rem',
+              justifyContent: 'center'
+            }}>
+              {colors.map(color => (
+                <div
+                  key={color}
+                  className={`color-btn ${currentColor === color ? 'active' : ''}`}
+                  onClick={() => setCurrentColor(color)}
+                  style={{
+                    width: '35px',
+                    height: '35px',
+                    borderRadius: '50%',
+                    backgroundColor: color,
+                    border: '3px solid rgba(255, 255, 255, 0.5)',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                  }}
+                />
+              ))}
+            </div>
+
+            <canvas
+              ref={canvasRef}
+              onMouseDown={startDrawing}
+              onMouseMove={draw}
+              onMouseUp={stopDrawing}
+              onMouseLeave={stopDrawing}
+              onTouchStart={startDrawing}
+              onTouchMove={draw}
+              onTouchEnd={stopDrawing}
+              style={{
+                width: '100%',
+                height: 'auto',
+                maxHeight: '400px',
+                border: '3px solid rgba(255, 255, 255, 0.4)',
+                borderRadius: '15px',
+                cursor: 'crosshair',
+                touchAction: 'none',
+                display: 'block'
+              }}
+            />
+          </div>
+
+          <div style={{
+            width: '100%', background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(20px)',
+            borderRadius: '30px', border: '2px solid rgba(255, 255, 255, 0.3)',
+            padding: '2rem 1.5rem', boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3)'
           }}>
             <h2 style={{
-              color: 'white',
-              fontSize: '1.25rem',
-              fontWeight: '600',
-              marginBottom: '1.5rem',
-              textAlign: 'center',
-              textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
+              color: 'white', fontSize: '1.25rem', fontWeight: '600', marginBottom: '1.5rem',
+              textAlign: 'center', textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
             }}>
               Qui est l'Imposteur?
             </h2>
 
             <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              {players.map((player, index) => {
-                const isCurrentUser = currentUser && player.id === currentUser.firebaseId;
-                const isSelected = selectedPlayer && selectedPlayer.id === player.id;
-                const cannotSelect = isCurrentUser;
+              {players.map((p, i) => {
+                const isCurrent = currentUser && p.id === currentUser.firebaseId;
+                const isSelected = selectedPlayer && selectedPlayer.id === p.id;
+                const cannotSelect = isCurrent;
                 
                 return (
-                  <div 
-                    key={player.id} 
-                    onClick={() => !cannotSelect && setSelectedPlayer(player)}
+                  <div key={p.id} onClick={() => !cannotSelect && setSelectedPlayer(p)}
                     className={`player-card ${cannotSelect ? 'disabled' : ''}`}
                     style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      gap: '1rem',
+                      display: 'flex', alignItems: 'center', gap: '1rem',
                       cursor: cannotSelect ? 'not-allowed' : 'pointer',
-                      padding: '0.5rem',
-                      opacity: cannotSelect ? 0.5 : 1,
-                      animation: `slideIn 0.4s ease-out ${index * 0.1}s backwards`
-                    }}
-                  >
-                    {/* Player Photo */}
+                      padding: '0.5rem', opacity: cannotSelect ? 0.5 : 1
+                    }}>
                     <div style={{
-                      width: '70px',
-                      height: '70px',
-                      borderRadius: '50%',
-                      overflow: 'hidden',
-                      border: isCurrentUser 
-                        ? (isImposter ? '3px solid rgba(239, 68, 68, 0.8)' : '3px solid rgba(16, 185, 129, 0.8)')
+                      width: '70px', height: '70px', borderRadius: '50%', overflow: 'hidden',
+                      border: isCurrent 
+                        ? '3px solid rgba(16, 185, 129, 0.8)'
                         : '3px solid rgba(255, 255, 255, 0.6)',
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                      flexShrink: 0,
-                      boxShadow: isCurrentUser 
-                        ? (isImposter ? '0 0 20px rgba(239, 68, 68, 0.5)' : '0 0 20px rgba(16, 185, 129, 0.5)')
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)', flexShrink: 0,
+                      boxShadow: isCurrent 
+                        ? '0 0 20px rgba(16, 185, 129, 0.5)'
                         : '0 4px 15px rgba(0, 0, 0, 0.2)'
                     }}>
-                      <img 
-                        src={player.photo} 
-                        alt={player.username}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover'
-                        }}
-                      />
+                      <img src={p.photo} alt={p.username} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
 
-                    {/* Player Username */}
                     <div style={{
-                      flex: 1,
-                      padding: '1rem 1.5rem',
-                      background: isCurrentUser 
-                        ? (isImposter 
-                          ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(220, 38, 38, 0.3) 100%)'
-                          : 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.3) 100%)')
+                      flex: 1, padding: '1rem 1.5rem',
+                      background: isCurrent 
+                        ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.3) 100%)'
                         : 'rgba(255, 255, 255, 0.2)',
                       backdropFilter: 'blur(10px)',
                       border: isSelected 
                         ? '3px solid #ef4444'
-                        : (isCurrentUser 
-                          ? (isImposter ? '2px solid rgba(239, 68, 68, 0.6)' : '2px solid rgba(16, 185, 129, 0.6)')
+                        : (isCurrent 
+                          ? '2px solid rgba(16, 185, 129, 0.6)'
                           : '2px solid rgba(255, 255, 255, 0.4)'),
-                      borderRadius: '20px',
-                      textAlign: 'center',
-                      fontSize: '1.125rem',
-                      fontWeight: '600',
-                      color: 'white',
+                      borderRadius: '20px', textAlign: 'center', fontSize: '1.125rem', fontWeight: '600', color: 'white',
                       boxShadow: isSelected 
                         ? '0 0 25px rgba(239, 68, 68, 0.6), 0 4px 15px rgba(0, 0, 0, 0.15)'
                         : '0 4px 15px rgba(0, 0, 0, 0.15)',
                       minWidth: '10rem'
                     }}>
-                      {player.username}
+                      {p.username}
                     </div>
                   </div>
                 );
@@ -1351,27 +1423,22 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
             </div>
           </div>
 
-          {/* Confirm Button */}
-          <button
-            onClick={handleConfirm}
-            className="btn-hover"
+          <button onClick={handleConfirm} className="btn-hover" disabled={hasVoted}
             style={{
-              width: '100%',
-              maxWidth: '400px',
-              padding: '1.25rem 3rem',
-              background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-              border: '3px solid rgba(255, 255, 255, 0.5)',
-              borderRadius: '25px',
-              fontWeight: '700',
-              fontSize: '1.25rem',
-              color: 'white',
-              cursor: 'pointer',
-              boxShadow: '0 10px 30px rgba(245, 87, 108, 0.4)',
-              textTransform: 'uppercase',
-              letterSpacing: '1px'
-            }}
-          >
-            Voter 🗳️
+              width: '100%', maxWidth: '400px', padding: '1.25rem 3rem',
+              background: hasVoted 
+                ? 'linear-gradient(135deg, #94a3b8 0%, #64748b 100%)'
+                : 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+              border: '3px solid rgba(255, 255, 255, 0.5)', borderRadius: '25px',
+              fontWeight: '700', fontSize: '1.25rem', color: 'white', 
+              cursor: hasVoted ? 'not-allowed' : 'pointer',
+              boxShadow: hasVoted 
+                ? '0 10px 30px rgba(100, 116, 139, 0.4)'
+                : '0 10px 30px rgba(245, 87, 108, 0.4)',
+              textTransform: 'uppercase', letterSpacing: '1px',
+              opacity: hasVoted ? 0.6 : 1
+            }}>
+            {hasVoted ? 'Vote Enregistré ✓' : 'Voter 🗳️'}
           </button>
         </div>
       </div>
