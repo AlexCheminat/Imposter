@@ -1084,17 +1084,6 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     });
   };
 
-  const clearCanvas = async () => {
-    if (!canvasRef.current) return;
-    
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = 'rgba(30, 41, 59, 0.95)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    await syncCanvas();
-  };
-
   const handleRefresh = async () => {
     if (!database || !lobbyId || isRefreshing) return;
     setIsRefreshing(true);
@@ -1300,25 +1289,6 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                 }}>
                   🎨 Tableau de Dessin
                 </h2>
-                
-                <button onClick={clearCanvas} className="btn-hover"
-                  style={{
-                    background: 'rgba(239, 68, 68, 0.8)', 
-                    backdropFilter: 'blur(10px)',
-                    border: '2px solid rgba(255, 255, 255, 0.4)', 
-                    borderRadius: '12px',
-                    padding: '0.5rem 1rem',
-                    cursor: 'pointer',
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '0.5rem',
-                    color: 'white',
-                    fontWeight: '600',
-                    fontSize: '0.9rem'
-                  }}>
-                  <Trash2 size={18} />
-                  Effacer
-                </button>
               </div>
 
               {/* Color palette */}
@@ -1334,8 +1304,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                     className={`color-btn ${currentColor === color ? 'active' : ''}`}
                     onClick={() => setCurrentColor(color)}
                     style={{
-                      width: '35px',
-                      height: '35px',
+                      width: '25px',
+                      height: '25px',
                       borderRadius: '50%',
                       backgroundColor: color,
                       border: '3px solid rgba(255, 255, 255, 0.5)',
