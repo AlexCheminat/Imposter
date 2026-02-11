@@ -1326,7 +1326,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                 onTouchEnd={stopDrawing}
                 style={{
                   width: '100%',
-                  height: '800px',
+                  height: '500px',
                   border: '3px solid rgba(255, 255, 255, 0.4)',
                   borderRadius: '15px',
                   cursor: 'crosshair',
