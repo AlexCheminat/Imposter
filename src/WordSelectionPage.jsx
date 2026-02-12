@@ -201,6 +201,102 @@ const wordCategories = {
     { word: 'Poubelle', hint: 'Collecte' }
   ],
 
+  places: [
+    { word: 'Maison', hint: 'Habitat' },
+    { word: 'Appartement', hint: 'Immeuble' },
+    { word: 'Studio', hint: 'Petit' },
+    { word: 'Villa', hint: 'Luxueux' },
+    { word: 'Immeuble', hint: 'Étages' },
+    { word: 'Résidence', hint: 'Logement' },
+
+    { word: 'Salon', hint: 'Canapé' },
+    { word: 'Cuisine', hint: 'Repas' },
+    { word: 'Chambre', hint: 'Sommeil' },
+    { word: 'Salle de bain', hint: 'Douche' },
+    { word: 'Toilettes', hint: 'Sanitaire' },
+    { word: 'Garage', hint: 'Voiture' },
+    { word: 'Cave', hint: 'Stockage' },
+    { word: 'Grenier', hint: 'Combles' },
+    { word: 'Balcon', hint: 'Extérieur' },
+    { word: 'Terrasse', hint: 'Soleil' },
+    { word: 'Jardin', hint: 'Plantes' },
+    { word: 'Cour', hint: 'Intérieure' },
+
+    { word: 'Rue', hint: 'Passage' },
+    { word: 'Avenue', hint: 'Large' },
+    { word: 'Boulevard', hint: 'Urbain' },
+    { word: 'Impasse', hint: 'Fermée' },
+    { word: 'Carrefour', hint: 'Croisement' },
+    { word: 'Trottoir', hint: 'Piéton' },
+    { word: 'Place', hint: 'Publique' },
+    { word: 'Quartier', hint: 'Zone' },
+
+    { word: 'Ville', hint: 'Urbaine' },
+    { word: 'Village', hint: 'Rural' },
+    { word: 'Banlieue', hint: 'Périphérie' },
+    { word: 'Centre-ville', hint: 'Commerce' },
+    { word: 'Zone industrielle', hint: 'Usines' },
+    { word: 'Zone commerciale', hint: 'Magasins' },
+
+    { word: 'École', hint: 'Élèves' },
+    { word: 'Collège', hint: 'Ados' },
+    { word: 'Lycée', hint: 'Études' },
+    { word: 'Université', hint: 'Campus' },
+    { word: 'Bibliothèque', hint: 'Livres' },
+    { word: 'Crèche', hint: 'Enfants' },
+
+    { word: 'Bureau', hint: 'Travail' },
+    { word: 'Entreprise', hint: 'Emploi' },
+    { word: 'Usine', hint: 'Production' },
+    { word: 'Chantier', hint: 'Construction' },
+    { word: 'Entrepôt', hint: 'Stock' },
+
+    { word: 'Magasin', hint: 'Achat' },
+    { word: 'Supermarché', hint: 'Courses' },
+    { word: 'Boutique', hint: 'Vente' },
+    { word: 'Centre commercial', hint: 'Galeries' },
+    { word: 'Marché', hint: 'Étals' },
+    { word: 'Boulangerie', hint: 'Pain' },
+    { word: 'Pharmacie', hint: 'Médicaments' },
+    { word: 'Librairie', hint: 'Lecture' },
+
+    { word: 'Restaurant', hint: 'Repas' },
+    { word: 'Café', hint: 'Boisson' },
+    { word: 'Bar', hint: 'Soirée' },
+    { word: 'Cantine', hint: 'Collectif' },
+    { word: 'Fast-food', hint: 'Rapide' },
+
+    { word: 'Hôpital', hint: 'Soins' },
+    { word: 'Clinique', hint: 'Médical' },
+    { word: 'Cabinet', hint: 'Consultation' },
+
+    { word: 'Gare', hint: 'Train' },
+    { word: 'Station', hint: 'Transport' },
+    { word: 'Aéroport', hint: 'Avion' },
+    { word: 'Port', hint: 'Bateaux' },
+    { word: 'Parking', hint: 'Stationnement' },
+
+    { word: 'Parc', hint: 'Verdure' },
+    { word: 'Square', hint: 'Bancs' },
+    { word: 'Forêt', hint: 'Arbres' },
+    { word: 'Bois', hint: 'Nature' },
+    { word: 'Plage', hint: 'Sable' },
+    { word: 'Montagne', hint: 'Altitude' },
+    { word: 'Colline', hint: 'Pente' },
+    { word: 'Vallée', hint: 'Creux' },
+    { word: 'Rivière', hint: 'Eau' },
+    { word: 'Lac', hint: 'Calme' },
+    { word: 'Fleuve', hint: 'Courant' },
+
+    { word: 'Stade', hint: 'Sport' },
+    { word: 'Gymnase', hint: 'Activité' },
+    { word: 'Piscine', hint: 'Nage' },
+    { word: 'Salle de sport', hint: 'Entraînement' },
+    { word: 'Cinéma', hint: 'Film' },
+    { word: 'Théâtre', hint: 'Scène' },
+    { word: 'Musée', hint: 'Exposition' }
+  ],
+
   jobs: [
     { word: 'Médecin', hint: 'Soins' },
     { word: 'Infirmier', hint: 'Hôpital' },
@@ -966,7 +1062,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     const ctx = canvasRef.current.getContext('2d');
     
     ctx.strokeStyle = currentColor;
-    ctx.lineWidth = 3;
+    // Make white pen thicker (acts as eraser)
+    ctx.lineWidth = currentColor === '#ffffff' ? 12 : 3;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.lineTo(x, y);
@@ -1241,8 +1338,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                     className={`color-btn ${currentColor === color ? 'active' : ''}`}
                     onClick={() => setCurrentColor(color)}
                     style={{
-                      width: '22px',
-                      height: '22px',
+                      width: '25px',
+                      height: '25px',
                       borderRadius: '50%',
                       backgroundColor: color,
                       border: color === '#ffffff' 
