@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { RotateCw, Play, Trash2 } from 'lucide-react';
 
-// Shortened word categories for context limits
 const wordCategories = {
   animals: [
     { word: 'Loutre', hint: 'Joueuse' },
@@ -200,102 +199,6 @@ const wordCategories = {
     { word: 'Serpillière', hint: 'Humide' },
     { word: 'Aspirateur', hint: 'Aspiration' },
     { word: 'Poubelle', hint: 'Collecte' }
-  ],
-
-  places: [
-    { word: 'Maison', hint: 'Habitat' },
-    { word: 'Appartement', hint: 'Immeuble' },
-    { word: 'Studio', hint: 'Petit' },
-    { word: 'Villa', hint: 'Luxueux' },
-    { word: 'Immeuble', hint: 'Étages' },
-    { word: 'Résidence', hint: 'Logement' },
-
-    { word: 'Salon', hint: 'Canapé' },
-    { word: 'Cuisine', hint: 'Repas' },
-    { word: 'Chambre', hint: 'Sommeil' },
-    { word: 'Salle de bain', hint: 'Douche' },
-    { word: 'Toilettes', hint: 'Sanitaire' },
-    { word: 'Garage', hint: 'Voiture' },
-    { word: 'Cave', hint: 'Stockage' },
-    { word: 'Grenier', hint: 'Combles' },
-    { word: 'Balcon', hint: 'Extérieur' },
-    { word: 'Terrasse', hint: 'Soleil' },
-    { word: 'Jardin', hint: 'Plantes' },
-    { word: 'Cour', hint: 'Intérieure' },
-
-    { word: 'Rue', hint: 'Passage' },
-    { word: 'Avenue', hint: 'Large' },
-    { word: 'Boulevard', hint: 'Urbain' },
-    { word: 'Impasse', hint: 'Fermée' },
-    { word: 'Carrefour', hint: 'Croisement' },
-    { word: 'Trottoir', hint: 'Piéton' },
-    { word: 'Place', hint: 'Publique' },
-    { word: 'Quartier', hint: 'Zone' },
-
-    { word: 'Ville', hint: 'Urbaine' },
-    { word: 'Village', hint: 'Rural' },
-    { word: 'Banlieue', hint: 'Périphérie' },
-    { word: 'Centre-ville', hint: 'Commerce' },
-    { word: 'Zone industrielle', hint: 'Usines' },
-    { word: 'Zone commerciale', hint: 'Magasins' },
-
-    { word: 'École', hint: 'Élèves' },
-    { word: 'Collège', hint: 'Ados' },
-    { word: 'Lycée', hint: 'Études' },
-    { word: 'Université', hint: 'Campus' },
-    { word: 'Bibliothèque', hint: 'Livres' },
-    { word: 'Crèche', hint: 'Enfants' },
-
-    { word: 'Bureau', hint: 'Travail' },
-    { word: 'Entreprise', hint: 'Emploi' },
-    { word: 'Usine', hint: 'Production' },
-    { word: 'Chantier', hint: 'Construction' },
-    { word: 'Entrepôt', hint: 'Stock' },
-
-    { word: 'Magasin', hint: 'Achat' },
-    { word: 'Supermarché', hint: 'Courses' },
-    { word: 'Boutique', hint: 'Vente' },
-    { word: 'Centre commercial', hint: 'Galeries' },
-    { word: 'Marché', hint: 'Étals' },
-    { word: 'Boulangerie', hint: 'Pain' },
-    { word: 'Pharmacie', hint: 'Médicaments' },
-    { word: 'Librairie', hint: 'Lecture' },
-
-    { word: 'Restaurant', hint: 'Repas' },
-    { word: 'Café', hint: 'Boisson' },
-    { word: 'Bar', hint: 'Soirée' },
-    { word: 'Cantine', hint: 'Collectif' },
-    { word: 'Fast-food', hint: 'Rapide' },
-
-    { word: 'Hôpital', hint: 'Soins' },
-    { word: 'Clinique', hint: 'Médical' },
-    { word: 'Cabinet', hint: 'Consultation' },
-
-    { word: 'Gare', hint: 'Train' },
-    { word: 'Station', hint: 'Transport' },
-    { word: 'Aéroport', hint: 'Avion' },
-    { word: 'Port', hint: 'Bateaux' },
-    { word: 'Parking', hint: 'Stationnement' },
-
-    { word: 'Parc', hint: 'Verdure' },
-    { word: 'Square', hint: 'Bancs' },
-    { word: 'Forêt', hint: 'Arbres' },
-    { word: 'Bois', hint: 'Nature' },
-    { word: 'Plage', hint: 'Sable' },
-    { word: 'Montagne', hint: 'Altitude' },
-    { word: 'Colline', hint: 'Pente' },
-    { word: 'Vallée', hint: 'Creux' },
-    { word: 'Rivière', hint: 'Eau' },
-    { word: 'Lac', hint: 'Calme' },
-    { word: 'Fleuve', hint: 'Courant' },
-
-    { word: 'Stade', hint: 'Sport' },
-    { word: 'Gymnase', hint: 'Activité' },
-    { word: 'Piscine', hint: 'Nage' },
-    { word: 'Salle de sport', hint: 'Entraînement' },
-    { word: 'Cinéma', hint: 'Film' },
-    { word: 'Théâtre', hint: 'Scène' },
-    { word: 'Musée', hint: 'Exposition' }
   ],
 
   jobs: [
@@ -874,7 +777,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
   // Drawing pad state
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
-  const [currentColor, setCurrentColor] = useState('#ffffff');
+  const [currentColor, setCurrentColor] = useState('#000000');
   const drawingTimeoutRef = useRef(null);
   
   const sortedPlayers = [...players].sort((a, b) => a.joinedAt - b.joinedAt);
@@ -992,6 +895,14 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
           ctx.drawImage(img, 0, 0);
         };
         img.src = data.imageData;
+      } else {
+        // If no data in Firebase, clear the canvas
+        const canvas = canvasRef.current;
+        if (canvas) {
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
       }
     });
     
@@ -1008,10 +919,17 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     canvas.width = 600;
     canvas.height = 400;
     
-    // Set background
-    ctx.fillStyle = 'rgba(30, 41, 59, 0.95)';
+    // Set white background
+    ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }, []);
+
+  // Clear drawing board when player votes (leaves page)
+  useEffect(() => {
+    if (hasVoted && database && lobbyId) {
+      clearDrawingBoard();
+    }
+  }, [hasVoted, database, lobbyId]);
 
   const getCoordinates = (e) => {
     const canvas = canvasRef.current;
@@ -1084,6 +1002,22 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     });
   };
 
+  const clearDrawingBoard = async () => {
+    if (!database || !lobbyId) return;
+    
+    // Clear canvas locally
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    }
+    
+    // Clear in Firebase
+    const { ref, set } = database;
+    const drawingRef = ref(database.db, `lobbies/${lobbyId}/drawing`);
+    await set(drawingRef, null);
+  };
+
   const handleRefresh = async () => {
     if (!database || !lobbyId || isRefreshing) return;
     setIsRefreshing(true);
@@ -1115,6 +1049,9 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
     });
     
     await set(imposterRef, randImposter ? randImposter.id : null);
+    
+    // Clear the drawing board when refreshing
+    await clearDrawingBoard();
   };
 
   const handleConfirm = () => {
@@ -1132,7 +1069,7 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
   const displayWord = (isImposter && inTheDarkMode) ? imposterWord : generatedWord;
   const showHintOnly = isImposter && !inTheDarkMode;
 
-  const colors = ['#ffffff', '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
+  const colors = ['#000000', '#ffffff', '#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'];
 
   return (
     <>
@@ -1308,7 +1245,9 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                       height: '25px',
                       borderRadius: '50%',
                       backgroundColor: color,
-                      border: '3px solid rgba(255, 255, 255, 0.5)',
+                      border: color === '#ffffff' 
+                        ? '3px solid rgba(100, 100, 100, 0.8)' 
+                        : '3px solid rgba(255, 255, 255, 0.5)',
                       boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
                     }}
                   />
@@ -1332,7 +1271,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                   borderRadius: '15px',
                   cursor: 'crosshair',
                   touchAction: 'none',
-                  display: 'block'
+                  display: 'block',
+                  backgroundColor: '#ffffff'
                 }}
               />
             </div>
