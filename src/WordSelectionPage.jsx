@@ -1338,8 +1338,8 @@ export default function WordSelectionPage({ players = [], currentUser, onConfirm
                     className={`color-btn ${currentColor === color ? 'active' : ''}`}
                     onClick={() => setCurrentColor(color)}
                     style={{
-                      width: '25px',
-                      height: '25px',
+                      width: '22px',
+                      height: '22px',
                       borderRadius: '50%',
                       backgroundColor: color,
                       border: color === '#ffffff' 
